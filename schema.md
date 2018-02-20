@@ -1,7 +1,7 @@
 # Data schemas
 
 ## Promises
-- promise_id `String`
+- promise_id default `String`
 - contributor_id `String`
 - politican_id `String`
 - source_date `Date`
@@ -17,7 +17,7 @@
 - updated_at `Timestamp`
 
 ## Politician
-- politican_id `String`
+- politican_id default `String`
 - contributor_id `String`
 - profile_image `String`
 - name `String`
@@ -30,7 +30,7 @@
 - updated_at `Timestamp`
 
 ## Submissions
-- submission_id `String`
+- submission_id default `String`
 - contributor_id `String`
 - politician_id `String`
 - politician_name `String`
