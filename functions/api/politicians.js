@@ -22,14 +22,20 @@ const createPolitician = (req, res) =>
     return politicians
       .add(validatedData)
       .then(id => res.json(id))
-      .catch(e => res.status(500).end());
+      .catch(e => {
+        console.log(e);
+        return res.status(500).end();
+      });
   });
 
 const listPoliticans = (req, res) =>
   politicians
     .list()
     .then(politicians => res.json(politicians))
-    .catch(e => res.status(500).send);
+    .catch(e => {
+      console.log(e);
+      res.status(500).end();
+    });
 
 const getPolitician = (req, res) =>
   politicians
@@ -38,22 +44,36 @@ const getPolitician = (req, res) =>
       politician =>
         _.isEmpty(politician) ? res.status(404).end() : res.json(politician)
     )
-    .catch(e => res.status(500).end());
+    .catch(e => {
+      console.log(e);
+      res.status(500).end();
+    });
 
 const updatePolitician = (req, res) =>
   politicians.updateSchema.validate(req.body, (err, validatedData) => {
     if (err) return res.status(400).send(err.message);
     return politicians
       .update(req.params.id, validatedData)
-      .then(() => res.status(204).end())
-      .catch(e => res.status(500).end());
+      .then(
+        result =>
+          result && result.status
+            ? res.status(result.status).end()
+            : res.status(204).end()
+      )
+      .catch(e => {
+        console.log(e);
+        return res.status(500).end();
+      });
   });
 
 const deletePolitician = (req, res) =>
   politicians
     .remove(req.params.id)
     .then(() => res.status(204).end())
-    .catch(e => res.status(500).end());
+    .catch(e => {
+      console.log(e);
+      return res.status(500).end();
+    });
 
 const app = express();
 

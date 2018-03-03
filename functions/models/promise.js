@@ -1,19 +1,27 @@
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const joi = require('joi');
+const asyncP = require('async-promises');
 const _ = require('lodash');
 
 const util = require('../etc/util');
 
-const defaultConfig = functions.config().firebase;
-
 const createSchema = joi.object().keys({
   contributor_id: joi.string().required(),
-  profile_image: joi.string().required(),
-  name: joi.string().required(),
-  primary_position: joi.string().required(),
-  brief: joi.string().required(),
-  description: joi.string(),
+  politician_id: joi.string().required(),
+  source_date: joi
+    .date()
+    .iso()
+    .required(),
+  source_name: joi.string().required(),
+  source_url: joi
+    .string()
+    .uri()
+    .required(),
+  cover_image: joi.string().uri(),
+  category: joi.string().required(),
+  title: joi.string().required(),
+  quote: joi.string().required(),
+  notes: joi.string(),
   status: joi.string().required(),
   live: joi.boolean().default(false),
   created_at: joi
@@ -28,11 +36,15 @@ const createSchema = joi.object().keys({
 
 const updateSchema = joi.object().keys({
   contributor_id: joi.string(),
-  profile_image: joi.string(),
-  name: joi.string(),
-  primary_position: joi.string(),
-  brief: joi.string(),
-  description: joi.string(),
+  politician_id: joi.string(),
+  source_date: joi.date().iso(),
+  source_name: joi.string(),
+  source_url: joi.string().uri(),
+  cover_image: joi.string().uri(),
+  category: joi.string(),
+  title: joi.string(),
+  quote: joi.string(),
+  notes: joi.string(),
   status: joi.string(),
   live: joi.boolean(),
   updated_at: joi
@@ -45,20 +57,23 @@ const add = data =>
   new Promise((resolve, reject) => {
     admin
       .database()
-      .ref('/politicians')
+      .ref('/promises')
       .push(data)
       .then(result => {
         if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
         return resolve({ id: result.key });
       })
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const get = id =>
   new Promise((resolve, reject) => {
     admin
       .database()
-      .ref(`/politicians/${id}`)
+      .ref(`/promises/${id}`)
       .once('value')
       .then(snapshot => {
         const data = snapshot.val();
@@ -66,64 +81,66 @@ const get = id =>
 
         return resolve(result);
       })
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const list = () =>
   new Promise((resolve, reject) => {
     admin
       .database()
-      .ref('/politicians')
+      .ref('/promises')
       .once('value')
       .then(snapshot => resolve(util.toArray(snapshot.val())))
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) => {
-    admin
-      .database()
-      .ref(`/politicians/${id}`)
-      .update(updateData)
-      .then(() => resolve())
-      .catch(e => reject(e));
+    asyncP
+      .waterfall([
+        () => get(id),
+        data => {
+          if (_.isEmpty(data)) return resolve({ status: 404 });
+          return admin
+            .database()
+            .ref(`/promises/${id}`)
+            .update(updateData);
+        }
+      ])
+      .then(d => resolve(d))
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const remove = id =>
   new Promise((resolve, reject) => {
     admin
       .database()
-      .ref(`/politicians/${id}`)
+      .ref(`/promises/${id}`)
       .remove()
       .then(() => resolve())
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
-const politicians = ({ config }) => {
-  admin.initializeApp(config);
-  return {
-    createSchema,
-    updateSchema,
-    list,
-    get,
-    add,
-    update,
-    remove
-  };
-};
+const promise = () => ({
+  createSchema,
+  updateSchema,
+  list,
+  get,
+  add,
+  update,
+  remove
+});
 
-const politician = ({ config = defaultConfig } = { config: defaultConfig }) => {
-  admin.initializeApp(config);
-
-  return {
-    createSchema,
-    updateSchema,
-    list,
-    get,
-    add,
-    update,
-    remove
-  };
-};
-
-module.exports = politician;
+module.exports = promise;

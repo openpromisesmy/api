@@ -1,15 +1,16 @@
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const joi = require('joi');
+const asyncP = require('async-promises');
 const _ = require('lodash');
 
 const util = require('../etc/util');
 
-const defaultConfig = functions.config().firebase;
-
 const createSchema = joi.object().keys({
   contributor_id: joi.string().required(),
-  profile_image: joi.string().required(),
+  profile_image: joi
+    .string()
+    .uri()
+    .required(),
   name: joi.string().required(),
   primary_position: joi.string().required(),
   brief: joi.string().required(),
@@ -28,7 +29,7 @@ const createSchema = joi.object().keys({
 
 const updateSchema = joi.object().keys({
   contributor_id: joi.string(),
-  profile_image: joi.string(),
+  profile_image: joi.string().uri(),
   name: joi.string(),
   primary_position: joi.string(),
   brief: joi.string(),
@@ -51,7 +52,10 @@ const add = data =>
         if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
         return resolve({ id: result.key });
       })
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const get = id =>
@@ -66,7 +70,10 @@ const get = id =>
 
         return resolve(result);
       })
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const list = () =>
@@ -81,12 +88,22 @@ const list = () =>
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) => {
-    admin
-      .database()
-      .ref(`/politicians/${id}`)
-      .update(updateData)
-      .then(() => resolve())
-      .catch(e => reject(e));
+    asyncP
+      .waterfall([
+        () => get(id),
+        data => {
+          if (_.isEmpty(data)) return resolve({ status: 404 });
+          return admin
+            .database()
+            .ref(`/politicians/${id}`)
+            .update(updateData);
+        }
+      ])
+      .then(d => resolve(d))
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
 const remove = id =>
@@ -96,34 +113,20 @@ const remove = id =>
       .ref(`/politicians/${id}`)
       .remove()
       .then(() => resolve())
-      .catch(e => reject(e));
+      .catch(e => {
+        console.log(e);
+        return reject(e);
+      });
   });
 
-const politicians = ({ config }) => {
-  admin.initializeApp(config);
-  return {
-    createSchema,
-    updateSchema,
-    list,
-    get,
-    add,
-    update,
-    remove
-  };
-};
-
-const politician = ({ config = defaultConfig } = { config: defaultConfig }) => {
-  admin.initializeApp(config);
-
-  return {
-    createSchema,
-    updateSchema,
-    list,
-    get,
-    add,
-    update,
-    remove
-  };
-};
+const politician = () => ({
+  createSchema,
+  updateSchema,
+  list,
+  get,
+  add,
+  update,
+  remove
+});
 
 module.exports = politician;

@@ -18,11 +18,12 @@ npm start
 
 * id default `String`
 * contributor_id `String`
-* politican_id `String`
+* politician_id `String`
 * source_date `Date`
 * source_name `String`
 * source_url `String`
 * category `String`
+* cover_image `String`
 * title `String`
 * quote `String`
 * notes `String`
