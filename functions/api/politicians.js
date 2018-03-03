@@ -1,9 +1,9 @@
-const functions = require("firebase-functions");
-const express = require("express");
-const cors = require("cors");
-const _ = require("lodash");
+const functions = require('firebase-functions');
+const express = require('express');
+const cors = require('cors');
+const _ = require('lodash');
 
-const politicianModel = require("../models/politician");
+const politicianModel = require('../models/politician');
 
 // politicians.get('/')
 // politicians.post('/').json({contributor_id: '123', profile_image: '123', name: 'Umar', primary_position: 'OpenPromises', brief: 'Umar bla bla', description: 'bla bla', status: 'verified', live: true})
@@ -13,7 +13,7 @@ const politicianModel = require("../models/politician");
 
 const politicians = politicianModel();
 
-const healthCheck = (req, res) => res.send("pong").end();
+const healthCheck = (req, res) => res.send('pong').end();
 
 const createPolitician = (req, res) =>
   politicians.createSchema.validate(req.body, (err, validatedData) => {
@@ -59,16 +59,16 @@ const app = express();
 
 app.use(cors({ origin: true }));
 
-app.get("/ping", (req, res) => res.send("pong").end());
+app.get('/ping', (req, res) => res.send('pong').end());
 
-app.post("/", createPolitician);
+app.post('/', createPolitician);
 
-app.get("/", listPoliticans);
+app.get('/', listPoliticans);
 
-app.get("/:id", getPolitician);
+app.get('/:id', getPolitician);
 
-app.post("/:id", updatePolitician);
+app.post('/:id', updatePolitician);
 
-app.delete("/:id", deletePolitician);
+app.delete('/:id', deletePolitician);
 
 module.exports = functions.https.onRequest(app);
