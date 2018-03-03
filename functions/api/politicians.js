@@ -1,67 +1,74 @@
-const functions = require('firebase-functions');
-const express = require('express');
-const cors = require('cors');
-const Joi = require('joi');
-const admin = require('firebase-admin');
+const functions = require("firebase-functions");
+const express = require("express");
+const cors = require("cors");
+const _ = require("lodash");
 
-admin.initializeApp(functions.config().firebase);
+const politicianModel = require("../models/politician");
 
-function now () {
-  return new Date().toISOString()
-}
-
-const politicianSchema = Joi.object().keys({
-    contributor_id: Joi.string().required(),
-    profile_image: Joi.string().required(),
-    name: Joi.string().required(),
-    primary_position: Joi.string().required(),
-    brief: Joi.string().required(),
-    description: Joi.string().optional(),
-    status: Joi.string().required(),
-    live: Joi.boolean().required(),
-    created_at: Joi.date().iso().default(now, 'Time of creation'),
-    updated_at: Joi.date().timestamp('javascript').default(now, 'Time of update')
-})
-
+// politicians.get('/')
 // politicians.post('/').json({contributor_id: '123', profile_image: '123', name: 'Umar', primary_position: 'OpenPromises', brief: 'Umar bla bla', description: 'bla bla', status: 'verified', live: true})
+// politicians.post('/-L6gfTkNClzZy7w9t_9e').json({contributor_id:'321'})
+// politicians.get('/-L6grrLSYEBLbHIxpeGy')
+// politicians.delete('/-L6gfTkNClzZy7w9t_9e')
 
-function insertPolitician(data) {
-  return admin.database()
-    .ref('/politicians')
-    .push(data)
-}
+const politicians = politicianModel();
+
+const healthCheck = (req, res) => res.send("pong").end();
+
+const createPolitician = (req, res) =>
+  politicians.createSchema.validate(req.body, (err, validatedData) => {
+    if (err) return res.status(400).send(err.message);
+
+    return politicians
+      .add(validatedData)
+      .then(id => res.json(id))
+      .catch(e => res.status(500).end());
+  });
+
+const listPoliticans = (req, res) =>
+  politicians
+    .list()
+    .then(politicians => res.json(politicians))
+    .catch(e => res.status(500).send);
+
+const getPolitician = (req, res) =>
+  politicians
+    .get(req.params.id)
+    .then(
+      politician =>
+        _.isEmpty(politician) ? res.status(404).end() : res.json(politician)
+    )
+    .catch(e => res.status(500).end());
+
+const updatePolitician = (req, res) =>
+  politicians.updateSchema.validate(req.body, (err, validatedData) => {
+    if (err) return res.status(400).send(err.message);
+    return politicians
+      .update(req.params.id, validatedData)
+      .then(() => res.status(204).end())
+      .catch(e => res.status(500).end());
+  });
+
+const deletePolitician = (req, res) =>
+  politicians
+    .remove(req.params.id)
+    .then(() => res.status(204).end())
+    .catch(e => res.status(500).end());
 
 const app = express();
 
 app.use(cors({ origin: true }));
 
-app.get('/ping', (req, res) => {
-  return res.send('pong');
-});
+app.get("/ping", (req, res) => res.send("pong").end());
 
-app.get('/', (req, res) => {
-  const db = admin.database();
-  const ref = db.ref('/politicians');
+app.post("/", createPolitician);
 
-  ref.on('value', snapshot => {
-    return res.send(snapshot.val());
-  }, (errorObject) => {
-    console.log('errorObject', errorObject);
-    return res.status(500).end();
-  });
-});
+app.get("/", listPoliticans);
 
-app.post('/', (req, res) => {
-  politicianSchema.validate(req.body, (err, validatedData) => {
-    if (err) return res.status(400).send(err.message);
-    
-    return insertPolitician(validatedData)
-      .then(result => res.send(result))
-      .catch(e => {
-        console.log(e);
-        return res.status(500).end();
-      });
-  });
-});
+app.get("/:id", getPolitician);
+
+app.post("/:id", updatePolitician);
+
+app.delete("/:id", deletePolitician);
 
 module.exports = functions.https.onRequest(app);
