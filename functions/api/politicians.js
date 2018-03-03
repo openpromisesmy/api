@@ -79,7 +79,7 @@ const app = express();
 
 app.use(cors({ origin: true }));
 
-app.get('/ping', (req, res) => res.send('pong').end());
+app.get('/ping', healthCheck);
 
 app.post('/', createPolitician);
 
