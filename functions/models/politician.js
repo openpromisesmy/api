@@ -1,9 +1,12 @@
 const admin = require('firebase-admin');
 const joi = require('joi');
-const asyncP = require('async-promises');
 const _ = require('lodash');
 
 const util = require('../etc/util');
+
+const contributorModel = require('./contributor');
+
+const contributor = contributorModel();
 
 const createSchema = joi.object().keys({
   contributor_id: joi.string().required(),
@@ -43,11 +46,18 @@ const updateSchema = joi.object().keys({
 });
 
 const add = data =>
-  new Promise((resolve, reject) => {
-    admin
-      .database()
-      .ref('/politicians')
-      .push(data)
+  new Promise((resolve, reject) =>
+    contributor
+      .get(data.contributor_id)
+      .then(contributor => {
+        if (_.isEmpty(contributor))
+          return resolve({ status: 404, message: 'Invalid Contributor' });
+
+        return admin
+          .database()
+          .ref('/politicians')
+          .push(data);
+      })
       .then(result => {
         if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
         return resolve({ id: result.key });
@@ -55,11 +65,11 @@ const add = data =>
       .catch(e => {
         console.log(e);
         return reject(e);
-      });
-  });
+      })
+  );
 
 const get = id =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, reject) =>
     admin
       .database()
       .ref(`/politicians/${id}`)
@@ -73,41 +83,40 @@ const get = id =>
       .catch(e => {
         console.log(e);
         return reject(e);
-      });
-  });
+      })
+  );
 
 const list = () =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, reject) =>
     admin
       .database()
       .ref('/politicians')
       .once('value')
       .then(snapshot => resolve(util.toArray(snapshot.val())))
-      .catch(e => reject(e));
-  });
+      .catch(e => reject(e))
+  );
 
 const update = (id, updateData) =>
-  new Promise((resolve, reject) => {
-    asyncP
-      .waterfall([
-        () => get(id),
-        data => {
-          if (_.isEmpty(data)) return resolve({ status: 404 });
-          return admin
-            .database()
-            .ref(`/politicians/${id}`)
-            .update(updateData);
-        }
-      ])
+  new Promise((resolve, reject) =>
+    get(id)
+      .then(politician => {
+        if (_.isEmpty(politician))
+          return resolve({ status: 404, message: 'Invalid Politician' });
+
+        return admin
+          .database()
+          .ref(`/politicians/${id}`)
+          .update(updateData);
+      })
       .then(d => resolve(d))
       .catch(e => {
         console.log(e);
         return reject(e);
-      });
-  });
+      })
+  );
 
 const remove = id =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, reject) =>
     admin
       .database()
       .ref(`/politicians/${id}`)
@@ -116,8 +125,8 @@ const remove = id =>
       .catch(e => {
         console.log(e);
         return reject(e);
-      });
-  });
+      })
+  );
 
 const politician = () => ({
   createSchema,

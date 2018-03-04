@@ -21,17 +21,27 @@ const createPolitician = (req, res) =>
 
     return politicians
       .add(validatedData)
-      .then(id => res.json(id))
+      .then(
+        result =>
+          result.status
+            ? res.status(result.status).json(result)
+            : res.json(result)
+      )
       .catch(e => {
         console.log(e);
         return res.status(500).end();
       });
   });
 
-const listPoliticans = (req, res) =>
+const listPoliticians = (req, res) =>
   politicians
     .list()
-    .then(politicians => res.json(politicians))
+    .then(
+      result =>
+        result.status
+          ? res.status(result.status).json(result)
+          : res.json(result)
+    )
     .catch(e => {
       console.log(e);
       res.status(500).end();
@@ -57,7 +67,7 @@ const updatePolitician = (req, res) =>
       .then(
         result =>
           result && result.status
-            ? res.status(result.status).end()
+            ? res.status(result.status).json(result)
             : res.status(204).end()
       )
       .catch(e => {
@@ -83,7 +93,7 @@ app.get('/ping', healthCheck);
 
 app.post('/', createPolitician);
 
-app.get('/', listPoliticans);
+app.get('/', listPoliticians);
 
 app.get('/:id', getPolitician);
 

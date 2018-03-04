@@ -1,32 +1,23 @@
 const admin = require('firebase-admin');
-const joi = require('joi');
+const joi = require('joi').extend(require('joi-phone-number'));
 const _ = require('lodash');
 
 const util = require('../etc/util');
 
-const politicianModel = require('./politician');
-const contributorModel = require('./contributor');
-
-const politician = politicianModel();
-const contributor = contributorModel();
-
 const createSchema = joi.object().keys({
-  contributor_id: joi.string().required(),
-  politician_id: joi.string().required(),
-  source_date: joi
-    .date()
-    .iso()
-    .required(),
-  source_name: joi.string().required(),
-  source_url: joi
+  profile_image: joi
     .string()
     .uri()
     .required(),
-  cover_image: joi.string().uri(),
-  category: joi.string().required(),
-  title: joi.string().required(),
-  quote: joi.string().required(),
-  notes: joi.string(),
+  name: joi.string().required(),
+  email: joi
+    .string()
+    .email()
+    .required(),
+  contact: joi
+    .string()
+    .phoneNumber({ defaultCountry: 'MY', format: 'international' })
+    .required(),
   status: joi.string().required(),
   live: joi.boolean().default(false),
   created_at: joi
@@ -40,18 +31,14 @@ const createSchema = joi.object().keys({
 });
 
 const updateSchema = joi.object().keys({
-  contributor_id: joi.string(),
-  politician_id: joi.string(),
-  source_date: joi.date().iso(),
-  source_name: joi.string(),
-  source_url: joi.string().uri(),
-  cover_image: joi.string().uri(),
-  category: joi.string(),
-  title: joi.string(),
-  quote: joi.string(),
-  notes: joi.string(),
+  profile_image: joi.string().uri(),
+  name: joi.string(),
+  email: joi.string().email(),
+  contact: joi
+    .string()
+    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
   status: joi.string(),
-  live: joi.boolean(),
+  live: joi.boolean().default(false),
   updated_at: joi
     .date()
     .iso()
@@ -60,30 +47,15 @@ const updateSchema = joi.object().keys({
 
 const add = data =>
   new Promise((resolve, reject) =>
-    Promise.all([
-      politician.get(data.politician_id),
-      contributor.get(data.contributor_id)
-    ])
-      .then(([politician, contributor]) => {
-        if (_.isEmpty(politician))
-          return resolve({ status: 404, message: 'Invalid Politician' });
-
-        if (_.isEmpty(contributor))
-          return resolve({ status: 404, message: 'Invalid Contributor' });
-
-        return admin
-          .database()
-          .ref('/promises')
-          .push(data);
-      })
+    admin
+      .database()
+      .ref('/contributors')
+      .push(data)
       .then(result => {
-        if (_.isEmpty(result)) return reject(new Error('Fail to add'));
-
+        if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
         return resolve({ id: result.key });
       })
       .catch(e => {
-        if (e.status) return resolve(e);
-
         console.log(e);
         return reject(e);
       })
@@ -93,7 +65,7 @@ const get = id =>
   new Promise((resolve, reject) =>
     admin
       .database()
-      .ref(`/promises/${id}`)
+      .ref(`/contributors/${id}`)
       .once('value')
       .then(snapshot => {
         const data = snapshot.val();
@@ -111,25 +83,22 @@ const list = () =>
   new Promise((resolve, reject) =>
     admin
       .database()
-      .ref('/promises')
+      .ref('/contributors')
       .once('value')
       .then(snapshot => resolve(util.toArray(snapshot.val())))
-      .catch(e => {
-        console.log(e);
-        return reject(e);
-      })
+      .catch(e => reject(e))
   );
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
     get(id)
-      .then(promise => {
-        if (_.isEmpty(promise))
-          return resolve({ status: 404, message: 'Invalid Promise' });
+      .then(contributor => {
+        if (_.isEmpty(contributor))
+          return resolve({ status: 404, message: 'Invalid Contributor' });
 
         return admin
           .database()
-          .ref(`/promises/${id}`)
+          .ref(`/contributors/${id}`)
           .update(updateData);
       })
       .then(d => resolve(d))
@@ -143,7 +112,7 @@ const remove = id =>
   new Promise((resolve, reject) =>
     admin
       .database()
-      .ref(`/promises/${id}`)
+      .ref(`/contributors/${id}`)
       .remove()
       .then(() => resolve())
       .catch(e => {
@@ -152,7 +121,7 @@ const remove = id =>
       })
   );
 
-const promise = () => ({
+const contributor = () => ({
   createSchema,
   updateSchema,
   list,
@@ -162,4 +131,4 @@ const promise = () => ({
   remove
 });
 
-module.exports = promise;
+module.exports = contributor;

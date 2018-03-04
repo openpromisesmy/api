@@ -1,3 +1,5 @@
+# Get Started
+
 ```
 npm i -g firebase-tools
 firebase login
@@ -46,20 +48,14 @@ npm start
 * created_at `Timestamp`
 * updated_at `Timestamp`
 
-## Submissions
+## Contributor
 
 * id default `String`
-* contributor_id `String`
-* politician_id `String`
-* politician_name `String`
-* promise_summary `String`
-* exact_quote `String`
-* source_name `String`
-* source_url `String`
-* contributor_name `String`
-* contributor_email `String`
-* contributor_contact `String`
-* contributor_notes `String`
+* profile_image `String`
+* name `String`
+* email `String`
+* contact `String`
 * status `String`
+* live `Boolean`
 * created_at `Timestamp`
 * updated_at `Timestamp`

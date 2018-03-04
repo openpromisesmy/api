@@ -3,23 +3,23 @@ const express = require('express');
 const cors = require('cors');
 const _ = require('lodash');
 
-const promiseModel = require('../models/promise');
+const contributorModel = require('../models/contributor');
 
-// promises.get('/')
-// promises.post('/').json({ contributor_id: '123', politician_id: '-L5o5YwQa-jgdt_4sPqe', source_date: '2018-03-03T16:20:01.072Z', source_name: 'Bernama', source_url: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', cover_image: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', category: 'potato', title: 'Promising promises', quote: '"...potato said potata"', status: 'In review' })
-// promises.post('/-L6kQKs6_GqlUfualdcA').json({contributor_id:'321'})
-// promises.get('/-L6grrLSYEBLbHIxpeGy')
-// promises.delete('/-L6gfTkNClzZy7w9t_9e')
+// contributors.get('/')
+// contributors.post('/').json({ profile_image: 'https://assets.openpromises.com/DSCF8873.jpg', name: 'Umar Rasydan', email: 'umarrasydan@gmail.com', contact: '+60172562786', status: 'Admin', live: true })
+// contributors.post('/-L6kq7u9sLz9fI2GuQ-h').json({name:'Umar Rasydan Romli'})
+// contributors.get('/-L6kq7u9sLz9fI2GuQ-h')
+// contributors.delete('/-L6gfTkNClzZy7w9t_9e')
 
-const promises = promiseModel();
+const contributors = contributorModel();
 
 const healthCheck = (req, res) => res.send('pong').end();
 
-const createPromise = (req, res) =>
-  promises.createSchema.validate(req.body, (err, validatedData) => {
+const createContributor = (req, res) =>
+  contributors.createSchema.validate(req.body, (err, validatedData) => {
     if (err) return res.status(400).send(err.message);
 
-    return promises
+    return contributors
       .add(validatedData)
       .then(
         result =>
@@ -33,8 +33,8 @@ const createPromise = (req, res) =>
       });
   });
 
-const listPromises = (req, res) =>
-  promises
+const listContributors = (req, res) =>
+  contributors
     .list()
     .then(
       result =>
@@ -44,25 +44,25 @@ const listPromises = (req, res) =>
     )
     .catch(e => {
       console.log(e);
-      return res.status(500).end();
+      res.status(500).end();
     });
 
-const getPromise = (req, res) =>
-  promises
+const getContributor = (req, res) =>
+  contributors
     .get(req.params.id)
     .then(
-      Promise =>
-        _.isEmpty(Promise) ? res.status(404).end() : res.json(Promise)
+      contributor =>
+        _.isEmpty(contributor) ? res.status(404).end() : res.json(contributor)
     )
     .catch(e => {
       console.log(e);
-      return res.status(500).end();
+      res.status(500).end();
     });
 
-const updatePromise = (req, res) =>
-  promises.updateSchema.validate(req.body, (err, validatedData) => {
+const updateContributor = (req, res) =>
+  contributors.updateSchema.validate(req.body, (err, validatedData) => {
     if (err) return res.status(400).send(err.message);
-    return promises
+    return contributors
       .update(req.params.id, validatedData)
       .then(
         result =>
@@ -76,8 +76,8 @@ const updatePromise = (req, res) =>
       });
   });
 
-const deletePromise = (req, res) =>
-  promises
+const deleteContributor = (req, res) =>
+  contributors
     .remove(req.params.id)
     .then(() => res.status(204).end())
     .catch(e => {
@@ -91,14 +91,14 @@ app.use(cors({ origin: true }));
 
 app.get('/ping', healthCheck);
 
-app.post('/', createPromise);
+app.post('/', createContributor);
 
-app.get('/', listPromises);
+app.get('/', listContributors);
 
-app.get('/:id', getPromise);
+app.get('/:id', getContributor);
 
-app.post('/:id', updatePromise);
+app.post('/:id', updateContributor);
 
-app.delete('/:id', deletePromise);
+app.delete('/:id', deleteContributor);
 
 module.exports = functions.https.onRequest(app);
