@@ -5,10 +5,7 @@ const _ = require('lodash');
 const util = require('../etc/util');
 
 const createSchema = joi.object().keys({
-  profile_image: joi
-    .string()
-    .uri()
-    .required(),
+  profile_image: joi.string().uri(),
   name: joi.string().required(),
   email: joi
     .string()
@@ -16,8 +13,7 @@ const createSchema = joi.object().keys({
     .required(),
   contact: joi
     .string()
-    .phoneNumber({ defaultCountry: 'MY', format: 'international' })
-    .required(),
+    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
   status: joi.string().required(),
   live: joi.boolean().default(false),
   created_at: joi
