@@ -5,7 +5,10 @@ const _ = require('lodash');
 const util = require('../etc/util');
 
 const createSchema = joi.object().keys({
-  profile_image: joi.string().uri(),
+  profile_image: joi
+    .string()
+    .uri()
+    .default('https://assets.openpromises.com/avatar.png'),
   name: joi.string().required(),
   email: joi
     .string()
