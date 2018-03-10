@@ -58,3 +58,5 @@ typings/
 .env
 
 openpromises-968cbf2e9372.json
+
+.DS_Store
