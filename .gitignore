@@ -62,4 +62,4 @@ openpromises-968cbf2e9372.json
 .DS_Store
 
 # store key in secrets folder
-secrets
+functions/secrets
