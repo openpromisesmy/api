@@ -1,18 +1,28 @@
 # Get Started
 
-```
+## Setup Firebase
+
 npm i -g firebase-tools
 firebase login
 
+## Navigate to directory
+
 cd functions/
 
-https://firebase.google.com/docs/functions/local-emulator
+`https://firebase.google.com/docs/functions/local-emulator`
 
+## Generate Service Account key as JSON
+
+refer to https://cloud.google.com/storage/docs/authentication#generating-a-private-key
+type of key = service account key
+choose 'App Engine Service Default' when prompted
 export GOOGLE_APPLICATION_CREDENTIALS="path/to/key.json"
+
+## Start
+
 npm start
 
 > politicians.get()
-```
 
 # Data schema
 
