@@ -11,13 +11,14 @@ const firebaseAuth = function(req, res, next) {
       .verifyIdToken(sentToken)
       .then(function(decodedToken) {
         var uid = decodedToken.uid;
+        return uid;
       })
       .catch(function(error) {
         res.status(400);
         res.send('None shall pass');
       });
 
-    next();
+    return next();
   }
 };
 
