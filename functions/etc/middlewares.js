@@ -9,11 +9,11 @@ const firebaseAuth = function(req, res, next) {
     admin
       .auth()
       .verifyIdToken(sentToken)
-      .then(function(decodedToken) {
+      .then(decodedToken => {
         var uid = decodedToken.uid;
         return uid;
       })
-      .catch(function(error) {
+      .catch(error => {
         res.status(400);
         res.send('None shall pass');
       });
