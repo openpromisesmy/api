@@ -1,10 +1,10 @@
 const admin = require('firebase-admin');
 
 const firebaseAuth = function(req, res, next) {
-  const sentToken = req.headers['x_firebase_token'];
-  const userEmail = req.headers['x_user_email'];
-  const userName = req.headers['x_user_name'];
-  const userPhoto = req.headers['x_user_photo'];
+  const sentToken = req.headers['x-firebase-token'];
+  const userEmail = req.headers['x-user-email'];
+  const userName = req.headers['x-user-name'];
+  const userPhoto = req.headers['x-user-photo'];
 
   if (!sentToken) {
     res.status(400);
