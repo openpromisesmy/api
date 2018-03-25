@@ -78,6 +78,25 @@ const get = id =>
       })
   );
 
+const find = match => {
+  // { email: 'name@test.com' }
+  new Promise((resolve, reject) =>
+    admin
+      .database()
+      .child('/contributors')
+      .orderByChild(Object.keys(match)[0])
+      .equalTo(Object.values(match)[0])
+      .once('value')
+      .then(snapshot => {
+        const data = snapshot.val();
+        const result = _.isEmpty(data) ? {} : util.toObject(id, data);
+
+        return resolve(result);
+      })
+      .catch(e => reject(e))
+  );
+};
+
 const list = () =>
   new Promise((resolve, reject) =>
     admin
@@ -125,6 +144,7 @@ const contributor = () => ({
   updateSchema,
   list,
   get,
+  find,
   add,
   update,
   remove
