@@ -61,7 +61,7 @@ const getContributor = (req, res) =>
 
 const findContributor = (req, res) =>
   contributors
-    .find({ [req.headers['x_match_key']]: req.headers['x_match_value'] })
+    .find(req.query)
     .then(
       contributor =>
         _.isEmpty(contributor) ? res.status(404).end() : res.json(contributor)
@@ -106,9 +106,9 @@ app.post('/', createContributor);
 
 app.get('/', listContributors);
 
-app.get('/:id', getContributor);
+app.get('/find', findContributor);
 
-app.get('/_find', findContributor);
+app.get('/:id', getContributor);
 
 app.post('/:id', updateContributor);
 

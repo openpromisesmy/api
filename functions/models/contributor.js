@@ -78,24 +78,22 @@ const get = id =>
       })
   );
 
-const find = match => {
-  // { email: 'name@test.com' }
+const find = match =>
   new Promise((resolve, reject) =>
     admin
       .database()
-      .child('/contributors')
+      .ref('/contributors')
       .orderByChild(Object.keys(match)[0])
       .equalTo(Object.values(match)[0])
       .once('value')
       .then(snapshot => {
         const data = snapshot.val();
-        const result = _.isEmpty(data) ? {} : util.toObject(id, data);
+        const result = _.isEmpty(data) ? {} : util.toObject(data);
 
         return resolve(result);
       })
       .catch(e => reject(e))
   );
-};
 
 const list = () =>
   new Promise((resolve, reject) =>
