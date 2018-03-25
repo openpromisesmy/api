@@ -3,7 +3,6 @@ const contributorModel = require('../models/contributor');
 const contributors = contributorModel();
 
 const firebaseAuth = function(req, res, next) {
-  console.log('firebase');
   const sentToken = req.headers['x-firebase-token'];
   const email = req.headers['x-user-email'];
   const name = req.headers['x-user-name'];
@@ -54,6 +53,7 @@ const firebaseAuth = function(req, res, next) {
             }
           })
           .catch(e => {
+            console.log(e);
             res.status(500).end();
           });
 
@@ -65,6 +65,7 @@ const firebaseAuth = function(req, res, next) {
         return uid;
       })
       .catch(error => {
+        console.log(error);
         res.status(400);
         res.send('There has been an error in authorization.');
       });
