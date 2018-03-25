@@ -59,6 +59,17 @@ const getContributor = (req, res) =>
       res.status(500).end();
     });
 
+const findContributor = (req, res) =>
+  contributors
+    .find({ [req.headers['x_match_key']]: req.headers['x_match_value'] })
+    .then(
+      contributor =>
+        _.isEmpty(contributor) ? res.status(404).end() : res.json(contributor)
+    )
+    .catch(e => {
+      res.status(500).end();
+    });
+
 const updateContributor = (req, res) =>
   contributors.updateSchema.validate(req.body, (err, validatedData) => {
     if (err) return res.status(400).send(err.message);
@@ -96,6 +107,8 @@ app.post('/', createContributor);
 app.get('/', listContributors);
 
 app.get('/:id', getContributor);
+
+app.get('/_find', findContributor);
 
 app.post('/:id', updateContributor);
 
