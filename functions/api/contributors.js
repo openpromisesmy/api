@@ -106,7 +106,7 @@ app.post('/', createContributor);
 
 app.get('/', listContributors);
 
-app.get('/find', findContributor);
+app.get('/_find', findContributor);
 
 app.get('/:id', getContributor);
 
