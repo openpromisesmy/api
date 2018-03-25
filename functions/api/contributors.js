@@ -59,6 +59,17 @@ const getContributor = (req, res) =>
       res.status(500).end();
     });
 
+const findContributor = (req, res) =>
+  contributors
+    .find(req.query)
+    .then(
+      contributor =>
+        _.isEmpty(contributor) ? res.status(404).end() : res.json(contributor)
+    )
+    .catch(e => {
+      res.status(500).end();
+    });
+
 const updateContributor = (req, res) =>
   contributors.updateSchema.validate(req.body, (err, validatedData) => {
     if (err) return res.status(400).send(err.message);
@@ -94,6 +105,8 @@ app.get('/ping', healthCheck);
 app.post('/', createContributor);
 
 app.get('/', listContributors);
+
+app.get('/_find', findContributor);
 
 app.get('/:id', getContributor);
 
