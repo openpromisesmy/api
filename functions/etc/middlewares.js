@@ -27,6 +27,7 @@ const firebaseAuth = function(req, res, next) {
         contributors
           .find({ email })
           .then(contributor => {
+            // if no contributor, create
             if (_.isEmpty(contributor)) {
               //  TODO: refactor below, which is just taken from model
               return contributors.createSchema.validate(
@@ -46,9 +47,8 @@ const firebaseAuth = function(req, res, next) {
                     });
                 }
               );
-
-              // createContributor
             } else {
+              // when contributor already exists, attach contributor_id
               req.params.contributor_id = contributor.id; // check that
               return next();
             }
@@ -57,10 +57,6 @@ const firebaseAuth = function(req, res, next) {
             console.log(e);
             res.status(500).end();
           });
-
-        // TODO: if exists, get the contributor_id
-        // TODO: if does not exist, create contributor then get contributor_id
-        // TODO: attach contributor_id in request.params.contributor_id
 
         var uid = decodedToken.uid;
         return uid;
