@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const _ = require('lodash');
 const contributorModel = require('../models/contributor');
 const contributors = contributorModel();
 
