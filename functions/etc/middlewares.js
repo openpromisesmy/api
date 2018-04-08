@@ -23,13 +23,12 @@ const firebaseAuth = function(req, res, next) {
       .auth()
       .verifyIdToken(sentToken)
       .then(decodedToken => {
-        // TODO: check whether userEmail already in list of contributors
+        // TODO: simplify below
         contributors
           .find({ email })
           .then(contributor => {
             // if no contributor, create
             if (_.isEmpty(contributor)) {
-              //  TODO: refactor below, which is just taken from model
               return contributors.createSchema.validate(
                 user,
                 (err, validatedData) => {
@@ -38,7 +37,7 @@ const firebaseAuth = function(req, res, next) {
                   return contributors
                     .add(validatedData)
                     .then(result => {
-                      req.params.contributor_id = contributor.id; // check that
+                      req.params.contributor_id = result.id;
                       return next();
                     })
                     .catch(e => {
@@ -58,7 +57,7 @@ const firebaseAuth = function(req, res, next) {
             res.status(500).end();
           });
 
-        var uid = decodedToken.uid;
+        var uid = decodedToken.uid; // TODO: remove this if unused
         return uid;
       })
       .catch(error => {
