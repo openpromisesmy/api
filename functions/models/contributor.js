@@ -17,7 +17,7 @@ const createSchema = joi.object().keys({
   contact: joi
     .string()
     .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
-  status: joi.string().required(),
+  status: joi.string().default('Tracker'),
   live: joi.boolean().default(false),
   created_at: joi
     .date()
