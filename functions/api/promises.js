@@ -88,7 +88,11 @@ const deletePromise = (req, res) =>
 
 const app = express();
 
-app.use(cors({ origin: true }));
+const corsOptions = {
+  origin: ['https://openpromises.com/', 'localhost']
+};
+
+app.use(cors(corsOptions));
 
 app.get('/ping', healthCheck);
 
