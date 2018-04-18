@@ -88,7 +88,7 @@ const deletePromise = (req, res) =>
 
 const app = express();
 
-app.use(cors());
+app.use(cors);
 
 app.get('/ping', healthCheck);
 
