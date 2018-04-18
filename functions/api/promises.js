@@ -89,7 +89,7 @@ const deletePromise = (req, res) =>
 const app = express();
 
 const corsOptions = {
-  origin: ['https://openpromises.com/', 'localhost']
+  origin: ['https://openpromises.com', 'localhost']
 };
 
 app.use(cors(corsOptions));
