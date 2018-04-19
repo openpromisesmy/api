@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors')({ origin: true });
 const _ = require('lodash');
 
 const promiseModel = require('../models/promise');
@@ -88,7 +88,7 @@ const deletePromise = (req, res) =>
 
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors);
 
 app.get('/ping', healthCheck);
 
