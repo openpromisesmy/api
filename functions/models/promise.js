@@ -23,7 +23,8 @@ const createSchema = joi.object().keys({
     .uri()
     .required(),
   cover_image: joi.string().uri(),
-  category: joi.string().required(),
+  post_url: joi.string(),
+  category: joi.string(),
   title: joi.string().required(),
   quote: joi.string().required(),
   notes: joi.string(),
