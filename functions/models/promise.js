@@ -14,8 +14,8 @@ const createSchema = joi.object().keys({
   contributor_id: joi.string().required(),
   politician_id: joi.string().required(),
   source_date: joi
-    .date()
-    .iso()
+    .string()
+    .isoDate()
     .required(),
   source_name: joi.string().required(),
   source_url: joi
