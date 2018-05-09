@@ -8,7 +8,7 @@ const firebaseAuth = function(req, res, next) {
   const email = req.headers['x-user-email'];
   const name = req.headers['x-user-name'];
   const profile_image = req.headers['x-user-photo'];
-  console.log({ headers: req.headers });
+
   const user = {
     email,
     name,
@@ -50,6 +50,7 @@ const firebaseAuth = function(req, res, next) {
               );
             } else {
               // when contributor already exists, attach contributor_id
+              console.log(contributor, contributor.id);
               req.params.contributor_id = contributor.id; // check that
               return next();
             }
