@@ -14,7 +14,7 @@ const firebaseAuth = function(req, res, next) {
     name,
     profile_image
   };
-  console.log({ user });
+
   if (!sentToken) {
     res.status(400);
     res.send('You need to be authorized to do this.');
@@ -48,8 +48,8 @@ const firebaseAuth = function(req, res, next) {
               );
             } else {
               // when contributor already exists, attach contributor_id
-              console.log({ contributor, contributorID: contributor.id });
-              req.params.contributor_id = contributor.id; // check that
+              const contributor_id = Object.keys(contributor.id)[0];
+              req.params.contributor_id = contributor_id; // check that
               console.log({ reqParams: req.params });
               return next();
             }
