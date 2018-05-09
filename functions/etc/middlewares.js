@@ -32,13 +32,11 @@ const firebaseAuth = function(req, res, next) {
               return contributors.createSchema.validate(
                 user,
                 (err, validatedData) => {
-                  console.log({ validatedData });
                   if (err) return res.status(400).send(err.message);
 
                   return contributors
                     .add(validatedData)
                     .then(result => {
-                      console.log({ result });
                       req.params.contributor_id = result.id;
                       return next();
                     })
@@ -50,8 +48,9 @@ const firebaseAuth = function(req, res, next) {
               );
             } else {
               // when contributor already exists, attach contributor_id
-              console.log(contributor, contributor.id);
+              console.log({ contributor, contributorID: contributor.id });
               req.params.contributor_id = contributor.id; // check that
+              console.log({ reqParams: req.params });
               return next();
             }
           })
