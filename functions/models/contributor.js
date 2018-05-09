@@ -84,7 +84,7 @@ const find = match =>
       .database()
       .ref('/contributors')
       .orderByChild(Object.keys(match)[0])
-      .equalTo(Object.values(match)[0])
+      .equalTo(Object.keys(match).map(key => match[key])[0])
       .once('value')
       .then(snapshot => {
         const data = snapshot.val();
