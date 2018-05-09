@@ -37,7 +37,7 @@ const firebaseAuth = function(req, res, next) {
                   return contributors
                     .add(validatedData)
                     .then(result => {
-                      req.params.contributor_id = result.id;
+                      req.body.contributor_id = result.id;
                       return next();
                     })
                     .catch(e => {
@@ -49,8 +49,8 @@ const firebaseAuth = function(req, res, next) {
             } else {
               // when contributor already exists, attach contributor_id
               const contributor_id = Object.keys(contributor.id)[0];
-              req.params.contributor_id = contributor_id; // check that
-              console.log({ reqParams: req.params });
+              req.body.contributor_id = contributor_id; // check that
+              console.log({ reqParams: req.body });
               return next();
             }
           })
