@@ -37,23 +37,24 @@ const firebaseAuth = function(req, res, next) {
                   return contributors
                     .add(validatedData)
                     .then(result => {
-                      req.params.contributor_id = result.id;
+                      req.body.contributor_id = result.id;
                       return next();
                     })
                     .catch(e => {
-                      console.log(e);
+                      console.error(e);
                       return res.status(500).end();
                     });
                 }
               );
             } else {
               // when contributor already exists, attach contributor_id
-              req.params.contributor_id = contributor.id; // check that
+              const contributor_id = Object.keys(contributor.id)[0];
+              req.body.contributor_id = contributor_id; // check that
               return next();
             }
           })
           .catch(e => {
-            console.log(e);
+            console.error(e);
             res.status(500).end();
           });
 
@@ -61,7 +62,7 @@ const firebaseAuth = function(req, res, next) {
         return uid;
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         res.status(400);
         res.send('There has been an error in authorization.');
       });
