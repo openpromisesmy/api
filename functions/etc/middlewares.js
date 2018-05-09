@@ -8,13 +8,13 @@ const firebaseAuth = function(req, res, next) {
   const email = req.headers['x-user-email'];
   const name = req.headers['x-user-name'];
   const profile_image = req.headers['x-user-photo'];
-
+  console.log({ headers: req.headers });
   const user = {
     email,
     name,
     profile_image
   };
-
+  console.log({ user });
   if (!sentToken) {
     res.status(400);
     res.send('You need to be authorized to do this.');
@@ -32,11 +32,13 @@ const firebaseAuth = function(req, res, next) {
               return contributors.createSchema.validate(
                 user,
                 (err, validatedData) => {
+                  console.log({ validatedData });
                   if (err) return res.status(400).send(err.message);
 
                   return contributors
                     .add(validatedData)
                     .then(result => {
+                      console.log({ result });
                       req.params.contributor_id = result.id;
                       return next();
                     })
