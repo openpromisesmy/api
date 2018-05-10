@@ -85,7 +85,7 @@ const add = data =>
       .catch(e => {
         if (e.status) return resolve(e);
 
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
@@ -103,23 +103,56 @@ const get = id =>
         return resolve(result);
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
 
-const list = () =>
-  new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref('/promises')
-      .once('value')
-      .then(snapshot => resolve(util.toArray(snapshot.val())))
-      .catch(e => {
-        console.log(e);
-        return reject(e);
-      })
-  );
+const list = query => {
+  const value = query[Object.keys(query)[0]];
+  const key = Object.keys(query)[0];
+  const ref = admin.database().ref('/promises');
+  if (query) {
+    return new Promise((resolve, reject) =>
+      ref
+        .orderByChild(key)
+        .equalTo(value)
+        .once('value')
+        .then(snapshot => {
+          if (_.isEmpty(snapshot.val()))
+            return resolve({
+              status: 404,
+              message: `No promises found for query ${JSON.stringify(query)}`
+            });
+
+          return resolve(util.toArray(snapshot.val()));
+        })
+        .catch(e => {
+          console.error(e);
+          return reject(e);
+        })
+    );
+  } else {
+    return new Promise((resolve, reject) =>
+      ref
+        .equalTo(value, key)
+        .once('value')
+        .then(snapshot => {
+          if (_.isEmpty(snapshot.val()))
+            return resolve({
+              status: 404,
+              message: `No promises found for query ${JSON.stringify(query)}`
+            });
+
+          return resolve(util.toArray(snapshot.val()));
+        })
+        .catch(e => {
+          console.error(e);
+          return reject(e);
+        })
+    );
+  }
+};
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
@@ -135,7 +168,7 @@ const update = (id, updateData) =>
       })
       .then(d => resolve(d))
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
@@ -148,7 +181,7 @@ const remove = id =>
       .remove()
       .then(() => resolve())
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
