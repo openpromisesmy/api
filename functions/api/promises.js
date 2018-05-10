@@ -4,7 +4,7 @@ const cors = require('cors')({ origin: true });
 const _ = require('lodash');
 
 const promiseModel = require('../models/promise');
-const { firebaseAuth } = require('../etc/middlewares');
+const { firebaseAuth, logger } = require('../etc/middlewares');
 
 // promises.get('/')
 // promises.post('/').json({ contributor_id: '123', politician_id: '-L5o5YwQa-jgdt_4sPqe', source_date: '2018-03-03T16:20:01.072Z', source_name: 'Bernama', source_url: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', cover_image: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', category: 'potato', title: 'Promising promises', quote: '"...potato said potata"', status: 'In review' })

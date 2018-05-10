@@ -69,6 +69,12 @@ const firebaseAuth = function(req, res, next) {
   }
 };
 
+const logger = function(req, res, next) {
+  // console.log(req.query);
+  next();
+};
+
 module.exports = {
-  firebaseAuth
+  firebaseAuth,
+  logger
 };
