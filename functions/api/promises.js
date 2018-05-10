@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors')({ origin: true });
 const _ = require('lodash');
+const bodyParser = require('body-parser');
+const boolParser = require('express-query-boolean');
 
 const promiseModel = require('../models/promise');
 const { firebaseAuth, logger } = require('../etc/middlewares');
@@ -36,7 +38,7 @@ const createPromise = (req, res) =>
 
 const listPromises = (req, res) =>
   promises
-    .list()
+    .list(req.query)
     .then(
       result =>
         result.status
@@ -89,6 +91,9 @@ const deletePromise = (req, res) =>
 const app = express();
 
 app.use(cors);
+
+app.use(bodyParser.json());
+app.use(boolParser());
 
 app.get('/ping', healthCheck);
 
