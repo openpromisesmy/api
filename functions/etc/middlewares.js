@@ -53,6 +53,8 @@ const firebaseAuth = function(req, res, next) {
                   return contributors
                     .add(validatedData)
                     .then(result => {
+                      // TODO: verify that this works
+                      // accessing the result property might need modification
                       req.body.contributor_id = result.id;
                       res.locals.scope = result.status;
                       return next();
@@ -72,7 +74,9 @@ const firebaseAuth = function(req, res, next) {
 
               const contributor_id = Object.keys(contributor.id)[0];
               req.body.contributor_id = contributor_id;
-              res.locals.scope = contributor.status; // TODO, rename to role
+              const status =
+                contributor.id[Object.keys(contributor.id)[0]].status;
+              res.locals.scope = status; // TODO, rename to role
               return next();
             }
           })
@@ -90,6 +94,20 @@ const firebaseAuth = function(req, res, next) {
   }
 };
 
+const routePermissions = function(req, res, next) {
+  const scopes = [{ path: '/all', role: 'Admin' }];
+  let error;
+  scopes.forEach(scope => {
+    if (scope.path === req.path) {
+      if (res.locals.scope !== scope.role) {
+        error = true;
+        return res.status(403).send('None shall pass. Insufficient scope.');
+      }
+    }
+  });
+  error ? '' : next();
+};
+
 const logger = function(req, res, next) {
   // console.log(req.query);
   next();
@@ -97,5 +115,6 @@ const logger = function(req, res, next) {
 
 module.exports = {
   firebaseAuth,
-  logger
+  logger,
+  routePermissions
 };
