@@ -3,18 +3,22 @@ const _ = require('lodash');
 const contributorModel = require('../models/contributor');
 const contributors = contributorModel();
 
-const firebaseAuth = function(req, res, next) {
+function missingHeaders(headers, res) {
   let error;
   ['x-firebase-token', 'x-user-email', 'x-user-name', 'x-user-photo'].forEach(
     key => {
-      const value = req.headers[key];
+      const value = headers[key];
       if (value === undefined || value === '') {
+        res.status(400).send(`${key} must be present in header`);
         error = true;
-        return res.status(400).send(`${key} must be present in header`);
       }
     }
   );
-  if (error) return;
+  return error;
+}
+
+const firebaseAuth = function(req, res, next) {
+  if (missingHeaders(req.headers, res)) return;
 
   const sentToken = req.headers['x-firebase-token'];
   const email = req.headers['x-user-email'];
