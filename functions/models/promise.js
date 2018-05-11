@@ -109,10 +109,10 @@ const get = id =>
   );
 
 const list = query => {
-  const value = query[Object.keys(query)[0]];
-  const key = Object.keys(query)[0];
   const ref = admin.database().ref('/promises');
   if (query) {
+    const value = query[Object.keys(query)[0]];
+    const key = Object.keys(query)[0];
     return new Promise((resolve, reject) =>
       ref
         .orderByChild(key)
@@ -133,15 +133,15 @@ const list = query => {
         })
     );
   } else {
+    // ALL promises, admin
     return new Promise((resolve, reject) =>
       ref
-        .equalTo(value, key)
         .once('value')
         .then(snapshot => {
           if (_.isEmpty(snapshot.val()))
             return resolve({
               status: 404,
-              message: `No promises found for query ${JSON.stringify(query)}`
+              message: `No promises found.`
             });
 
           return resolve(util.toArray(snapshot.val()));

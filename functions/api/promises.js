@@ -36,9 +36,25 @@ const createPromise = (req, res) =>
       });
   });
 
+// only live Promises shown
 const listPromises = (req, res) =>
   promises
-    .list(req.query)
+    .list({ live: true })
+    .then(
+      result =>
+        result.status
+          ? res.status(result.status).json(result)
+          : res.json(result)
+    )
+    .catch(e => {
+      console.log(e);
+      return res.status(500).end();
+    });
+
+// lists All Promises, for admin
+const listAllPromises = (req, res) =>
+  promises
+    .list()
     .then(
       result =>
         result.status
@@ -100,6 +116,7 @@ app.get('/ping', healthCheck);
 app.post('/', firebaseAuth, createPromise);
 
 app.get('/', listPromises);
+app.get('/all', firebaseAuth, listAllPromises);
 
 app.get('/:id', getPromise);
 
