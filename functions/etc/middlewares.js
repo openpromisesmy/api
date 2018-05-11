@@ -4,6 +4,18 @@ const contributorModel = require('../models/contributor');
 const contributors = contributorModel();
 
 const firebaseAuth = function(req, res, next) {
+  let error;
+  ['x-firebase-token', 'x-user-email', 'x-user-name', 'x-user-photo'].forEach(
+    key => {
+      const value = req.headers[key];
+      if (value === undefined || value === '') {
+        error = true;
+        return res.status(400).send(`${key} must be present in header`);
+      }
+    }
+  );
+  if (error) return;
+
   const sentToken = req.headers['x-firebase-token'];
   const email = req.headers['x-user-email'];
   const name = req.headers['x-user-name'];
@@ -23,11 +35,11 @@ const firebaseAuth = function(req, res, next) {
       .auth()
       .verifyIdToken(sentToken)
       .then(decodedToken => {
-        // TODO: simplify below
+        // TODO: address callback hell below
         contributors
           .find({ email })
           .then(contributor => {
-            // if no contributor, create
+            // WHEN contributor does not exist yet, create
             if (_.isEmpty(contributor)) {
               return contributors.createSchema.validate(
                 user,
@@ -38,6 +50,7 @@ const firebaseAuth = function(req, res, next) {
                     .add(validatedData)
                     .then(result => {
                       req.body.contributor_id = result.id;
+                      res.locals.scope = result.status;
                       return next();
                     })
                     .catch(e => {
@@ -47,9 +60,15 @@ const firebaseAuth = function(req, res, next) {
                 }
               );
             } else {
-              // when contributor already exists, attach contributor_id
+              // WHEN contributor already exists, attach contributor_id
+              if (decodedToken.email !== email) {
+                res.status(400).send('You need to be authorized to do this.');
+                console.error('Sent email does not match decoded token email.');
+              }
+
               const contributor_id = Object.keys(contributor.id)[0];
-              req.body.contributor_id = contributor_id; // check that
+              req.body.contributor_id = contributor_id;
+              res.locals.scope = contributor.status; // TODO, rename to role
               return next();
             }
           })
@@ -57,9 +76,7 @@ const firebaseAuth = function(req, res, next) {
             console.error(e);
             res.status(500).end();
           });
-
-        var uid = decodedToken.uid; // TODO: remove this if unused
-        return uid;
+        return undefined;
       })
       .catch(error => {
         console.error(error);
