@@ -56,17 +56,13 @@ const add = data =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
-        return admin
-          .database()
-          .ref('/politicians')
-          .push(data);
-      })
-      .then(result => {
-        if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
-        return resolve({ id: result.key });
+        return collection.add(data).then(ref => {
+          if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+          return resolve({ id: ref.id });
+        });
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
@@ -90,11 +86,15 @@ const get = id =>
 
 const list = () =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref('/politicians')
-      .once('value')
-      .then(snapshot => resolve(util.toArray(snapshot.val())))
+    collection
+      .get()
+      .then(snapshot => {
+        const array = [];
+        snapshot.forEach(doc => {
+          array.push(util.toObject(doc.id, doc.data()));
+        });
+        resolve(array);
+      })
       .catch(e => reject(e))
   );
 
