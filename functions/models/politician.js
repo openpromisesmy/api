@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const joi = require('joi');
 const _ = require('lodash');
 
@@ -45,6 +46,8 @@ const updateSchema = joi.object().keys({
     .default(util.now, 'Time of update')
 });
 
+const collection = db.collection('politicians');
+
 const add = data =>
   new Promise((resolve, reject) =>
     contributor
@@ -70,15 +73,14 @@ const add = data =>
 
 const get = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/politicians/${id}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
+    collection
+      .doc(id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
-        return resolve(result);
+        return resolve({ result });
       })
       .catch(e => {
         console.log(e);
