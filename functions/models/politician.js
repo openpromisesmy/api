@@ -105,12 +105,11 @@ const update = (id, updateData) =>
         if (_.isEmpty(politician))
           return resolve({ status: 404, message: 'Invalid Politician' });
 
-        return admin
-          .database()
-          .ref(`/politicians/${id}`)
-          .update(updateData);
+        return collection
+          .doc(id)
+          .update(updateData)
+          .then(d => resolve(d));
       })
-      .then(d => resolve(d))
       .catch(e => {
         console.log(e);
         return reject(e);
