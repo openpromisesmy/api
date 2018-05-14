@@ -153,12 +153,12 @@ const update = (id, updateData) =>
         if (_.isEmpty(promise))
           return resolve({ status: 404, message: 'Invalid Promise' });
 
-        return admin
-          .database()
-          .ref(`/promises/${id}`)
-          .update(updateData);
+        return collection
+          .doc(id)
+          .update(updateData)
+          .then(d => resolve(d))
+          .catch(e => reject(id));
       })
-      .then(d => resolve(d))
       .catch(e => {
         console.error(e);
         return reject(e);
