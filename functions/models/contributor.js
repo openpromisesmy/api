@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const joi = require('joi').extend(require('joi-phone-number'));
 const _ = require('lodash');
 
@@ -44,18 +45,18 @@ const updateSchema = joi.object().keys({
     .default(util.now, 'Time of update')
 });
 
+const collection = db.collection('contributors');
+
 const add = data =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref('/contributors')
-      .push(data)
-      .then(result => {
-        if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
-        return resolve({ id: result.key });
+    collection
+      .add(data)
+      .then(ref => {
+        if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+        return resolve({ id: ref.id });
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
