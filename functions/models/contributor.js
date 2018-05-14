@@ -131,13 +131,12 @@ const update = (id, updateData) =>
 
 const remove = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/contributors/${id}`)
-      .remove()
+    collection
+      .doc(id)
+      .delete()
       .then(() => resolve())
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
