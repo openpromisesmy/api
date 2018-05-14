@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const joi = require('joi');
 const _ = require('lodash');
 
@@ -59,6 +60,8 @@ const updateSchema = joi.object().keys({
     .default(util.now, 'Time of update')
 });
 
+const collection = db.collection('promises');
+
 const add = data =>
   new Promise((resolve, reject) =>
     Promise.all([
@@ -72,15 +75,16 @@ const add = data =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
-        return admin
-          .database()
-          .ref('/promises')
-          .push(data);
-      })
-      .then(result => {
-        if (_.isEmpty(result)) return reject(new Error('Fail to add'));
-
-        return resolve({ id: result.key });
+        return collection
+          .add(data)
+          .then(ref => {
+            if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+            return resolve({ id: ref.id });
+          })
+          .catch(e => {
+            console.error(e);
+            return reject(e);
+          });
       })
       .catch(e => {
         if (e.status) return resolve(e);
