@@ -109,7 +109,8 @@ const routePermissions = function(req, res, next) {
 };
 
 const logger = function(req, res, next) {
-  // console.log(req.query);
+  const { params } = req;
+  // console.log({ params });
   next();
 };
 
