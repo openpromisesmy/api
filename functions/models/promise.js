@@ -96,18 +96,18 @@ const add = data =>
 
 const get = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/promises/${id}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
+    collection
+      .doc(id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        console.log(doc, data);
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
         return resolve(result);
       })
       .catch(e => {
-        console.error(e);
+        console.log(e);
         return reject(e);
       })
   );
