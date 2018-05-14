@@ -88,7 +88,9 @@ const find = match =>
       .once('value')
       .then(snapshot => {
         const data = snapshot.val();
-        const result = _.isEmpty(data) ? {} : util.toObject(data);
+        const id = Object.keys(data)[0];
+        const contributor = data[id];
+        const result = _.isEmpty(data) ? {} : util.toObject(id, contributor);
 
         return resolve(result);
       })
