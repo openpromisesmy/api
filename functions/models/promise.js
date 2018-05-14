@@ -101,7 +101,6 @@ const get = id =>
       .get()
       .then(doc => {
         const data = doc.data();
-        console.log(doc, data);
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
         return resolve(result);
@@ -118,42 +117,31 @@ const list = query => {
     const value = query[Object.keys(query)[0]];
     const key = Object.keys(query)[0];
     return new Promise((resolve, reject) =>
-      ref
-        .orderByChild(key)
-        .equalTo(value)
-        .once('value')
+      collection
+        .where(key, '==', value)
+        .get()
         .then(snapshot => {
-          if (_.isEmpty(snapshot.val()))
-            return resolve({
-              status: 404,
-              message: `No promises found for query ${JSON.stringify(query)}`
-            });
-
-          return resolve(util.toArray(snapshot.val()));
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
         })
-        .catch(e => {
-          console.error(e);
-          return reject(e);
-        })
+        .catch(e => reject(e))
     );
   } else {
     // ALL promises, admin
     return new Promise((resolve, reject) =>
-      ref
-        .once('value')
+      collection
+        .get()
         .then(snapshot => {
-          if (_.isEmpty(snapshot.val()))
-            return resolve({
-              status: 404,
-              message: `No promises found.`
-            });
-
-          return resolve(util.toArray(snapshot.val()));
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
         })
-        .catch(e => {
-          console.error(e);
-          return reject(e);
-        })
+        .catch(e => reject(e))
     );
   }
 };
