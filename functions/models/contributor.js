@@ -63,12 +63,11 @@ const add = data =>
 
 const get = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/contributors/${id}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
+    collection
+      .doc(id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
         return resolve(result);

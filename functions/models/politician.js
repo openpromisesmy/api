@@ -76,7 +76,7 @@ const get = id =>
         const data = doc.data();
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
-        return resolve({ result });
+        return resolve(result);
       })
       .catch(e => {
         console.log(e);
