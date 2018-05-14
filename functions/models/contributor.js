@@ -99,11 +99,15 @@ const find = match =>
 
 const list = () =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref('/contributors')
-      .once('value')
-      .then(snapshot => resolve(util.toArray(snapshot.val())))
+    collection
+      .get()
+      .then(snapshot => {
+        const array = [];
+        snapshot.forEach(doc => {
+          array.push(util.toObject(doc.id, doc.data()));
+        });
+        resolve(array);
+      })
       .catch(e => reject(e))
   );
 
