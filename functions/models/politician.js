@@ -111,7 +111,7 @@ const update = (id, updateData) =>
           .then(d => resolve(d));
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );

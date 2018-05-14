@@ -118,14 +118,13 @@ const update = (id, updateData) =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
-        return admin
-          .database()
-          .ref(`/contributors/${id}`)
-          .update(updateData);
+        return collection
+          .doc(id)
+          .update(updateData)
+          .then(d => resolve(d));
       })
-      .then(d => resolve(d))
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
