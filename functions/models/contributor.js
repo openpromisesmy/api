@@ -121,7 +121,8 @@ const update = (id, updateData) =>
         return collection
           .doc(id)
           .update(updateData)
-          .then(d => resolve(d));
+          .then(d => resolve(d))
+          .catch(e => reject(id));
       })
       .catch(e => {
         console.error(e);

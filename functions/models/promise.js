@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const joi = require('joi');
 const _ = require('lodash');
 
@@ -59,6 +60,8 @@ const updateSchema = joi.object().keys({
     .default(util.now, 'Time of update')
 });
 
+const collection = db.collection('promises');
+
 const add = data =>
   new Promise((resolve, reject) =>
     Promise.all([
@@ -72,15 +75,16 @@ const add = data =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
-        return admin
-          .database()
-          .ref('/promises')
-          .push(data);
-      })
-      .then(result => {
-        if (_.isEmpty(result)) return reject(new Error('Fail to add'));
-
-        return resolve({ id: result.key });
+        return collection
+          .add(data)
+          .then(ref => {
+            if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+            return resolve({ id: ref.id });
+          })
+          .catch(e => {
+            console.error(e);
+            return reject(e);
+          });
       })
       .catch(e => {
         if (e.status) return resolve(e);
@@ -92,18 +96,17 @@ const add = data =>
 
 const get = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/promises/${id}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
+    collection
+      .doc(id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
         return resolve(result);
       })
       .catch(e => {
-        console.error(e);
+        console.log(e);
         return reject(e);
       })
   );
@@ -114,42 +117,31 @@ const list = query => {
     const value = query[Object.keys(query)[0]];
     const key = Object.keys(query)[0];
     return new Promise((resolve, reject) =>
-      ref
-        .orderByChild(key)
-        .equalTo(value)
-        .once('value')
+      collection
+        .where(key, '==', value)
+        .get()
         .then(snapshot => {
-          if (_.isEmpty(snapshot.val()))
-            return resolve({
-              status: 404,
-              message: `No promises found for query ${JSON.stringify(query)}`
-            });
-
-          return resolve(util.toArray(snapshot.val()));
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
         })
-        .catch(e => {
-          console.error(e);
-          return reject(e);
-        })
+        .catch(e => reject(e))
     );
   } else {
     // ALL promises, admin
     return new Promise((resolve, reject) =>
-      ref
-        .once('value')
+      collection
+        .get()
         .then(snapshot => {
-          if (_.isEmpty(snapshot.val()))
-            return resolve({
-              status: 404,
-              message: `No promises found.`
-            });
-
-          return resolve(util.toArray(snapshot.val()));
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
         })
-        .catch(e => {
-          console.error(e);
-          return reject(e);
-        })
+        .catch(e => reject(e))
     );
   }
 };
@@ -161,12 +153,12 @@ const update = (id, updateData) =>
         if (_.isEmpty(promise))
           return resolve({ status: 404, message: 'Invalid Promise' });
 
-        return admin
-          .database()
-          .ref(`/promises/${id}`)
-          .update(updateData);
+        return collection
+          .doc(id)
+          .update(updateData)
+          .then(d => resolve(d))
+          .catch(e => reject(id));
       })
-      .then(d => resolve(d))
       .catch(e => {
         console.error(e);
         return reject(e);
@@ -175,10 +167,9 @@ const update = (id, updateData) =>
 
 const remove = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/promises/${id}`)
-      .remove()
+    collection
+      .doc(id)
+      .delete()
       .then(() => resolve())
       .catch(e => {
         console.error(e);
