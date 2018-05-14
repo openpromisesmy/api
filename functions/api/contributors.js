@@ -5,6 +5,8 @@ const _ = require('lodash');
 
 const contributorModel = require('../models/contributor');
 
+const { logger } = require('../etc/middlewares');
+
 // contributors.get('/')
 // contributors.post('/').json({ profile_image: 'https://assets.openpromises.com/DSCF8873.jpg', name: 'Umar Rasydan', email: 'umarrasydan@gmail.com', contact: '+60172562786', status: 'Admin', live: true })
 // contributors.post('/-L6kq7u9sLz9fI2GuQ-h').json({name:'Umar Rasydan Romli'})
