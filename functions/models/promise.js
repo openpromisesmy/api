@@ -115,7 +115,9 @@ const list = query =>
   new Promise((resolve, reject) => {
     let ref = collection;
     if (!_.isEmpty(query)) {
-      ref = ref.where(util.getKey(query), '==', util.getValue(query));
+      for (let x in query) {
+        ref = ref.where(x, '==', query[x]);
+      }
     }
     ref
       .get()

@@ -46,7 +46,7 @@ const createPromise = (req, res) =>
 // only live Promises shown
 const listPromises = (req, res) =>
   promises
-    .list({ live: true })
+    .list(Object.assign({ live: true }, req.query))
     .then(
       result =>
         result.status
