@@ -111,40 +111,19 @@ const get = id =>
       })
   );
 
-const list = query => {
-  const ref = admin.database().ref('/promises');
-  if (query) {
-    const value = query[Object.keys(query)[0]];
-    const key = Object.keys(query)[0];
-    return new Promise((resolve, reject) =>
-      collection
-        .where(key, '==', value)
-        .get()
-        .then(snapshot => {
-          const array = [];
-          snapshot.forEach(doc => {
-            array.push(util.toObject(doc.id, doc.data()));
-          });
-          resolve(array);
-        })
-        .catch(e => reject(e))
-    );
-  } else {
-    // ALL promises, admin
-    return new Promise((resolve, reject) =>
-      collection
-        .get()
-        .then(snapshot => {
-          const array = [];
-          snapshot.forEach(doc => {
-            array.push(util.toObject(doc.id, doc.data()));
-          });
-          resolve(array);
-        })
-        .catch(e => reject(e))
-    );
-  }
-};
+const list = query =>
+  new Promise((resolve, reject) => {
+    let ref = collection;
+    if (!_.isEmpty(query)) {
+      ref = ref.where(util.getKey(query), '==', util.getValue(query));
+    }
+    ref
+      .get()
+      .then(snapshot => {
+        resolve(util.snapshotToArray(snapshot));
+      })
+      .catch(e => reject(e));
+  });
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
