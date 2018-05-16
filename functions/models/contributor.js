@@ -97,9 +97,10 @@ const find = match =>
       .catch(e => reject(e))
   );
 
-const list = () =>
+const list = query =>
   new Promise((resolve, reject) =>
     collection
+      .where(util.getKey(query), '==', util.getValue(query))
       .get()
       .then(snapshot => {
         const array = [];

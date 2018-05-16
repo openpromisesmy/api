@@ -6,10 +6,14 @@ const toArray = fireObj =>
     []
   );
 const toObject = (id, fireObj) => Object.assign({ id }, fireObj);
+const getKey = obj => Object.keys(obj)[0];
+const getValue = obj => obj[getKey(obj)];
 
 module.exports = {
   compose,
   now,
   toArray,
-  toObject
+  toObject,
+  getKey,
+  getValue
 };

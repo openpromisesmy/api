@@ -37,7 +37,7 @@ const createContributor = (req, res) =>
 
 const listContributors = (req, res) =>
   contributors
-    .list()
+    .list(req.query)
     .then(
       result =>
         result.status
