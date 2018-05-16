@@ -98,19 +98,32 @@ const find = match =>
   );
 
 const list = query =>
-  new Promise((resolve, reject) =>
-    collection
-      .where(util.getKey(query), '==', util.getValue(query))
-      .get()
-      .then(snapshot => {
-        const array = [];
-        snapshot.forEach(doc => {
-          array.push(util.toObject(doc.id, doc.data()));
-        });
-        resolve(array);
-      })
-      .catch(e => reject(e))
-  );
+  new Promise((resolve, reject) => {
+    if (!_.isEmpty(query)) {
+      collection
+        .where(util.getKey(query), '==', util.getValue(query))
+        .get()
+        .then(snapshot => {
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
+        })
+        .catch(e => reject(e));
+    } else {
+      collection
+        .get()
+        .then(snapshot => {
+          const array = [];
+          snapshot.forEach(doc => {
+            array.push(util.toObject(doc.id, doc.data()));
+          });
+          resolve(array);
+        })
+        .catch(e => reject(e));
+    }
+  });
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
