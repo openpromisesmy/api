@@ -74,8 +74,7 @@ const firebaseAuth = function(req, res, next) {
 
               const contributor_id = Object.keys(contributor.id)[0];
               req.body.contributor_id = contributor_id;
-              const status =
-                contributor.id[Object.keys(contributor.id)[0]].status;
+              const status = contributor.status;
               res.locals.scope = status; // TODO, rename to role
               return next();
             }
