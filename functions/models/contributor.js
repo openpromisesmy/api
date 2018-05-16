@@ -107,11 +107,7 @@ const list = query =>
     ref
       .get()
       .then(snapshot => {
-        const array = [];
-        snapshot.forEach(doc => {
-          array.push(util.toObject(doc.id, doc.data()));
-        });
-        resolve(array);
+        resolve(util.snapshotToArray(snapshot));
       })
       .catch(e => reject(e));
   });
