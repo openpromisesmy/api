@@ -97,19 +97,20 @@ const find = match =>
       .catch(e => reject(e))
   );
 
-const list = () =>
-  new Promise((resolve, reject) =>
-    collection
+const list = query =>
+  new Promise((resolve, reject) => {
+    let ref = collection;
+    if (!_.isEmpty(query)) {
+      ref = ref.where(util.getKey(query), '==', util.getValue(query));
+    }
+
+    ref
       .get()
       .then(snapshot => {
-        const array = [];
-        snapshot.forEach(doc => {
-          array.push(util.toObject(doc.id, doc.data()));
-        });
-        resolve(array);
+        resolve(util.snapshotToArray(snapshot));
       })
-      .catch(e => reject(e))
-  );
+      .catch(e => reject(e));
+  });
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
