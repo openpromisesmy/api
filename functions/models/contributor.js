@@ -99,30 +99,21 @@ const find = match =>
 
 const list = query =>
   new Promise((resolve, reject) => {
+    let ref = collection;
     if (!_.isEmpty(query)) {
-      collection
-        .where(util.getKey(query), '==', util.getValue(query))
-        .get()
-        .then(snapshot => {
-          const array = [];
-          snapshot.forEach(doc => {
-            array.push(util.toObject(doc.id, doc.data()));
-          });
-          resolve(array);
-        })
-        .catch(e => reject(e));
-    } else {
-      collection
-        .get()
-        .then(snapshot => {
-          const array = [];
-          snapshot.forEach(doc => {
-            array.push(util.toObject(doc.id, doc.data()));
-          });
-          resolve(array);
-        })
-        .catch(e => reject(e));
+      ref = ref.where(util.getKey(query), '==', util.getValue(query));
     }
+
+    ref
+      .get()
+      .then(snapshot => {
+        const array = [];
+        snapshot.forEach(doc => {
+          array.push(util.toObject(doc.id, doc.data()));
+        });
+        resolve(array);
+      })
+      .catch(e => reject(e));
   });
 
 const update = (id, updateData) =>
