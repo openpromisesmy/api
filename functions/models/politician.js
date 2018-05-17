@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const joi = require('joi');
 const _ = require('lodash');
 
@@ -45,6 +46,8 @@ const updateSchema = joi.object().keys({
     .default(util.now, 'Time of update')
 });
 
+const collection = db.collection('politicians');
+
 const add = data =>
   new Promise((resolve, reject) =>
     contributor
@@ -53,29 +56,24 @@ const add = data =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
-        return admin
-          .database()
-          .ref('/politicians')
-          .push(data);
-      })
-      .then(result => {
-        if (_.isEmpty(result.key)) return reject(new Error('Fail to add'));
-        return resolve({ id: result.key });
+        return collection.add(data).then(ref => {
+          if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+          return resolve({ id: ref.id });
+        });
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
 
 const get = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/politicians/${id}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
+    collection
+      .doc(id)
+      .get()
+      .then(doc => {
+        const data = doc.data();
         const result = _.isEmpty(data) ? {} : util.toObject(id, data);
 
         return resolve(result);
@@ -88,11 +86,15 @@ const get = id =>
 
 const list = () =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref('/politicians')
-      .once('value')
-      .then(snapshot => resolve(util.toArray(snapshot.val())))
+    collection
+      .get()
+      .then(snapshot => {
+        const array = [];
+        snapshot.forEach(doc => {
+          array.push(util.toObject(doc.id, doc.data()));
+        });
+        resolve(array);
+      })
       .catch(e => reject(e))
   );
 
@@ -103,27 +105,25 @@ const update = (id, updateData) =>
         if (_.isEmpty(politician))
           return resolve({ status: 404, message: 'Invalid Politician' });
 
-        return admin
-          .database()
-          .ref(`/politicians/${id}`)
-          .update(updateData);
+        return collection
+          .doc(id)
+          .update(updateData)
+          .then(d => resolve(d));
       })
-      .then(d => resolve(d))
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );
 
 const remove = id =>
   new Promise((resolve, reject) =>
-    admin
-      .database()
-      .ref(`/politicians/${id}`)
-      .remove()
+    collection
+      .doc(id)
+      .delete()
       .then(() => resolve())
       .catch(e => {
-        console.log(e);
+        console.error(e);
         return reject(e);
       })
   );

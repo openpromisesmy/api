@@ -40,10 +40,13 @@ const createPromise = (req, res) =>
       });
   });
 
+// TODO: check for scope
+// if no scope, call list with live:true
+// if admin scope, call list with no arguments
 // only live Promises shown
 const listPromises = (req, res) =>
   promises
-    .list({ live: true })
+    .list(Object.assign({ live: true }, req.query))
     .then(
       result =>
         result.status

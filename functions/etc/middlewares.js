@@ -41,10 +41,10 @@ const firebaseAuth = function(req, res, next) {
       .then(decodedToken => {
         // TODO: address callback hell below
         contributors
-          .find({ email })
-          .then(contributor => {
+          .list({ email })
+          .then(result => {
             // WHEN contributor does not exist yet, create
-            if (_.isEmpty(contributor)) {
+            if (result.length === 0) {
               return contributors.createSchema.validate(
                 user,
                 (err, validatedData) => {
@@ -66,6 +66,7 @@ const firebaseAuth = function(req, res, next) {
                 }
               );
             } else {
+              const contributor = result[0];
               // WHEN contributor already exists, attach contributor_id
               if (decodedToken.email !== email) {
                 res.status(400).send('You need to be authorized to do this.');
@@ -74,8 +75,7 @@ const firebaseAuth = function(req, res, next) {
 
               const contributor_id = Object.keys(contributor.id)[0];
               req.body.contributor_id = contributor_id;
-              const status =
-                contributor.id[Object.keys(contributor.id)[0]].status;
+              const status = contributor.status;
               res.locals.scope = status; // TODO, rename to role
               return next();
             }
@@ -109,7 +109,8 @@ const routePermissions = function(req, res, next) {
 };
 
 const logger = function(req, res, next) {
-  // console.log(req.query);
+  const { params } = req;
+  // console.log({ params });
   next();
 };
 

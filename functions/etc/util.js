@@ -6,10 +6,22 @@ const toArray = fireObj =>
     []
   );
 const toObject = (id, fireObj) => Object.assign({ id }, fireObj);
+const getKey = obj => Object.keys(obj)[0];
+const getValue = obj => obj[getKey(obj)];
+const snapshotToArray = snapshot => {
+  const array = [];
+  snapshot.forEach(doc => {
+    array.push(toObject(doc.id, doc.data()));
+  });
+  return array;
+};
 
 module.exports = {
   compose,
   now,
   toArray,
-  toObject
+  toObject,
+  getKey,
+  getValue,
+  snapshotToArray
 };

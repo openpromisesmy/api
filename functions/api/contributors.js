@@ -5,6 +5,8 @@ const _ = require('lodash');
 
 const contributorModel = require('../models/contributor');
 
+const { logger } = require('../etc/middlewares');
+
 // contributors.get('/')
 // contributors.post('/').json({ profile_image: 'https://assets.openpromises.com/DSCF8873.jpg', name: 'Umar Rasydan', email: 'umarrasydan@gmail.com', contact: '+60172562786', status: 'Admin', live: true })
 // contributors.post('/-L6kq7u9sLz9fI2GuQ-h').json({name:'Umar Rasydan Romli'})
@@ -35,7 +37,7 @@ const createContributor = (req, res) =>
 
 const listContributors = (req, res) =>
   contributors
-    .list()
+    .list(req.query)
     .then(
       result =>
         result.status
@@ -56,17 +58,6 @@ const getContributor = (req, res) =>
     )
     .catch(e => {
       console.log(e);
-      res.status(500).end();
-    });
-
-const findContributor = (req, res) =>
-  contributors
-    .find(req.query)
-    .then(
-      contributor =>
-        _.isEmpty(contributor) ? res.status(404).end() : res.json(contributor)
-    )
-    .catch(e => {
       res.status(500).end();
     });
 
@@ -105,8 +96,6 @@ app.get('/ping', healthCheck);
 app.post('/', createContributor);
 
 app.get('/', listContributors);
-
-app.get('/_find', findContributor);
 
 app.get('/:id', getContributor);
 
