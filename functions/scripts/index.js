@@ -21,23 +21,23 @@ console.log(`batch writing ${collectionName}`);
 
 let result;
 
-if (!acknowledged) {
-  return console.error(
-    'Operation stopped. You have not acknowledged the warning.'
-  );
-}
-
 db
   .collection(collectionName)
   .get()
   .then(snapshot => {
+    if (!acknowledged) {
+      return console.error(
+        'Operation stopped. You have not acknowledged the warning.'
+      );
+    }
+
     result = util.snapshotToArray(snapshot);
     result.forEach(doc => {
       const ref = db.collection(collectionName).doc(doc.id);
       batch.update(ref, { live: true });
     });
 
-    batch.commit().then(function() {
+    return batch.commit().then(function() {
       console.log('done');
     });
   })
