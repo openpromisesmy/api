@@ -101,11 +101,12 @@ const routePermissions = function(req, res, next) {
     if (scope.path === req.path) {
       if (res.locals.scope !== scope.role) {
         error = true;
-        return res.status(403).send('None shall pass. Insufficient scope.');
       }
     }
   });
-  error ? '' : next();
+  if (error)
+    return res.status(403).send('None shall pass. Insufficient scope.');
+  return next();
 };
 
 const logger = function(req, res, next) {

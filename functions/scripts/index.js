@@ -21,10 +21,11 @@ console.log(`batch writing ${collectionName}`);
 
 let result;
 
-if (!acknowledged)
+if (!acknowledged) {
   return console.error(
     'Operation stopped. You have not acknowledged the warning.'
   );
+}
 
 db
   .collection(collectionName)

@@ -93,7 +93,7 @@ const list = () =>
         snapshot.forEach(doc => {
           array.push(util.toObject(doc.id, doc.data()));
         });
-        resolve(array);
+        return resolve(array);
       })
       .catch(e => reject(e))
   );

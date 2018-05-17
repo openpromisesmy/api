@@ -107,7 +107,7 @@ const list = query =>
     ref
       .get()
       .then(snapshot => {
-        resolve(util.snapshotToArray(snapshot));
+        return resolve(util.snapshotToArray(snapshot));
       })
       .catch(e => reject(e));
   });
