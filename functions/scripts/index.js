@@ -1,5 +1,13 @@
 const admin = require('firebase-admin');
 var serviceAccount = require('../secrets/google-key.json');
+const util = require('../etc/util');
+
+// WARNING
+// DANGER!
+// THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION
+// USE MINDFULLY
+// TO ENABLE, CHANGE acknowledged to true
+const acknowledged = false;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -8,18 +16,37 @@ admin.initializeApp({
 var db = admin.firestore();
 var batch = db.batch();
 
-const collectionName = 'politicians';
-const json = require(`./${collectionName}`);
-
+const collectionName = '';
 console.log(`batch writing ${collectionName}`);
 
-for (let child in json) {
-  const id = child;
-  const object = json[id];
-  var ref = db.collection(collectionName).doc(id);
-  batch.set(ref, object);
-}
+let result;
 
-batch.commit().then(function() {
-  console.log('done');
-});
+if (!acknowledged)
+  return console.error(
+    'Operation stopped. You have not acknowledged the warning.'
+  );
+
+db
+  .collection(collectionName)
+  .get()
+  .then(snapshot => {
+    result = util.snapshotToArray(snapshot);
+    result.forEach(doc => {
+      const ref = db.collection(collectionName).doc(doc.id);
+      batch.update(ref, { live: true });
+    });
+
+    batch.commit().then(function() {
+      console.log('done');
+    });
+  })
+  .catch(e => reject(e));
+
+// IF READING FROM JSON
+// const json = require(`./${collectionName}`);
+// for (let child in json) {
+//   const id = child;
+//   const object = json[id];
+//   var ref = db.collection(collectionName).doc(id);
+//   batch.set(ref, object);
+// }
