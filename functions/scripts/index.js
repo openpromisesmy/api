@@ -38,7 +38,7 @@ db
     });
 
     return batch.commit().then(function() {
-      console.log('done');
+      return console.log('done');
     });
   })
   .catch(e => reject(e));
