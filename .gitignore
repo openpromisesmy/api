@@ -63,3 +63,5 @@ openpromises-968cbf2e9372.json
 
 # store key in secrets folder
 functions/secrets
+
+functions/scripts/data
