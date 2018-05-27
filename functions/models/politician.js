@@ -54,17 +54,18 @@ const checkContributor = function(contributor) {
   return contributor;
 };
 
+const addPolitician = function() {
+  return collection.add(this.data).then(ref => {
+    if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+    return this.resolve({ id: ref.id });
+  });
+};
 const add = data =>
   new Promise((resolve, reject) =>
     contributor
       .get(data.contributor_id)
       .then(checkContributor.bind({ resolve }))
-      .then(() =>
-        collection.add(data).then(ref => {
-          if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-          return resolve({ id: ref.id });
-        })
-      )
+      .then(addPolitician.bind({ resolve, data }))
       .catch(e => {
         console.error(e);
         return reject(e);
