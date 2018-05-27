@@ -109,7 +109,7 @@ const list = query =>
 const checkPoliticianExists = function({ resolve, politician }) {
   if (_.isEmpty(politician))
     return resolve({ status: 404, message: 'Invalid Politician' });
-  return;
+  return politician;
 };
 
 const updatePolitician = function({ resolve, id, updateData }) {
