@@ -105,23 +105,23 @@ const list = query =>
       .catch(e => reject(e));
   });
 
-const checkPoliticianExists = function(politician) {
+const checkPoliticianExists = function({ resolve }) {
   if (_.isEmpty(politician))
-    return this.resolve({ status: 404, message: 'Invalid Politician' });
+    return resolve({ status: 404, message: 'Invalid Politician' });
 };
 
-const updatePolitician = function() {
+const updatePolitician = function({ resolve, id, updateData }) {
   return collection
-    .doc(this.id)
-    .update(this.updateData)
-    .then(d => this.resolve(d));
+    .doc(id)
+    .update(updateData)
+    .then(d => resolve(d));
 };
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
     get(id)
-      .then(checkPoliticianExists.bind({ resolve }))
-      .then(updatePolitician.bind({ resolve, id, updateData }))
+      .then(() => checkPoliticianExists({ resolve }))
+      .then(() => updatePolitician({ resolve, id, updateData }))
       .catch(e => {
         console.error(e);
         return reject(e);
