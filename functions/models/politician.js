@@ -84,19 +84,21 @@ const get = id =>
       })
   );
 
-const list = () =>
-  new Promise((resolve, reject) =>
-    collection
+const list = query =>
+  new Promise((resolve, reject) => {
+    let ref = collection;
+    if (!_.isEmpty(query)) {
+      for (let x in query) {
+        ref = ref.where(x, '==', query[x]);
+      }
+    }
+    ref
       .get()
       .then(snapshot => {
-        const array = [];
-        snapshot.forEach(doc => {
-          array.push(util.toObject(doc.id, doc.data()));
-        });
-        return resolve(array);
+        return resolve(util.snapshotToArray(snapshot));
       })
-      .catch(e => reject(e))
-  );
+      .catch(e => reject(e));
+  });
 
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>

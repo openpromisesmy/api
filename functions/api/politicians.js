@@ -35,7 +35,7 @@ const createPolitician = (req, res) =>
 
 const listPoliticians = (req, res) =>
   politicians
-    .list()
+    .list(Object.assign({ live: true }, req.query))
     .then(
       result =>
         result.status
@@ -44,7 +44,7 @@ const listPoliticians = (req, res) =>
     )
     .catch(e => {
       console.log(e);
-      res.status(500).end();
+      return res.status(500).end();
     });
 
 const getPolitician = (req, res) =>
