@@ -106,9 +106,10 @@ const list = query =>
       .catch(e => reject(e));
   });
 
-const checkPoliticianExists = function({ resolve }) {
+const checkPoliticianExists = function({ resolve, politician }) {
   if (_.isEmpty(politician))
     return resolve({ status: 404, message: 'Invalid Politician' });
+  return;
 };
 
 const updatePolitician = function({ resolve, id, updateData }) {
@@ -121,7 +122,7 @@ const updatePolitician = function({ resolve, id, updateData }) {
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
     get(id)
-      .then(() => checkPoliticianExists({ resolve }))
+      .then(politician => checkPoliticianExists({ resolve, politician }))
       .then(() => updatePolitician({ resolve, id, updateData }))
       .catch(e => {
         console.error(e);
