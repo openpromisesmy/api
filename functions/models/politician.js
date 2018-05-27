@@ -48,19 +48,25 @@ const updateSchema = joi.object().keys({
 
 const collection = db.collection('politicians');
 
+const checkContributor = function({ resolve, contributor }) {
+  if (_.isEmpty(contributor))
+    return resolve({ status: 404, message: 'Invalid Contributor' });
+  return contributor;
+};
+
+const addPolitician = function({ resolve, data }) {
+  return collection.add(data).then(ref => {
+    if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
+    return resolve({ id: ref.id });
+  });
+};
+
 const add = data =>
   new Promise((resolve, reject) =>
     contributor
       .get(data.contributor_id)
-      .then(contributor => {
-        if (_.isEmpty(contributor))
-          return resolve({ status: 404, message: 'Invalid Contributor' });
-
-        return collection.add(data).then(ref => {
-          if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-          return resolve({ id: ref.id });
-        });
-      })
+      .then(contributor => checkContributor({ resolve, contributor }))
+      .then(() => addPolitician({ resolve, data }))
       .catch(e => {
         console.error(e);
         return reject(e);
@@ -100,18 +106,24 @@ const list = query =>
       .catch(e => reject(e));
   });
 
+const checkPoliticianExists = function({ resolve, politician }) {
+  if (_.isEmpty(politician))
+    return resolve({ status: 404, message: 'Invalid Politician' });
+  return politician;
+};
+
+const updatePolitician = function({ resolve, id, updateData }) {
+  return collection
+    .doc(id)
+    .update(updateData)
+    .then(d => resolve(d));
+};
+
 const update = (id, updateData) =>
   new Promise((resolve, reject) =>
     get(id)
-      .then(politician => {
-        if (_.isEmpty(politician))
-          return resolve({ status: 404, message: 'Invalid Politician' });
-
-        return collection
-          .doc(id)
-          .update(updateData)
-          .then(d => resolve(d));
-      })
+      .then(politician => checkPoliticianExists({ resolve, politician }))
+      .then(() => updatePolitician({ resolve, id, updateData }))
       .catch(e => {
         console.error(e);
         return reject(e);
