@@ -48,24 +48,25 @@ const updateSchema = joi.object().keys({
 
 const collection = db.collection('politicians');
 
-const checkContributor = function(contributor) {
+const checkContributor = function({ resolve, contributor }) {
   if (_.isEmpty(contributor))
-    return this.resolve({ status: 404, message: 'Invalid Contributor' });
+    return resolve({ status: 404, message: 'Invalid Contributor' });
   return contributor;
 };
 
-const addPolitician = function() {
-  return collection.add(this.data).then(ref => {
+const addPolitician = function({ resolve, data }) {
+  return collection.add(data).then(ref => {
     if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-    return this.resolve({ id: ref.id });
+    return resolve({ id: ref.id });
   });
 };
+
 const add = data =>
   new Promise((resolve, reject) =>
     contributor
       .get(data.contributor_id)
-      .then(checkContributor.bind({ resolve }))
-      .then(addPolitician.bind({ resolve, data }))
+      .then(contributor => checkContributor({ resolve, contributor }))
+      .then(() => addPolitician({ resolve, data }))
       .catch(e => {
         console.error(e);
         return reject(e);
