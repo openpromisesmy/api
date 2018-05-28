@@ -29,7 +29,7 @@ const createSchema = joi.object().keys({
   title: joi.string().required(),
   quote: joi.string().required(),
   notes: joi.string(),
-  status: joi.string(),
+  status: joi.string().default('Review Needed'),
   live: joi.boolean().default(false),
   created_at: joi
     .date()
