@@ -47,6 +47,20 @@ const listPoliticians = (req, res) =>
       return res.status(500).end();
     });
 
+const listAllPoliticians = (req, res) =>
+  politicians
+    .list()
+    .then(
+      result =>
+        result.status
+          ? res.status(result.status).json(result)
+          : res.json(result)
+    )
+    .catch(e => {
+      console.log(e);
+      return res.status(500).end();
+    });
+
 const getPolitician = (req, res) =>
   politicians
     .get(req.params.id)
@@ -94,6 +108,7 @@ app.get('/ping', healthCheck);
 app.post('/', createPolitician);
 
 app.get('/', listPoliticians);
+app.get('/all', listAllPoliticians);
 
 app.get('/:id', getPolitician);
 
