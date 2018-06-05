@@ -126,7 +126,7 @@ app.get('/all', firebaseAuth, routePermissions, listAllPromises);
 
 app.get('/:id', getPromise);
 
-app.post('/:id', firebaseAuth, updatePromise);
+app.post('/:id', updatePromise);
 
 app.delete('/:id', deletePromise);
 
