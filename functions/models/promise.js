@@ -29,7 +29,17 @@ const createSchema = joi.object().keys({
   title: joi.string().required(),
   quote: joi.string().required(),
   notes: joi.string(),
-  status: joi.string().default('Review Needed'),
+  status: joi
+    .string()
+    .allow([
+      'Review Needed',
+      'Fulfilled',
+      'Broken',
+      'Partially Fulfilled',
+      'In Progress',
+      'Not Started'
+    ])
+    .default('Review Needed'),
   live: joi.boolean().default(false),
   created_at: joi
     .date()
@@ -52,7 +62,17 @@ const updateSchema = joi.object().keys({
   title: joi.string(),
   quote: joi.string(),
   notes: joi.string(),
-  status: joi.string(),
+  status: joi
+    .string()
+    .allow([
+      'Review Needed',
+      'Fulfilled',
+      'Broken',
+      'Partially Fulfilled',
+      'In Progress',
+      'Not Started'
+    ])
+    .default('Review Needed'),
   live: joi.boolean(),
   updated_at: joi
     .date()
