@@ -88,7 +88,7 @@ const firebaseAuth = function(req, res, next) {
       })
       .catch(error => {
         console.error(error);
-        res.status(403);
+        res.status(401);
         res.send('There has been an error in authorization.');
       });
   }
