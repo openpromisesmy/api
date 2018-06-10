@@ -11,6 +11,16 @@ const contributorModel = require('./contributor');
 const politician = politicianModel();
 const contributor = contributorModel();
 
+const promiseStatusValues = [
+  'Review Needed',
+  'Fulfilled',
+  'Broken',
+  'Partially Fulfilled',
+  'In Progress',
+  'Not Started',
+  'At Risk'
+];
+
 const createSchema = joi.object().keys({
   contributor_id: joi.string().required(),
   politician_id: joi.string().required(),
@@ -31,14 +41,7 @@ const createSchema = joi.object().keys({
   notes: joi.string(),
   status: joi
     .string()
-    .allow([
-      'Review Needed',
-      'Fulfilled',
-      'Broken',
-      'Partially Fulfilled',
-      'In Progress',
-      'Not Started'
-    ])
+    .allow(promiseStatusValues)
     .default('Review Needed'),
   live: joi.boolean().default(false),
   created_at: joi
@@ -48,7 +51,8 @@ const createSchema = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(util.now, 'Time of update'),
+  post_url: joi.string().uri()
 });
 
 const updateSchema = joi.object().keys({
@@ -64,20 +68,14 @@ const updateSchema = joi.object().keys({
   notes: joi.string(),
   status: joi
     .string()
-    .allow([
-      'Review Needed',
-      'Fulfilled',
-      'Broken',
-      'Partially Fulfilled',
-      'In Progress',
-      'Not Started'
-    ])
+    .allow(promiseStatusValues)
     .default('Review Needed'),
   live: joi.boolean(),
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(util.now, 'Time of update'),
+  post_url: joi.string().uri()
 });
 
 const collection = db.collection('promises');
