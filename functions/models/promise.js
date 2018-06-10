@@ -52,7 +52,7 @@ const createSchema = joi.object().keys({
     .date()
     .iso()
     .default(util.now, 'Time of update'),
-  post_url: joi.string().uri()
+  post_url: joi.string()
 });
 
 const updateSchema = joi.object().keys({
@@ -75,7 +75,7 @@ const updateSchema = joi.object().keys({
     .date()
     .iso()
     .default(util.now, 'Time of update'),
-  post_url: joi.string().uri()
+  post_url: joi.string()
 });
 
 const collection = db.collection('promises');
