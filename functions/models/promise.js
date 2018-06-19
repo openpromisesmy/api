@@ -51,8 +51,7 @@ const createSchema = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update'),
-  post_url: joi.string()
+    .default(util.now, 'Time of update')
 });
 
 const updateSchema = joi.object().keys({
