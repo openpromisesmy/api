@@ -130,10 +130,35 @@ const get = id =>
 
 const list = query =>
   new Promise((resolve, reject) => {
+    const paginationQueries = [
+      'pageSize',
+      'startAfterID',
+      'orderBy',
+      'reverse'
+    ];
     let ref = collection;
+    // apply ref modification when there are query params
     if (!_.isEmpty(query)) {
       for (let x in query) {
-        ref = ref.where(x, '==', query[x]);
+        if (paginationQueries.includes(x)) {
+          // for pagination
+          switch (x) {
+            case 'pageSize':
+              ref = ref.limit(Number(query[x]));
+              break;
+            case 'startAfter':
+              ref = ref.startAfter(query[x]);
+              break;
+            case 'orderBy':
+              ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+              break;
+            default:
+              break;
+          }
+        } else {
+          // for other queries
+          ref = ref.where(x, '==', query[x]);
+        }
       }
     }
     ref
