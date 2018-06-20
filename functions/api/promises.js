@@ -61,7 +61,7 @@ const listPromises = (req, res) =>
 // lists All Promises, for admin
 const listAllPromises = (req, res) =>
   promises
-    .list()
+    .list(req.query)
     .then(
       result =>
         result.status
