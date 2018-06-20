@@ -130,7 +130,12 @@ const get = id =>
 
 const list = query =>
   new Promise((resolve, reject) => {
-    const paginationQueries = ['pageSize', 'startAfterID', 'orderBy'];
+    const paginationQueries = [
+      'pageSize',
+      'startAfterID',
+      'orderBy',
+      'reverse'
+    ];
     let ref = collection;
     // apply ref modification when there are query params
     if (!_.isEmpty(query)) {
@@ -145,10 +150,10 @@ const list = query =>
               ref = ref.startAfter(query[x]);
               break;
             case 'orderBy':
-              ref = ref.orderBy(query[x]);
+              ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
               break;
             default:
-              return;
+              break;
           }
         } else {
           // for other queries
