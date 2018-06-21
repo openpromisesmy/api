@@ -57,7 +57,10 @@ const createSchema = joi.object().keys({
 const updateSchema = joi.object().keys({
   contributor_id: joi.string(),
   politician_id: joi.string(),
-  source_date: joi.date().iso(),
+  source_date: joi
+    .string()
+    .isoDate()
+    .required(),
   source_name: joi.string(),
   source_url: joi.string().uri(),
   cover_image: joi.string().uri(),
