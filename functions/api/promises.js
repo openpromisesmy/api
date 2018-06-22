@@ -119,7 +119,7 @@ app.use(boolParser());
 
 app.get('/ping', healthCheck);
 
-app.post('/', createPromise);
+app.post('/', firebaseAuth, createPromise);
 
 app.get('/', listPromises);
 app.get('/all', firebaseAuth, routePermissions, listAllPromises);
