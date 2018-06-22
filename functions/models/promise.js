@@ -133,12 +133,7 @@ const get = id =>
 
 const list = query =>
   new Promise((resolve, reject) => {
-    const paginationQueries = [
-      'pageSize',
-      'startAfterID',
-      'orderBy',
-      'reverse'
-    ];
+    const paginationQueries = ['pageSize', 'startAfter', 'orderBy', 'reverse'];
     let ref = collection;
     // apply ref modification when there are query params
     if (!_.isEmpty(query)) {

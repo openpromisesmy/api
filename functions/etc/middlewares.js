@@ -5,15 +5,13 @@ const contributors = contributorModel();
 
 function missingHeaders(headers, res) {
   let error;
-  ['x-firebase-token', 'x-user-email', 'x-user-name', 'x-user-photo'].forEach(
-    key => {
-      const value = headers[key];
-      if (value === undefined || value === '') {
-        res.status(400).send(`${key} must be present in header`);
-        error = true;
-      }
+  ['x-firebase-token', 'x-user-email'].forEach(key => {
+    const value = headers[key];
+    if (value === undefined || value === '') {
+      res.status(400).send(`${key} must be present in header`);
+      error = true;
     }
-  );
+  });
   return error;
 }
 
@@ -49,13 +47,13 @@ const firebaseAuth = function(req, res, next) {
                 user,
                 (err, validatedData) => {
                   if (err) return res.status(400).send(err.message);
-
                   return contributors
                     .add(validatedData)
                     .then(result => {
                       // TODO: verify that this works
                       // accessing the result property might need modification
-                      req.body.contributor_id = result.id;
+                      const contributor_id = Object.keys(result.id)[0];
+                      req.body.contributor_id = contributor_id;
                       res.locals.scope = result.status;
                       return next();
                     })
@@ -73,8 +71,6 @@ const firebaseAuth = function(req, res, next) {
                 console.error('Sent email does not match decoded token email.');
               }
 
-              const contributor_id = Object.keys(contributor.id)[0];
-              req.body.contributor_id = contributor_id;
               const status = contributor.status;
               res.locals.scope = status; // TODO, rename to role
               return next();
