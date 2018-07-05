@@ -19,7 +19,7 @@ const createSchema = joi.object().keys({
   primary_position: joi.string().required(),
   brief: joi.string().required(),
   description: joi.string(),
-  status: joi.string().required(),
+  status: joi.string(),
   live: joi.boolean().default(false),
   created_at: joi
     .date()
