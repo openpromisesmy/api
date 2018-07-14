@@ -230,8 +230,9 @@ const stats = () =>
           Object.assign(
             {},
             {
-              count: livePromisesByLivePoliticians.length,
-              allLivePromisesCount: promises.length
+              livePromisesByLivePoliticians:
+                livePromisesByLivePoliticians.length,
+              livePromises: promises.length
             },
             statsByStatus
           )
