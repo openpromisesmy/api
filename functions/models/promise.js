@@ -226,17 +226,11 @@ const stats = () =>
 
         const statsByStatus = aggregateByStatus(livePromisesByLivePoliticians);
 
-        return resolve(
-          Object.assign(
-            {},
-            {
-              livePromisesByLivePoliticians:
-                livePromisesByLivePoliticians.length,
-              livePromises: promises.length
-            },
-            statsByStatus
-          )
-        );
+        return resolve({
+          livePromisesByLivePoliticians: livePromisesByLivePoliticians.length,
+          livePromises: promises.length,
+          countByStatus: statsByStatus
+        });
       })
       .catch(e => reject(e));
   });
