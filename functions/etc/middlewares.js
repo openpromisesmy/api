@@ -37,6 +37,7 @@ const firebaseAuth = function(req, res, next) {
       .auth()
       .verifyIdToken(sentToken)
       .then(decodedToken => {
+        // TODO: wtf fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         // TODO: address callback hell below
         contributors
           .list({ email })

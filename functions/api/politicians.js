@@ -106,14 +106,11 @@ app.use(cors({ origin: true }));
 app.get('/ping', healthCheck);
 
 app.post('/', createPolitician);
+app.post('/:id', updatePolitician);
+app.delete('/:id', deletePolitician);
 
 app.get('/', listPoliticians);
 app.get('/all', listAllPoliticians);
-
 app.get('/:id', getPolitician);
-
-app.post('/:id', updatePolitician);
-
-app.delete('/:id', deletePolitician);
 
 module.exports = functions.https.onRequest(app);

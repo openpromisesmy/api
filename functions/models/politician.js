@@ -142,6 +142,16 @@ const remove = id =>
       })
   );
 
+const stats = () =>
+  new Promise((resolve, reject) => {
+    collection
+      .where('live', '==', true)
+      .select()
+      .get()
+      .then(snapshot => resolve({ livePoliticians: snapshot.size }))
+      .catch(e => reject(e));
+  });
+
 const politician = () => ({
   createSchema,
   updateSchema,
@@ -149,7 +159,8 @@ const politician = () => ({
   get,
   add,
   update,
-  remove
+  remove,
+  stats
 });
 
 module.exports = politician;

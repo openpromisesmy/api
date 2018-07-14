@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-var serviceAccount = require('../secrets/google-key.json');
+const serviceAccount = require('../secrets/google-key.json');
 const util = require('../etc/util');
 
 // WARNING
@@ -13,8 +13,8 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-var db = admin.firestore();
-var batch = db.batch();
+const db = admin.firestore();
+const batch = db.batch();
 
 const collectionName = '';
 console.log(`batch writing ${collectionName}`);
@@ -37,9 +37,8 @@ db
       batch.update(ref, { live: true });
     });
 
-    return batch.commit().then(function() {
-      return console.log('done');
-    });
+    // @TODO: change this to function refer https://github.com/xjamundx/eslint-plugin-promise/issues/42
+    return batch.commit().then(() => console.log('done'));
   })
   .catch(e => reject(e));
 

@@ -3,17 +3,4 @@
     "predeploy": ["npm --prefix $RESOURCE_DIR run lint"],
     "source": "functions"
   }
-  // "hosting": {
-  //   "public": "public",
-  //   "rewrites": [
-  //     { "source": "/contributors/*", "function": "contributors" },
-  //     { "source": "/promises/*", "function": "promises" },
-  //     { "source": "/politicians/*", "function": "politicians" }
-  //   ],
-  //   "ignore": [
-  //     "firebase.json",
-  //     "**/.*",
-  //     "**/node_modules/**"
-  //   ]
-  // }
 }
