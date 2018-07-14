@@ -207,7 +207,7 @@ const stats = () =>
       db
         .collection('promises')
         .where('live', '==', true)
-        .select('politician_id')
+        .select('politician_id', 'status')
         .get(),
       db
         .collection('politicians')
@@ -224,10 +224,18 @@ const stats = () =>
           politicians
         );
 
-        return resolve({
-          count: livePromisesByLivePoliticians,
-          allLivePromisesCount: promises.length
-        });
+        const statsByStatus = aggregateByStatus(livePromisesByLivePoliticians);
+
+        return resolve(
+          Object.assign(
+            {},
+            {
+              count: livePromisesByLivePoliticians.length,
+              allLivePromisesCount: promises.length
+            },
+            statsByStatus
+          )
+        );
       })
       .catch(e => reject(e));
   });
@@ -248,7 +256,17 @@ module.exports = promise;
 function filterPromisesWithLivePoliticians(promises, politicians) {
   return promises.reduce(
     (acc, p) =>
-      politicians.find(pl => pl.id === p.politician_id) ? acc : (acc += 1),
-    0
+      politicians.find(pl => pl.id === p.politician_id)
+        ? acc
+        : acc.concat(
+            Object.assign({}, p, {
+              status: p.status ? p.status : 'Review Needed'
+            })
+          ),
+    []
   );
+}
+
+function aggregateByStatus(livePromisesByLivePoliticians) {
+  return _.countBy(livePromisesByLivePoliticians, 'status');
 }
