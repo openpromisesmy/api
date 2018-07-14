@@ -257,12 +257,12 @@ function filterPromisesWithLivePoliticians(promises, politicians) {
   return promises.reduce(
     (acc, p) =>
       politicians.find(pl => pl.id === p.politician_id)
-        ? acc
-        : acc.concat(
+        ? acc.concat(
             Object.assign({}, p, {
               status: p.status ? p.status : 'Review Needed'
             })
-          ),
+          )
+        : acc,
     []
   );
 }
