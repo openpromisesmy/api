@@ -119,6 +119,7 @@ const update = (id, updateData) =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
+        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         return collection
           .doc(id)
           .update(updateData)
@@ -143,6 +144,15 @@ const remove = id =>
       })
   );
 
+const stats = () =>
+  new Promise((resolve, reject) => {
+    collection
+      .select()
+      .get()
+      .then(snapshot => resolve({ count: snapshot.size }))
+      .catch(e => reject(e));
+  });
+
 const contributor = () => ({
   createSchema,
   updateSchema,
@@ -151,7 +161,8 @@ const contributor = () => ({
   find,
   add,
   update,
-  remove
+  remove,
+  stats
 });
 
 module.exports = contributor;

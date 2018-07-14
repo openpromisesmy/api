@@ -94,13 +94,10 @@ app.use(cors({ origin: true }));
 app.get('/ping', healthCheck);
 
 app.post('/', createContributor);
+app.post('/:id', updateContributor);
+app.delete('/:id', deleteContributor);
 
 app.get('/', listContributors);
-
 app.get('/:id', getContributor);
-
-app.post('/:id', updateContributor);
-
-app.delete('/:id', deleteContributor);
 
 module.exports = functions.https.onRequest(app);

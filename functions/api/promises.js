@@ -120,14 +120,11 @@ app.use(boolParser());
 app.get('/ping', healthCheck);
 
 app.post('/', firebaseAuth, createPromise);
+app.post('/:id', updatePromise);
+app.delete('/:id', deletePromise);
 
 app.get('/', listPromises);
-app.get('/all', firebaseAuth, routePermissions, listAllPromises);
-
 app.get('/:id', getPromise);
-
-app.post('/:id', updatePromise);
-
-app.delete('/:id', deletePromise);
+app.get('/all', firebaseAuth, routePermissions, listAllPromises);
 
 module.exports = functions.https.onRequest(app);

@@ -96,6 +96,7 @@ const add = data =>
         if (_.isEmpty(contributor))
           return resolve({ status: 404, message: 'Invalid Contributor' });
 
+        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         return collection
           .add(data)
           .then(ref => {
@@ -175,6 +176,7 @@ const update = (id, updateData) =>
         if (_.isEmpty(promise))
           return resolve({ status: 404, message: 'Invalid Promise' });
 
+        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         return collection
           .doc(id)
           .update(updateData)
@@ -199,6 +201,37 @@ const remove = id =>
       })
   );
 
+const stats = () =>
+  new Promise((resolve, reject) => {
+    Promise.all([
+      db
+        .collection('promises')
+        .where('live', '==', true)
+        .select('politician_id')
+        .get(),
+      db
+        .collection('politicians')
+        .where('live', '==', true)
+        .select('_id')
+        .get()
+    ])
+      .then(servicesSnapshot => {
+        const promises = util.snapshotToArray(servicesSnapshot[0]);
+        const politicians = util.snapshotToArray(servicesSnapshot[1]);
+
+        const livePromisesByLivePoliticians = filterPromisesWithLivePoliticians(
+          promises,
+          politicians
+        );
+
+        return resolve({
+          count: livePromisesByLivePoliticians,
+          allLivePromisesCount: promises.length
+        });
+      })
+      .catch(e => reject(e));
+  });
+
 const promise = () => ({
   createSchema,
   updateSchema,
@@ -206,7 +239,16 @@ const promise = () => ({
   get,
   add,
   update,
-  remove
+  remove,
+  stats
 });
 
 module.exports = promise;
+
+function filterPromisesWithLivePoliticians(promises, politicians) {
+  return promises.reduce(
+    (acc, p) =>
+      politicians.find(pl => pl.id === p.politician_id) ? acc : (acc += 1),
+    0
+  );
+}
