@@ -148,7 +148,7 @@ const stats = () =>
       .where('live', '==', true)
       .select()
       .get()
-      .then(snapshot => resolve({ count: snapshot.size }))
+      .then(snapshot => resolve({ livePoliticians: snapshot.size }))
       .catch(e => reject(e));
   });
 
