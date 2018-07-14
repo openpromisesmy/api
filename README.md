@@ -16,7 +16,8 @@ cd functions/
 refer to https://cloud.google.com/storage/docs/authentication#generating-a-private-key
 type of key = service account key
 choose 'App Engine Service Default' when prompted
-export GOOGLE_APPLICATION_CREDENTIALS="path/to/key.json"
+
+export GOOGLE_APPLICATION_CREDENTIALS=path/to/key.json
 
 ## Start
 
