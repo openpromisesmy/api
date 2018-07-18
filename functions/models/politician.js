@@ -95,7 +95,11 @@ const list = query =>
     let ref = collection;
     if (!_.isEmpty(query)) {
       for (let x in query) {
-        ref = ref.where(x, '==', query[x]);
+        if (x === 'orderBy') {
+          ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+        } else {
+          ref = ref.where(x, '==', query[x]);
+        }
       }
     }
     ref
