@@ -49,7 +49,7 @@ const listPoliticians = (req, res) =>
 
 const listAllPoliticians = (req, res) =>
   politicians
-    .list()
+    .list(req.query)
     .then(
       result =>
         result.status
