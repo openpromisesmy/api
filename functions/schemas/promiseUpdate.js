@@ -17,6 +17,7 @@ const create = joi.object().keys({
   updates: joi
     .array()
     .min(1)
+    .required()
     .items(
       joi.object().keys({
         contributor_id: joi.string().required(),
