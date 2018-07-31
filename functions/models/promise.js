@@ -1,85 +1,14 @@
 const admin = require('firebase-admin');
 const db = admin.firestore();
-const joi = require('joi');
 const _ = require('lodash');
-
 const util = require('../etc/util');
-
 const politicianModel = require('./politician');
 const contributorModel = require('./contributor');
-
 const politician = politicianModel();
 const contributor = contributorModel();
-
-const promiseStatusValues = [
-  'Review Needed',
-  'Fulfilled',
-  'Broken',
-  'Partially Fulfilled',
-  'In Progress',
-  'Not Started',
-  'At Risk',
-  'Retracted'
-];
-
-const createSchema = joi.object().keys({
-  contributor_id: joi.string().required(),
-  politician_id: joi.string().required(),
-  source_date: joi
-    .string()
-    .isoDate()
-    .required(),
-  source_name: joi.string().required(),
-  source_url: joi
-    .string()
-    .uri()
-    .required(),
-  cover_image: joi.string().uri(),
-  post_url: joi.string(),
-  category: joi.string(),
-  title: joi.string().required(),
-  quote: joi.string().required(),
-  notes: joi.string(),
-  status: joi
-    .string()
-    .allow(promiseStatusValues)
-    .default('Review Needed'),
-  live: joi.boolean().default(false),
-  created_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of creation'),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
-});
-
-const updateSchema = joi.object().keys({
-  contributor_id: joi.string(),
-  politician_id: joi.string(),
-  source_date: joi
-    .string()
-    .isoDate()
-    .required(),
-  source_name: joi.string(),
-  source_url: joi.string().uri(),
-  cover_image: joi.string().uri(),
-  category: joi.string(),
-  title: joi.string(),
-  quote: joi.string(),
-  notes: joi.string(),
-  status: joi
-    .string()
-    .allow(promiseStatusValues)
-    .default('Review Needed'),
-  live: joi.boolean(),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update'),
-  post_url: joi.string()
-});
+const schema = require('../schemas/promise');
+const createSchema = schema.create;
+const updateSchema = schema.update;
 
 const collection = db.collection('promises');
 
