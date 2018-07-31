@@ -14,38 +14,41 @@ const promiseStatusValues = [
 
 const create = joi.object().keys({
   promise_id: joi.string().required(),
-  updates: joi.array().items(
-    joi.object().keys({
-      contributor_id: joi.string().required(),
-      source_date: joi
-        .string()
-        .isoDate()
-        .required(),
-      source_name: joi.string().required(),
-      source_url: joi
-        .string()
-        .uri()
-        .required(),
-      cover_image: joi.string().uri(),
-      title: joi.string().required(),
-      quote: joi.string().required(),
-      description: joi.string(), // displayed publicly
-      notes: joi.string(), // for internal use
-      status: joi
-        .string()
-        .allow(promiseStatusValues)
-        .default('Review Needed'),
-      live: joi.boolean().default(false),
-      created_at: joi
-        .date()
-        .iso()
-        .default(util.now, 'Time of creation'),
-      updated_at: joi
-        .date()
-        .iso()
-        .default(util.now, 'Time of update')
-    })
-  )
+  updates: joi
+    .array()
+    .min(1)
+    .items(
+      joi.object().keys({
+        contributor_id: joi.string().required(),
+        source_date: joi
+          .string()
+          .isoDate()
+          .required(),
+        source_name: joi.string().required(),
+        source_url: joi
+          .string()
+          .uri()
+          .required(),
+        cover_image: joi.string().uri(),
+        title: joi.string().required(),
+        quote: joi.string().required(),
+        description: joi.string(), // displayed publicly
+        notes: joi.string(), // for internal use
+        status: joi
+          .string()
+          .allow(promiseStatusValues)
+          .default('Review Needed'),
+        live: joi.boolean().default(false),
+        created_at: joi
+          .date()
+          .iso()
+          .default(util.now, 'Time of creation'),
+        updated_at: joi
+          .date()
+          .iso()
+          .default(util.now, 'Time of update')
+      })
+    )
 });
 
 const update = joi.object().keys({
