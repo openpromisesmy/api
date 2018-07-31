@@ -97,7 +97,7 @@ const remove = id =>
       })
   );
 
-const promise = () => ({
+const promiseUpdate = () => ({
   createSchema,
   updateSchema,
   list,
