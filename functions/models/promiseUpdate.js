@@ -57,7 +57,7 @@ const get = id =>
 
 const list = () =>
   new Promise((resolve, reject) => {
-    ref
+    collection
       .get()
       .then(snapshot => {
         return resolve(util.snapshotToArray(snapshot));
