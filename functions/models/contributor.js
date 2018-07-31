@@ -1,51 +1,11 @@
 const admin = require('firebase-admin');
 const db = admin.firestore();
-const joi = require('joi').extend(require('joi-phone-number'));
 const _ = require('lodash');
-
 const util = require('../etc/util');
-
-const createSchema = joi.object().keys({
-  profile_image: joi
-    .string()
-    .uri()
-    .default('https://assets.openpromises.com/avatar.png'),
-  name: joi.string().required(),
-  email: joi
-    .string()
-    .email()
-    .required(),
-  contact: joi
-    .string()
-    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
-  status: joi.string().default('Tracker'),
-  live: joi.boolean().default(false),
-  created_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of creation'),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
-});
-
-const updateSchema = joi.object().keys({
-  profile_image: joi.string().uri(),
-  name: joi.string(),
-  email: joi.string().email(),
-  contact: joi
-    .string()
-    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
-  status: joi.string(),
-  live: joi.boolean().default(false),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
-});
-
+const schema = require('../schemas/contributor');
 const collection = db.collection('contributors');
+const createSchema = schema.create;
+const updateSchema = schema.update;
 
 const add = data =>
   new Promise((resolve, reject) =>
