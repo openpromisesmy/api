@@ -1,52 +1,13 @@
 const admin = require('firebase-admin');
 const db = admin.firestore();
-const joi = require('joi');
 const _ = require('lodash');
-
 const util = require('../etc/util');
-
 const contributorModel = require('./contributor');
-
 const contributor = contributorModel();
-
-const createSchema = joi.object().keys({
-  contributor_id: joi.string().required(),
-  profile_image: joi
-    .string()
-    .uri()
-    .required(),
-  name: joi.string().required(),
-  primary_position: joi.string().required(),
-  brief: joi.string().required(),
-  description: joi.string(),
-  status: joi.string(),
-  live: joi.boolean().default(false),
-  created_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of creation'),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
-});
-
-const updateSchema = joi.object().keys({
-  contributor_id: joi.string(),
-  profile_image: joi.string().uri(),
-  name: joi.string(),
-  primary_position: joi.string(),
-  brief: joi.string(),
-  description: joi.string(),
-  status: joi.string(),
-  live: joi.boolean(),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
-});
-
 const collection = db.collection('politicians');
+const schema = require('../schemas/politician');
+const createSchema = schema.create;
+const updateSchema = schema.update;
 
 const checkContributor = function({ resolve, contributor }) {
   if (_.isEmpty(contributor))
