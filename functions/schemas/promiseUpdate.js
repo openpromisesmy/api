@@ -15,12 +15,12 @@ const promiseStatusValues = [
 const create = joi.object().keys({
   promise_id: joi.string().required(),
   created_at: joi
-    .date()
-    .iso()
+    .string()
+    .isoDate()
     .default(util.now, 'Time of creation'),
   updated_at: joi
-    .date()
-    .iso()
+    .string()
+    .isoDate()
     .default(util.now, 'Time of update'),
   updates: joi
     .array()
@@ -49,12 +49,12 @@ const create = joi.object().keys({
           .default('Review Needed'),
         live: joi.boolean().default(false),
         created_at: joi
-          .date()
-          .iso()
+          .string()
+          .isoDate()
           .default(util.now, 'Time of creation'),
         updated_at: joi
-          .date()
-          .iso()
+          .string()
+          .isoDate()
           .default(util.now, 'Time of update')
       })
     )
@@ -63,12 +63,12 @@ const create = joi.object().keys({
 const update = joi.object().keys({
   promise_id: joi.string().required(),
   created_at: joi
-    .date()
-    .iso()
+    .string()
+    .isoDate()
     .required(),
   updated_at: joi
-    .date()
-    .iso()
+    .string()
+    .isoDate()
     .default(util.now, 'Time of update'),
   updates: joi.array().items(
     joi.object().keys({
@@ -93,12 +93,12 @@ const update = joi.object().keys({
         .default('Review Needed'),
       live: joi.boolean().default(false),
       created_at: joi
-        .date()
-        .iso()
+        .string()
+        .isoDate()
         .required(),
       updated_at: joi
-        .date()
-        .iso()
+        .string()
+        .isoDate()
         .default(util.now, 'Time of update')
     })
   )
