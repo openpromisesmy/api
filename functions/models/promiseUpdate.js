@@ -79,7 +79,6 @@ const update = (id, validatedData) =>
         if (validatedData.updates.length > 0) {
           const latestStatus =
             validatedData.updates[validatedData.updates.length - 1].status;
-          console.log(latestStatus);
           promise
             .update(validatedData.promise_id, { status: latestStatus })
             .then(res => console.log(res))
