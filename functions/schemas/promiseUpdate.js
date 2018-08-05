@@ -14,6 +14,14 @@ const promiseStatusValues = [
 
 const create = joi.object().keys({
   promise_id: joi.string().required(),
+  created_at: joi
+    .date()
+    .iso()
+    .default(util.now, 'Time of creation'),
+  updated_at: joi
+    .date()
+    .iso()
+    .default(util.now, 'Time of update'),
   updates: joi
     .array()
     .min(1)
@@ -54,6 +62,14 @@ const create = joi.object().keys({
 
 const update = joi.object().keys({
   promise_id: joi.string().required(),
+  created_at: joi
+    .date()
+    .iso()
+    .required(),
+  updated_at: joi
+    .date()
+    .iso()
+    .default(util.now, 'Time of update'),
   updates: joi.array().items(
     joi.object().keys({
       contributor_id: joi.string().required(),
