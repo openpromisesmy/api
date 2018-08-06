@@ -90,7 +90,7 @@ const list = query =>
       .catch(e => reject(e));
   });
 
-const update = (id, validatedData) =>
+const update = (id, data) =>
   new Promise((resolve, reject) =>
     get(id)
       .then(promiseUpdate => {
@@ -100,9 +100,9 @@ const update = (id, validatedData) =>
         // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         return collection
           .doc(id)
-          .update(validatedData)
+          .update(data)
           .then(d => {
-            updateHostPromiseStatus(validatedData.promise_id)
+            updateHostPromiseStatus(data.promise_id)
               .then(res => console.log(res))
               .catch(err => console.err(err));
 
