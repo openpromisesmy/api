@@ -32,6 +32,7 @@ const create = joi.object().keys({
   status: joi
     .string()
     .allow(promiseStatusValues)
+    .required()
     .default('Review Needed'),
   live: joi.boolean().default(false),
   created_at: joi
@@ -64,6 +65,7 @@ const update = joi.object().keys({
   status: joi
     .string()
     .allow(promiseStatusValues)
+    .required()
     .default('Review Needed'),
   live: joi.boolean().default(false),
   created_at: joi
