@@ -23,6 +23,11 @@ const add = data =>
           .add(data)
           .then(ref => {
             if (_.isEmpty(ref)) return reject(new Error('Failed to add'));
+
+            updateHostPromiseStatus(data.promise_id)
+              .then(res => console.log(res))
+              .catch(err => console.err(err));
+
             return resolve({ id: ref.id });
           })
           .catch(e => {
@@ -92,23 +97,17 @@ const update = (id, validatedData) =>
         if (_.isEmpty(promiseUpdate))
           return resolve({ status: 404, message: 'Invalid Promise Update' });
 
-        // TODO: check if promiseUpdate is latest for promise
-        // If so, update status
-        // TODO: do this in POST promiseUpdate too
-        const isLatest = true;
-        if (isLatest) {
-          const latestStatus = validatedData.status;
-          promise
-            .update(validatedData.promise_id, { status: latestStatus })
-            .then(res => console.log(res))
-            .catch(err => console.error(err));
-        }
-
         // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
         return collection
           .doc(id)
           .update(validatedData)
-          .then(d => resolve(d))
+          .then(d => {
+            updateHostPromiseStatus(validatedData.promise_id)
+              .then(res => console.log(res))
+              .catch(err => console.err(err));
+
+            resolve(d);
+          })
           .catch(e => reject(id));
       })
       .catch(e => {
@@ -123,6 +122,26 @@ const remove = id =>
       .doc(id)
       .delete()
       .then(() => resolve())
+      .catch(e => {
+        console.error(e);
+        return reject(e);
+      })
+  );
+
+const updateHostPromiseStatus = promiseID =>
+  new Promise((resolve, reject) =>
+    list({ promise_id: promiseID, orderBy: 'source_date' })
+      .then(promiseUpdates => {
+        const latestUpdate = promiseUpdates[promiseUpdates.length - 1];
+        const latestStatus = latestUpdate.status;
+        console.log(latestStatus);
+
+        // TODO: avoid update if no change
+        promise
+          .update(promiseID, { status: latestStatus })
+          .then(res => console.log(res))
+          .catch(err => console.error(err));
+      })
       .catch(e => {
         console.error(e);
         return reject(e);
