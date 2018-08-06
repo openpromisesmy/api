@@ -134,7 +134,6 @@ const updateHostPromiseStatus = promiseID =>
       .then(promiseUpdates => {
         const latestUpdate = promiseUpdates[promiseUpdates.length - 1];
         const latestStatus = latestUpdate.status;
-        console.log(latestStatus);
 
         // TODO: avoid update if no change
         promise
