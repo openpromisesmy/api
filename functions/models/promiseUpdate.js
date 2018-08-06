@@ -55,9 +55,29 @@ const get = id =>
       })
   );
 
-const list = () =>
+// add in query for promise_id, and source_date (asc)
+const list = query =>
   new Promise((resolve, reject) => {
-    collection
+    const paginationQueries = ['orderBy', 'reverse'];
+    let ref = collection;
+    if (!_.isEmpty(query)) {
+      for (let x in query) {
+        if (paginationQueries.includes(x)) {
+          // for pagination
+          switch (x) {
+            case 'orderBy':
+              ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+              break;
+            default:
+              break;
+          }
+        } else {
+          // for other queries
+          ref = ref.where(x, '==', query[x]);
+        }
+      }
+    }
+    ref
       .get()
       .then(snapshot => {
         return resolve(util.snapshotToArray(snapshot));
@@ -72,13 +92,12 @@ const update = (id, validatedData) =>
         if (_.isEmpty(promiseUpdate))
           return resolve({ status: 404, message: 'Invalid Promise Update' });
 
-        // TODO: check if promise exists, like in add
-
-        // update status of Promise based on latest status of latest update
-        // TODO: do we need to force sort the updates array based on source date?
-        if (validatedData.updates.length > 0) {
-          const latestStatus =
-            validatedData.updates[validatedData.updates.length - 1].status;
+        // TODO: check if promiseUpdate is latest for promise
+        // If so, update status
+        // TODO: do this in POST promiseUpdate too
+        const isLatest = true;
+        if (isLatest) {
+          const latestStatus = validatedData.status;
           promise
             .update(validatedData.promise_id, { status: latestStatus })
             .then(res => console.log(res))
