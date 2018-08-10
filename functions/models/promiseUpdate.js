@@ -134,7 +134,7 @@ const updateSourcePromiseStatus = promiseID =>
         // TODO: avoid update if no change
         promise
           .update(promiseID, { status: latestStatus })
-          .then(res => console.log(res))
+          .then(res => resolve(res))
           .catch(err => console.error(err));
       })
       .catch(e => {
