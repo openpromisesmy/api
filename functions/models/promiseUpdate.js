@@ -24,11 +24,9 @@ const add = data =>
           .then(ref => {
             if (_.isEmpty(ref)) return reject(new Error('Failed to add'));
 
-            updateHostPromiseStatus(data.promise_id)
-              .then(res => console.log(res))
+            return updateHostPromiseStatus(data.promise_id)
+              .then(res => resolve({ id: ref.id }))
               .catch(err => console.err(err));
-
-            return resolve({ id: ref.id });
           })
           .catch(e => {
             console.error(e);
@@ -102,11 +100,9 @@ const update = (id, data) =>
           .doc(id)
           .update(data)
           .then(d => {
-            updateHostPromiseStatus(data.promise_id)
-              .then(res => console.log(res))
+            return updateHostPromiseStatus(data.promise_id)
+              .then(res => resolve(d))
               .catch(err => console.err(err));
-
-            resolve(d);
           })
           .catch(e => reject(id));
       })
