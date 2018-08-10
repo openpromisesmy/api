@@ -24,7 +24,7 @@ const add = data =>
           .then(ref => {
             if (_.isEmpty(ref)) return reject(new Error('Failed to add'));
 
-            return updateHostPromiseStatus(data.promise_id)
+            return updateSourcePromiseStatus(data.promise_id)
               .then(res => resolve({ id: ref.id }))
               .catch(err => console.err(err));
           })
@@ -100,7 +100,7 @@ const update = (id, data) =>
           .doc(id)
           .update(data)
           .then(d => {
-            return updateHostPromiseStatus(data.promise_id)
+            return updateSourcePromiseStatus(data.promise_id)
               .then(res => resolve(d))
               .catch(err => console.err(err));
           })
@@ -124,7 +124,7 @@ const remove = id =>
       })
   );
 
-const updateHostPromiseStatus = promiseID =>
+const updateSourcePromiseStatus = promiseID =>
   new Promise((resolve, reject) =>
     list({ promise_id: promiseID, orderBy: 'source_date' })
       .then(promiseUpdates => {
