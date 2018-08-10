@@ -132,7 +132,7 @@ const updateSourcePromiseStatus = promiseID =>
         const latestStatus = latestUpdate.status;
 
         // TODO: avoid update if no change
-        promise
+        return promise
           .update(promiseID, { status: latestStatus })
           .then(res => resolve(res))
           .catch(err => console.error(err));
