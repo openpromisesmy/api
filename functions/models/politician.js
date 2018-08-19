@@ -1,131 +1,113 @@
-const admin = require('firebase-admin');
-const db = admin.firestore();
-const _ = require('lodash');
-const util = require('../etc/util');
-const contributorModel = require('./contributor');
-const contributor = contributorModel();
+'use strict';
+var __awaiter =
+  (this && this.__awaiter) ||
+  function(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator['throw'](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : new P(function(resolve) {
+              resolve(result.value);
+            }).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+const firebase_admin_1 = __importDefault(require('firebase-admin'));
+const lodash_1 = __importDefault(require('lodash'));
+const util_1 = __importDefault(require('../etc/util'));
+const politician_1 = require('../schemas/politician');
+const contributor_1 = __importDefault(require('./contributor'));
+const db = firebase_admin_1.default.firestore();
+const contributor = contributor_1.default();
 const collection = db.collection('politicians');
-const schema = require('../schemas/politician');
-const createSchema = schema.create;
-const updateSchema = schema.update;
-
-const checkContributor = function({ resolve, contributor }) {
-  if (_.isEmpty(contributor))
-    return resolve({ status: 404, message: 'Invalid Contributor' });
-  return contributor;
-};
-
-const addPolitician = function({ resolve, data }) {
-  return collection.add(data).then(ref => {
-    if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-    return resolve({ id: ref.id });
+function add(data) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const con = yield contributor.get(data.contributor_id);
+    if (lodash_1.default.isEmpty(con)) {
+      return { status: 404, message: 'Invalid Contributor' };
+    }
+    const ref = yield collection.add(data);
+    if (lodash_1.default.isEmpty(ref)) {
+      throw new Error('Fail to add');
+    }
+    return { id: ref.id };
   });
-};
-
-const add = data =>
-  new Promise((resolve, reject) =>
-    contributor
-      .get(data.contributor_id)
-      .then(contributor => checkContributor({ resolve, contributor }))
-      .then(() => addPolitician({ resolve, data }))
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const get = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .get()
-      .then(doc => {
-        const data = doc.data();
-        const result = _.isEmpty(data) ? {} : util.toObject(id, data);
-
-        return resolve(result);
-      })
-      .catch(e => {
-        console.log(e);
-        return reject(e);
-      })
-  );
-
-const list = query =>
-  new Promise((resolve, reject) => {
+}
+function get(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const doc = yield collection.doc(id).get();
+    const coll = doc.data();
+    return lodash_1.default.isEmpty(coll)
+      ? {}
+      : util_1.default.toObject(id, coll);
+  });
+}
+function list(query) {
+  return __awaiter(this, void 0, void 0, function*() {
     let ref = collection;
-    if (!_.isEmpty(query)) {
+    if (lodash_1.default.isEmpty(query)) {
       for (let x in query) {
         if (x === 'orderBy') {
-          ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+          ref = collection.orderBy(query[x], query.reverse ? 'desc' : 'asc');
         } else {
-          ref = ref.where(x, '==', query[x]);
+          ref = collection.where(x, '==', query[x]);
         }
       }
     }
-    ref
-      .get()
-      .then(snapshot => {
-        return resolve(util.snapshotToArray(snapshot));
-      })
-      .catch(e => reject(e));
+    const snapshot = yield ref.get();
+    return util_1.default.snapshotToArray(snapshot);
   });
-
-const checkPoliticianExists = function({ resolve, politician }) {
-  if (_.isEmpty(politician))
-    return resolve({ status: 404, message: 'Invalid Politician' });
-  return politician;
-};
-
-const updatePolitician = function({ resolve, id, updateData }) {
-  return collection
-    .doc(id)
-    .update(updateData)
-    .then(d => resolve(d));
-};
-
-const update = (id, updateData) =>
-  new Promise((resolve, reject) =>
-    get(id)
-      .then(politician => checkPoliticianExists({ resolve, politician }))
-      .then(() => updatePolitician({ resolve, id, updateData }))
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const remove = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .delete()
-      .then(() => resolve())
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const stats = () =>
-  new Promise((resolve, reject) => {
-    collection
+}
+function update(id, updateData) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const politician = yield get(id);
+    if (lodash_1.default.isEmpty(politician)) {
+      return { status: 404, message: 'Invalid Politicain' };
+    }
+    return collection.doc(id).update(updateData);
+  });
+}
+function remove(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    return collection.doc(id).delete();
+  });
+}
+function stats() {
+  return __awaiter(this, void 0, void 0, function*() {
+    const snapshot = yield collection
       .where('live', '==', true)
       .select()
-      .get()
-      .then(snapshot => resolve({ livePoliticians: snapshot.size }))
-      .catch(e => reject(e));
+      .get();
+    return { livePoliticians: snapshot.size };
   });
-
-const politician = () => ({
-  createSchema,
-  updateSchema,
-  list,
-  get,
+}
+module.exports = () => ({
   add,
-  update,
+  createSchema: politician_1.create,
+  get,
+  list,
   remove,
-  stats
+  stats,
+  update,
+  updateSchema: politician_1.update
 });
-
-module.exports = politician;

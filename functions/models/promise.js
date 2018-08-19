@@ -1,138 +1,125 @@
-const admin = require('firebase-admin');
-const db = admin.firestore();
-const _ = require('lodash');
-const util = require('../etc/util');
-const politicianModel = require('./politician');
-const contributorModel = require('./contributor');
-const politician = politicianModel();
-const contributor = contributorModel();
-const schema = require('../schemas/promise');
-const createSchema = schema.create;
-const updateSchema = schema.update;
-
-const collection = db.collection('promises');
-
-const add = data =>
-  new Promise((resolve, reject) =>
-    Promise.all([
-      politician.get(data.politician_id),
-      contributor.get(data.contributor_id)
-    ])
-      .then(([politician, contributor]) => {
-        if (_.isEmpty(politician))
-          return resolve({ status: 404, message: 'Invalid Politician' });
-
-        if (_.isEmpty(contributor))
-          return resolve({ status: 404, message: 'Invalid Contributor' });
-
-        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
-        return collection
-          .add(data)
-          .then(ref => {
-            if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-            return resolve({ id: ref.id });
-          })
-          .catch(e => {
-            console.error(e);
-            return reject(e);
-          });
-      })
-      .catch(e => {
-        if (e.status) return resolve(e);
-
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const get = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .get()
-      .then(doc => {
-        const data = doc.data();
-        const result = _.isEmpty(data) ? {} : util.toObject(id, data);
-
-        return resolve(result);
-      })
-      .catch(e => {
-        console.log(e);
-        return reject(e);
-      })
-  );
-
-const list = query =>
-  new Promise((resolve, reject) => {
-    const paginationQueries = ['pageSize', 'startAfter', 'orderBy', 'reverse'];
-    let ref = collection;
-    // apply ref modification when there are query params
-    if (!_.isEmpty(query)) {
-      for (let x in query) {
-        if (paginationQueries.includes(x)) {
-          // for pagination
-          switch (x) {
-            case 'pageSize':
-              ref = ref.limit(Number(query[x]));
-              break;
-            case 'startAfter':
-              ref = ref.startAfter(query[x]);
-              break;
-            case 'orderBy':
-              ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
-              break;
-            default:
-              break;
-          }
-        } else {
-          // for other queries
-          ref = ref.where(x, '==', query[x]);
+'use strict';
+var __awaiter =
+  (this && this.__awaiter) ||
+  function(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
         }
       }
+      function rejected(value) {
+        try {
+          step(generator['throw'](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : new P(function(resolve) {
+              resolve(result.value);
+            }).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+const firebase_admin_1 = __importDefault(require('firebase-admin'));
+const lodash_1 = __importDefault(require('lodash'));
+const util_1 = __importDefault(require('../etc/util'));
+const promise_1 = require('../schemas/promise');
+const contributor_1 = __importDefault(require('./contributor'));
+const politician_1 = __importDefault(require('./politician'));
+const db = firebase_admin_1.default.firestore();
+const politician = politician_1.default();
+const contributor = contributor_1.default();
+const collection = db.collection('promises');
+function add(data) {
+  return __awaiter(this, void 0, void 0, function*() {
+    try {
+      const [pol, con] = yield Promise.all([
+        politician.get(data.politician_id),
+        contributor.get(data.contributor_id)
+      ]);
+      if (lodash_1.default.isEmpty(pol)) {
+        return { status: 404, message: 'Invalid Politician' };
+      }
+      if (lodash_1.default.isEmpty(con)) {
+        return { status: 404, message: 'Invalid Contributor' };
+      }
+      const ref = yield collection.add(data);
+      if (lodash_1.default.isEmpty(ref)) {
+        throw new Error('Fail to add');
+      }
+      return { id: ref.id };
+    } catch (e) {
+      if (e.status) {
+        return e;
+      }
+      throw e;
     }
-    ref
-      .get()
-      .then(snapshot => {
-        return resolve(util.snapshotToArray(snapshot));
-      })
-      .catch(e => reject(e));
   });
-
-const update = (id, updateData) =>
-  new Promise((resolve, reject) =>
-    get(id)
-      .then(promise => {
-        if (_.isEmpty(promise))
-          return resolve({ status: 404, message: 'Invalid Promise' });
-
-        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
-        return collection
-          .doc(id)
-          .update(updateData)
-          .then(d => resolve(d))
-          .catch(e => reject(id));
-      })
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const remove = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .delete()
-      .then(() => resolve())
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const stats = () =>
-  new Promise((resolve, reject) => {
-    Promise.all([
+}
+function get(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const doc = yield collection.doc(id).get();
+    const promise = doc.data();
+    return lodash_1.default.isEmpty(promise)
+      ? {}
+      : util_1.default.toObject(id, promise);
+  });
+}
+function list(query) {
+  return __awaiter(this, void 0, void 0, function*() {
+    let ref = collection;
+    // apply ref modification when there are query params
+    if (!lodash_1.default.isEmpty(query)) {
+      lodash_1.default.forIn(query, (value, key) => {
+        switch (key) {
+          case 'pageSize':
+            ref = collection.limit(Number(value));
+            break;
+          case 'startAfter':
+            ref = collection.startAfter(value);
+            break;
+          case 'orderBy':
+            ref = collection.orderBy(value, query.reverse ? 'desc' : 'asc');
+            break;
+          default:
+            ref = collection.where(key, '==', value);
+            break;
+        }
+      });
+    }
+    const snapshot = ref.get();
+    return util_1.default.snapshotToArray(snapshot);
+  });
+}
+function update(id, updateData) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const promise = yield get(id);
+    if (lodash_1.default.isEmpty(promise)) {
+      return { status: 404, message: 'Invalid Promise' };
+    }
+    return collection.doc(id).update(updateData);
+  });
+}
+function remove(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    return collection.doc(id).delete();
+  });
+}
+function stats() {
+  return __awaiter(this, void 0, void 0, function*() {
+    const servicesSnapshot = yield Promise.all([
       db
         .collection('promises')
         .where('live', '==', true)
@@ -143,41 +130,22 @@ const stats = () =>
         .where('live', '==', true)
         .select('_id')
         .get()
-    ])
-      .then(servicesSnapshot => {
-        const promises = util.snapshotToArray(servicesSnapshot[0]);
-        const politicians = util.snapshotToArray(servicesSnapshot[1]);
-
-        const livePromisesByLivePoliticians = filterPromisesWithLivePoliticians(
-          promises,
-          politicians
-        );
-
-        const statsByStatus = aggregateByStatus(livePromisesByLivePoliticians);
-
-        return resolve({
-          livePromisesByLivePoliticians: livePromisesByLivePoliticians.length,
-          livePromises: promises.length,
-          countByStatus: statsByStatus
-        });
-      })
-      .catch(e => reject(e));
+    ]);
+    const promises = util_1.default.snapshotToArray(servicesSnapshot[0]);
+    const politicians = util_1.default.snapshotToArray(servicesSnapshot[1]);
+    const livePromisesByLivePoliticians = _filterPromisesWithLivePoliticians(
+      promises,
+      politicians
+    );
+    const statsByStatus = _aggregateByStatus(livePromisesByLivePoliticians);
+    return {
+      countByStatus: statsByStatus,
+      livePromises: promises.length,
+      livePromisesByLivePoliticians: livePromisesByLivePoliticians.length
+    };
   });
-
-const promise = () => ({
-  createSchema,
-  updateSchema,
-  list,
-  get,
-  add,
-  update,
-  remove,
-  stats
-});
-
-module.exports = promise;
-
-function filterPromisesWithLivePoliticians(promises, politicians) {
+}
+function _filterPromisesWithLivePoliticians(promises, politicians) {
   return promises.reduce(
     (acc, p) =>
       politicians.find(pl => pl.id === p.politician_id)
@@ -190,7 +158,16 @@ function filterPromisesWithLivePoliticians(promises, politicians) {
     []
   );
 }
-
-function aggregateByStatus(livePromisesByLivePoliticians) {
-  return _.countBy(livePromisesByLivePoliticians, 'status');
+function _aggregateByStatus(livePromisesByLivePoliticians) {
+  return lodash_1.default.countBy(livePromisesByLivePoliticians, 'status');
 }
+module.exports = () => ({
+  add,
+  createSchema: promise_1.create,
+  get,
+  list,
+  remove,
+  stats,
+  update,
+  updateSchema: promise_1.update
+});

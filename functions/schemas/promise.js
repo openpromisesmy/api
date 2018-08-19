@@ -1,6 +1,12 @@
-const joi = require('joi');
-const util = require('../etc/util');
-
+'use strict';
+var __importDefault =
+  (this && this.__importDefault) ||
+  function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+const joi_1 = __importDefault(require('joi'));
+const util_1 = __importDefault(require('../etc/util'));
 const promiseStatusValues = [
   'Review Needed',
   'Fulfilled',
@@ -11,67 +17,60 @@ const promiseStatusValues = [
   'At Risk',
   'Retracted'
 ];
-
-const create = joi.object().keys({
-  contributor_id: joi.string().required(),
-  politician_id: joi.string().required(),
-  source_date: joi
+exports.create = joi_1.default.object().keys({
+  category: joi_1.default.string(),
+  contributor_id: joi_1.default.string().required(),
+  cover_image: joi_1.default.string().uri(),
+  created_at: joi_1.default
+    .date()
+    .iso()
+    .default(util_1.default.now, 'Time of creation'),
+  live: joi_1.default.boolean().default(false),
+  notes: joi_1.default.string(),
+  politician_id: joi_1.default.string().required(),
+  post_url: joi_1.default.string(),
+  quote: joi_1.default.string().required(),
+  source_date: joi_1.default
     .string()
     .isoDate()
     .required(),
-  source_name: joi.string().required(),
-  source_url: joi
+  source_name: joi_1.default.string().required(),
+  source_url: joi_1.default
     .string()
     .uri()
     .required(),
-  cover_image: joi.string().uri(),
-  post_url: joi.string(),
-  category: joi.string(),
-  title: joi.string().required(),
-  quote: joi.string().required(),
-  notes: joi.string(),
-  status: joi
+  status: joi_1.default
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  live: joi.boolean().default(false),
-  created_at: joi
+  title: joi_1.default.string().required(),
+  updated_at: joi_1.default
     .date()
     .iso()
-    .default(util.now, 'Time of creation'),
-  updated_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of update')
+    .default(util_1.default.now, 'Time of update')
 });
-
-const update = joi.object().keys({
-  contributor_id: joi.string(),
-  politician_id: joi.string(),
-  source_date: joi
+exports.update = joi_1.default.object().keys({
+  category: joi_1.default.string(),
+  contributor_id: joi_1.default.string(),
+  cover_image: joi_1.default.string().uri(),
+  live: joi_1.default.boolean(),
+  notes: joi_1.default.string(),
+  politician_id: joi_1.default.string(),
+  post_url: joi_1.default.string(),
+  quote: joi_1.default.string(),
+  source_date: joi_1.default
     .string()
     .isoDate()
     .required(),
-  source_name: joi.string(),
-  source_url: joi.string().uri(),
-  cover_image: joi.string().uri(),
-  category: joi.string(),
-  title: joi.string(),
-  quote: joi.string(),
-  notes: joi.string(),
-  status: joi
+  source_name: joi_1.default.string(),
+  source_url: joi_1.default.string().uri(),
+  status: joi_1.default
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  live: joi.boolean(),
-  updated_at: joi
+  title: joi_1.default.string(),
+  updated_at: joi_1.default
     .date()
     .iso()
-    .default(util.now, 'Time of update'),
-  post_url: joi.string()
+    .default(util_1.default.now, 'Time of update')
 });
-
-module.exports = {
-  create,
-  update
-};

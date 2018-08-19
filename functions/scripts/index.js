@@ -1,47 +1,75 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('../secrets/google-key.json');
-const util = require('../etc/util');
-
+'use strict';
+var __awaiter =
+  (this && this.__awaiter) ||
+  function(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator['throw'](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : new P(function(resolve) {
+              resolve(result.value);
+            }).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+const firebase_admin_1 = __importDefault(require('firebase-admin'));
+const util_1 = __importDefault(require('../etc/util'));
+const google_key_json_1 = __importDefault(
+  require('../secrets/google-key.json')
+);
 // WARNING
 // DANGER!
 // THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION
 // USE MINDFULLY
 // TO ENABLE, CHANGE acknowledged to true
 const acknowledged = false;
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+firebase_admin_1.default.initializeApp({
+  credential: firebase_admin_1.default.credential.cert(
+    google_key_json_1.default
+  )
 });
-
-const db = admin.firestore();
+const db = firebase_admin_1.default.firestore();
 const batch = db.batch();
-
 const collectionName = '';
 console.log(`batch writing ${collectionName}`);
-
 let result;
-
-db
-  .collection(collectionName)
-  .get()
-  .then(snapshot => {
+(() =>
+  __awaiter(this, void 0, void 0, function*() {
+    const snapshot = yield db.collection(collectionName).get();
     if (!acknowledged) {
-      return console.error(
-        'Operation stopped. You have not acknowledged the warning.'
-      );
+      console.log('Operation stopped. You have not acknowledged the warning.');
+      return;
     }
-
-    result = util.snapshotToArray(snapshot);
+    result = util_1.default.snapshotToArray(snapshot);
     result.forEach(doc => {
       const ref = db.collection(collectionName).doc(doc.id);
       batch.update(ref, { live: true });
     });
-
-    // @TODO: change this to function refer https://github.com/xjamundx/eslint-plugin-promise/issues/42
-    return batch.commit().then(() => console.log('done'));
-  })
-  .catch(e => reject(e));
-
+    yield batch.commit();
+  }))().catch(e => {
+  console.log(e);
+});
 // IF READING FROM JSON
 // const json = require(`./${collectionName}`);
 // for (let child in json) {

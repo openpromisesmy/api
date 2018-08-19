@@ -1,8 +1,18 @@
-'use strict';
-Object.defineProperty(exports, '__esModule', { value: true });
 const joi = require('joi').extend(require('joi-phone-number'));
 const util = require('../etc/util');
-exports.create = joi.object().keys({
+
+export interface IContributor {
+  contact?: string;
+  created_at: string;
+  email: string;
+  live: boolean;
+  name: string;
+  profile_image: string;
+  status: string;
+  updated_at: string;
+}
+
+export const create = joi.object().keys({
   contact: joi
     .string()
     .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
@@ -26,7 +36,8 @@ exports.create = joi.object().keys({
     .iso()
     .default(util.now, 'Time of update')
 });
-exports.update = joi.object().keys({
+
+export const update = joi.object().keys({
   contact: joi
     .string()
     .phoneNumber({ defaultCountry: 'MY', format: 'international' }),

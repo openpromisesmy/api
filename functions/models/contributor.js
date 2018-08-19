@@ -1,128 +1,119 @@
-const admin = require('firebase-admin');
-const db = admin.firestore();
-const _ = require('lodash');
-const util = require('../etc/util');
-const schema = require('../schemas/contributor');
+'use strict';
+var __awaiter =
+  (this && this.__awaiter) ||
+  function(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function(resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator['throw'](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : new P(function(resolve) {
+              resolve(result.value);
+            }).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+const firebase_admin_1 = __importDefault(require('firebase-admin'));
+const lodash_1 = __importDefault(require('lodash'));
+const util_1 = __importDefault(require('../etc/util'));
+const contributor_1 = require('../schemas/contributor');
+const db = firebase_admin_1.default.firestore();
 const collection = db.collection('contributors');
-const createSchema = schema.create;
-const updateSchema = schema.update;
-
-const add = data =>
-  new Promise((resolve, reject) =>
-    collection
-      .add(data)
-      .then(ref => {
-        if (_.isEmpty(ref)) return reject(new Error('Fail to add'));
-        return resolve({ id: ref.id });
-      })
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const get = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .get()
-      .then(doc => {
-        const data = doc.data();
-        const result = _.isEmpty(data) ? {} : util.toObject(id, data);
-
-        return resolve(result);
-      })
-      .catch(e => {
-        console.log(e);
-        return reject(e);
-      })
-  );
-
-const find = match =>
-  new Promise((resolve, reject) =>
-    admin
+function add(data) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const ref = yield collection.add(data);
+    if (lodash_1.default.isEmpty(ref)) {
+      throw new Error('Fail to add');
+    }
+    return { id: ref.id };
+  });
+}
+function get(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const doc = yield collection.doc(id).get();
+    const data = doc.data();
+    const contributor = lodash_1.default.isEmpty(data)
+      ? {}
+      : util_1.default.toObject(id, data);
+    return contributor;
+  });
+}
+function find(match) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const snapshot = yield firebase_admin_1.default
       .database()
       .ref('/contributors')
       .orderByChild(Object.keys(match)[0])
-      .equalTo(Object.keys(match).map(key => match[key])[0])
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
-        const id = Object.keys(data)[0];
-        const contributor = data[id];
-        const result = _.isEmpty(data) ? {} : util.toObject(id, contributor);
-
-        return resolve(result);
-      })
-      .catch(e => reject(e))
-  );
-
-const list = query =>
-  new Promise((resolve, reject) => {
-    let ref = collection;
-    if (!_.isEmpty(query)) {
-      ref = ref.where(util.getKey(query), '==', util.getValue(query));
+      .equalTo(Object.keys(match).map(key => match[key][0]))
+      .once('value');
+    const data = snapshot.val();
+    const id = Object.keys(data)[0];
+    const contributor = lodash_1.default.isEmpty(data)
+      ? {}
+      : util_1.default.toObject(id, data[id]);
+    return contributor;
+  });
+}
+function list(query) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const ref = lodash_1.default.isEmpty(query)
+      ? collection
+      : collection.where(
+          util_1.default.getKey(query),
+          '==',
+          util_1.default.getValue(query)
+        );
+    const snapshot = yield ref.get();
+    return util_1.default.snapshotToArray(snapshot);
+  });
+}
+function update(id, updateData) {
+  return __awaiter(this, void 0, void 0, function*() {
+    const contributor = yield get(id);
+    if (lodash_1.default.isEmpty(contributor)) {
+      return { status: 404, message: 'Invalid Contributor' };
     }
-
-    ref
-      .get()
-      .then(snapshot => {
-        return resolve(util.snapshotToArray(snapshot));
-      })
-      .catch(e => reject(e));
+    return collection.doc(id).update(updateData);
   });
-
-const update = (id, updateData) =>
-  new Promise((resolve, reject) =>
-    get(id)
-      .then(contributor => {
-        if (_.isEmpty(contributor))
-          return resolve({ status: 404, message: 'Invalid Contributor' });
-
-        // @TODO: fix https://github.com/xjamundx/eslint-plugin-promise/issues/42
-        return collection
-          .doc(id)
-          .update(updateData)
-          .then(d => resolve(d))
-          .catch(e => reject(id));
-      })
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const remove = id =>
-  new Promise((resolve, reject) =>
-    collection
-      .doc(id)
-      .delete()
-      .then(() => resolve())
-      .catch(e => {
-        console.error(e);
-        return reject(e);
-      })
-  );
-
-const stats = () =>
-  new Promise((resolve, reject) => {
-    collection
-      .select()
-      .get()
-      .then(snapshot => resolve({ count: snapshot.size }))
-      .catch(e => reject(e));
+}
+function remove(id) {
+  return __awaiter(this, void 0, void 0, function*() {
+    return collection.doc(id).delete();
   });
-
-const contributor = () => ({
-  createSchema,
-  updateSchema,
-  list,
-  get,
-  find,
+}
+function stats() {
+  return __awaiter(this, void 0, void 0, function*() {
+    const snapshot = yield collection.select().get();
+    return { count: snapshot.size };
+  });
+}
+module.exports = () => ({
   add,
-  update,
+  createSchema: contributor_1.create,
+  find,
+  get,
+  list,
   remove,
-  stats
+  stats,
+  update,
+  updateSchema: contributor_1.update
 });
-
-module.exports = contributor;
