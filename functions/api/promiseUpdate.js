@@ -29,6 +29,20 @@ const createPromiseUpdate = (req, res) =>
 
 const listPromiseUpdates = (req, res) =>
   promiseUpdates
+    .list(Object.assign({ live: true }, req.query))
+    .then(
+      result =>
+        result.status
+          ? res.status(result.status).json(result)
+          : res.json(result)
+    )
+    .catch(e => {
+      console.log(e);
+      res.status(500).end();
+    });
+
+const listAllPromiseUpdates = (req, res) =>
+  promiseUpdates
     .list(req.query)
     .then(
       result =>
@@ -91,6 +105,7 @@ app.post('/', createPromiseUpdate);
 app.post('/:id', updatePromiseUpdate);
 app.delete('/:id', deletePromiseUpdate);
 
+app.get('/all', listAllPromiseUpdates);
 app.get('/', listPromiseUpdates);
 app.get('/:id', getPromiseUpdate);
 
