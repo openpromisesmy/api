@@ -20,6 +20,7 @@ app.post('/', createPromiseUpdate);
 app.post('/:id', updatePromiseUpdate);
 app.delete('/:id', deletePromiseUpdate);
 
+app.get('/all', listAllPromiseUpdates);
 app.get('/', listPromiseUpdates);
 app.get('/:id', getPromiseUpdate);
 
@@ -53,17 +54,35 @@ async function createPromiseUpdate(
   }
 }
 
-async function listPromiseUpdates(req: express.Request, res: express.Response) {
+async function listAllPromiseUpdates(
+  req: express.Request,
+  res: express.Response
+) {
   try {
     const promiseUpdates = await promiseUpdateModel.list(req.query);
 
-    // This might be a potential bug
-    // promiseUpdates is an array
     return promiseUpdates.status
       ? res.status(promiseUpdates.status).json(promiseUpdates)
       : res.json(promiseUpdates);
   } catch (e) {
     console.log(e);
+    return res.status(500).end();
+  }
+}
+
+async function listPromiseUpdates(req: express.Request, res: express.Response) {
+  try {
+    const promiseUpdates = await promiseUpdateModel.list({
+      live: true,
+      ...req.query
+    });
+
+    return promiseUpdates.status
+      ? res.status(promiseUpdates.status).json(promiseUpdates)
+      : res.json(promiseUpdates);
+  } catch (e) {
+    console.log(e);
+
     return res.status(500).end();
   }
 }

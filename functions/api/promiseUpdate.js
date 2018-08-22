@@ -44,6 +44,7 @@ app.get('/ping', healthCheck);
 app.post('/', createPromiseUpdate);
 app.post('/:id', updatePromiseUpdate);
 app.delete('/:id', deletePromiseUpdate);
+app.get('/all', listAllPromiseUpdates);
 app.get('/', listPromiseUpdates);
 app.get('/:id', getPromiseUpdate);
 function healthCheck(req, res) {
@@ -70,12 +71,25 @@ function createPromiseUpdate(req, res) {
     }
   });
 }
-function listPromiseUpdates(req, res) {
+function listAllPromiseUpdates(req, res) {
   return __awaiter(this, void 0, void 0, function*() {
     try {
       const promiseUpdates = yield promiseUpdateModel.list(req.query);
-      // This might be a potential bug
-      // promiseUpdates is an array
+      return promiseUpdates.status
+        ? res.status(promiseUpdates.status).json(promiseUpdates)
+        : res.json(promiseUpdates);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).end();
+    }
+  });
+}
+function listPromiseUpdates(req, res) {
+  return __awaiter(this, void 0, void 0, function*() {
+    try {
+      const promiseUpdates = yield promiseUpdateModel.list(
+        Object.assign({ live: true }, req.query)
+      );
       return promiseUpdates.status
         ? res.status(promiseUpdates.status).json(promiseUpdates)
         : res.json(promiseUpdates);
