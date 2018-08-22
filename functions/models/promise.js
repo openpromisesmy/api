@@ -99,7 +99,8 @@ function list(query) {
         }
       });
     }
-    const snapshot = ref.get();
+    const snapshot = yield ref.get();
+    console.log(snapshot);
     return util_1.default.snapshotToArray(snapshot);
   });
 }

@@ -88,8 +88,8 @@ async function list(query: object) {
     });
   }
 
-  const snapshot = ref.get();
-
+  const snapshot = await ref.get();
+  console.log(snapshot);
   return util.snapshotToArray(snapshot);
 }
 
