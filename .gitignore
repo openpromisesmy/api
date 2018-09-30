@@ -5,6 +5,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+functions/**.js
+functions/api/**.js
+functions/etc/**.js
+functions/models/**.js
+functions/schemas/**.js
+functions/scripts/**.js
+
 # Runtime data
 pids
 *.pid
