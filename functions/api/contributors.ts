@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import _ from 'lodash';
 
-const functions = require('firebase-functions');
+import functions from 'firebase-functions';
 
 import ContributorModel from '../models/contributor';
 

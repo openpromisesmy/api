@@ -5,13 +5,14 @@ import boolParser from 'express-query-boolean';
 
 import cors from 'cors';
 import express from 'express';
-const functions = require('firebase-functions');
+import functions from 'firebase-functions';
 
-import { firebaseAuth, routePermissions } from '../etc/middlewares';
+import middlewares from '../etc/middlewares';
 import PromiseModel from '../models/promise';
 
 import { ValidationError } from 'joi';
 
+const { firebaseAuth, routePermissions } = middlewares;
 // promises.get('/')
 // promises.post('/').json({ contributor_id: '123', politician_id: '-L5o5YwQa-jgdt_4sPqe', source_date: '2018-03-03T16:20:01.072Z', source_name: 'Bernama', source_url: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', cover_image: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', category: 'potato', title: 'Promising promises', quote: '"...potato said potata"', status: 'In review' })
 // promises.post('/-L6kQKs6_GqlUfualdcA').json({contributor_id:'321'})
