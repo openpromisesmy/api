@@ -6,6 +6,8 @@ import functions from 'firebase-functions';
 
 import ContributorModel from '../models/contributor';
 
+import { IContributor } from '../schemas/contributor';
+
 import { ValidationError } from 'joi';
 
 // contributors.get('/')
@@ -43,9 +45,7 @@ async function createContributor(req: express.Request, res: express.Response) {
 
     const contributor = await contributorModel.add(validatedContributor);
 
-    return contributor.status
-      ? res.status(contributor.status).json(contributor)
-      : res.json(contributor);
+    return contributor.id && res.status(200).json(contributor);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -60,9 +60,7 @@ async function listContributors(req: express.Request, res: express.Response) {
   try {
     const contributors = await contributorModel.list(req.query);
 
-    return contributors.status
-      ? res.status(contributors.status).json(contributors)
-      : res.json(contributors);
+    return res.json(contributors) || [];
   } catch (e) {
     console.log(e);
     res.status(500).end();
@@ -118,10 +116,10 @@ async function deleteContributor(req: express.Request, res: express.Response) {
 }
 
 function _asyncContributorValidateCreate(dataToValidate: object) {
-  return new Promise((resolve, reject) => {
+  return new Promise<IContributor>((resolve, reject) => {
     contributorModel.createSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IContributor) => {
         if (e) {
           return reject(e);
         }
@@ -133,10 +131,10 @@ function _asyncContributorValidateCreate(dataToValidate: object) {
 }
 
 function _asyncContributorValidateUpdate(dataToValidate: object) {
-  return new Promise((resolve, reject) => {
+  return new Promise<IContributor>((resolve, reject) => {
     contributorModel.updateSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IContributor) => {
         if (e) {
           return reject(e);
         }

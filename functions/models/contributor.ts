@@ -66,8 +66,8 @@ async function list(query: object) {
   return util.snapshotToArray(snapshot);
 }
 
-async function update(id: string, updateData: object) {
-  const contributor = await get(id);
+async function update(id: string, updateData: IContributor) {
+  const contributor: IContributor = await get(id);
 
   if (_.isEmpty(contributor)) {
     return { status: 404, message: 'Invalid Contributor' };

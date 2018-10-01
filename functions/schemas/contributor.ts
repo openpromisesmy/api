@@ -46,6 +46,7 @@ export const update = joi.object().keys({
   name: joi.string(),
   profile_image: joi.string().uri(),
   status: joi.string(),
+  created_at: joi.date().iso(),
   updated_at: joi
     .date()
     .iso()
