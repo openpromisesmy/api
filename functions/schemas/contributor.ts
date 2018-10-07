@@ -1,5 +1,7 @@
-const joi = require('joi').extend(require('joi-phone-number'));
-const util = require('../etc/util');
+import joi from 'joi';
+import joiPhoneNumber from 'joi-phone-number';
+import util = require('../etc/util');
+joi.extend(joiPhoneNumber);
 
 export interface IContributor {
   contact?: string;
@@ -41,12 +43,12 @@ export const update = joi.object().keys({
   contact: joi
     .string()
     .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
+  created_at: joi.date().iso(),
   email: joi.string().email(),
   live: joi.boolean().default(false),
   name: joi.string(),
   profile_image: joi.string().uri(),
   status: joi.string(),
-  created_at: joi.date().iso(),
   updated_at: joi
     .date()
     .iso()
