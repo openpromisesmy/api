@@ -2,32 +2,36 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint .",
-    "serve": "firebase serve --only functions",
-    "serve-h": "firebase serve --only functions,hosting",
-    "shell": "firebase experimental:functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log",
-    "precommit": "pretty-quick --staged"
+    "lint": "tslint -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
+    "serve": "(tsc || true) && firebase serve --only functions",
+    "serve-h": "(tsc || true) && firebase serve --only functions,hosting",
+    "shell": "(tsc || true) && firebase experimental:functions:shell",
+    "start": "(tsc || true) && npm run shell",
+    "deploy": "(tsc || true) && firebase deploy --only functions",
+    "logs": "(tsc || true) && firebase functions:log",
+    "precommit": "pretty-quick --staged",
+    "build": "tsc"
   },
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "cors": "^2.8.4",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "express-query-boolean": "^2.0.0",
-    "firebase-admin": "^5.8.2",
-    "firebase-functions": "^0.8.1",
-    "joi": "^13.1.2",
-    "joi-phone-number": "^2.0.7",
-    "lodash": "^4.17.5"
+    "firebase-admin": "^5.13.1",
+    "firebase-functions": "^0.8.2",
+    "joi": "^13.6.0",
+    "joi-phone-number": "^2.0.11",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "eslint": "^4.12.0",
-    "eslint-plugin-promise": "^3.6.0",
+    "@types/cors": "^2.8.4",
+    "@types/joi": "^13.4.2",
     "husky": "^0.14.3",
     "prettier": "1.11.1",
-    "pretty-quick": "^1.4.1"
+    "pretty-quick": "^1.6.0",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.14.0",
+    "typescript": "^3.0.1"
   },
   "private": true
 }
