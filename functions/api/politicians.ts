@@ -1,6 +1,6 @@
 import cors from 'cors';
 
-import functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
 
 import express from 'express';
 import _ from 'lodash';

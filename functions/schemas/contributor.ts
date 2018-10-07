@@ -1,7 +1,8 @@
 import joi from 'joi';
-import joiPhoneNumber from 'joi-phone-number';
+// import joiPhoneNumber from 'joi-phone-number';
 import util = require('../etc/util');
-joi.extend(joiPhoneNumber);
+// joi.extend(joiPhoneNumber);
+// TODO: resolve phoneNumber
 
 export interface IContributor {
   contact?: string;
@@ -15,9 +16,8 @@ export interface IContributor {
 }
 
 export const create = joi.object().keys({
-  contact: joi
-    .string()
-    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
+  contact: joi.string(),
+  // .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
   created_at: joi
     .date()
     .iso()
@@ -40,9 +40,8 @@ export const create = joi.object().keys({
 });
 
 export const update = joi.object().keys({
-  contact: joi
-    .string()
-    .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
+  contact: joi.string(),
+  // .phoneNumber({ defaultCountry: 'MY', format: 'international' }),
   created_at: joi.date().iso(),
   email: joi.string().email(),
   live: joi.boolean().default(false),

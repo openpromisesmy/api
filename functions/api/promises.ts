@@ -5,7 +5,7 @@ import boolParser from 'express-query-boolean';
 
 import cors from 'cors';
 import express from 'express';
-import functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
 
 import middlewares from '../etc/middlewares';
 import PromiseModel from '../models/promise';
