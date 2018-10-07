@@ -1,6 +1,6 @@
 import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
 
-const compose = (...fns: ((d: any) => any)[]) => (x: ((d: any) => any)) =>
+const compose = (...fns: Array<((d: any) => any)>) => (x: ((d: any) => any)) =>
   fns.reduceRight((acc, fn) => fn(acc), x);
 const now = () => new Date().toISOString();
 const toArray = (fireObj: DocumentData) =>
