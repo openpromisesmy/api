@@ -96,7 +96,7 @@ async function listAllPromises(req: express.Request, res: express.Response) {
 
 async function getPromise(req: express.Request, res: express.Response) {
   try {
-    const promise = await promiseModel.get(req.param.id);
+    const promise = await promiseModel.get(req.params.id);
 
     return _.isEmpty(promise) ? res.status(404).end() : res.json(promise);
   } catch (e) {
