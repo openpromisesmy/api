@@ -58,20 +58,7 @@ async function get(id: string) {
 
 // add in query for promise_id, and source_date (asc)
 async function list(query: object) {
-  let ref = collection;
-
-  if (!_.isEmpty(query)) {
-    _.forIn(query, (value: string, key: string) => {
-      switch (key) {
-        case 'orderBy':
-          ref = collection.orderBy(value, query.reverse ? 'desc' : 'asc');
-          break;
-        default:
-          ref = collection.where(key, '==', value);
-          break;
-      }
-    });
-  }
+  let ref = util.parseQueryForRef(collection, query);
 
   const snapshot = await ref.get();
 
