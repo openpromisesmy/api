@@ -1,7 +1,7 @@
 import {
+  CollectionReference,
   DocumentData,
-  QuerySnapshot,
-  CollectionReference
+  QuerySnapshot
 } from '@google-cloud/firestore';
 import _ from 'lodash';
 
@@ -39,7 +39,7 @@ const parseQueryForRef = (ref: CollectionReference, query: object) => {
   const paginationQueries = ['orderBy', 'reverse'];
 
   if (!_.isEmpty(query)) {
-    for (let x in query) {
+    for (const x in query) {
       if (paginationQueries.includes(x)) {
         // for pagination
         switch (x) {
@@ -64,9 +64,9 @@ export = {
   getKey,
   getValue,
   now,
+  parseQueryForRef,
   promisify,
   snapshotToArray,
   toArray,
-  toObject,
-  parseQueryForRef
+  toObject
 };

@@ -58,7 +58,7 @@ async function get(id: string) {
 
 // add in query for promise_id, and source_date (asc)
 async function list(query: object) {
-  let ref = util.parseQueryForRef(collection, query);
+  const ref = util.parseQueryForRef(collection, query);
 
   const snapshot = await ref.get();
 
