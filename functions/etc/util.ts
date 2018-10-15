@@ -1,4 +1,8 @@
-import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
+import {
+  DocumentData,
+  QuerySnapshot,
+  CollectionReference
+} from '@google-cloud/firestore';
 import _ from 'lodash';
 
 const compose = (...fns: Array<((d: any) => any)>) => (x: ((d: any) => any)) =>
@@ -31,7 +35,7 @@ const promisify = (f: any, ...params: any[]) => {
   });
 };
 
-const parseQueryForRef = (ref, query) => {
+const parseQueryForRef = (ref: CollectionReference, query: object) => {
   const paginationQueries = ['orderBy', 'reverse'];
 
   if (!_.isEmpty(query)) {
