@@ -58,7 +58,6 @@ async function listAllPromiseUpdates(
   req: express.Request,
   res: express.Response
 ) {
-  console.log('a', req.query);
   try {
     const promiseUpdates = await promiseUpdateModel.list(req.query);
 
