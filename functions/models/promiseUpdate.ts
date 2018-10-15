@@ -58,25 +58,7 @@ async function get(id: string) {
 
 // add in query for promise_id, and source_date (asc)
 async function list(query: object) {
-  let ref = collection;
-  const paginationQueries = ['orderBy', 'reverse'];
-  if (!_.isEmpty(query)) {
-    for (let x in query) {
-      if (paginationQueries.includes(x)) {
-        // for pagination
-        switch (x) {
-          case 'orderBy':
-            ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
-            break;
-          default:
-            break;
-        }
-      } else {
-        // for other queries
-        ref = ref.where(x, '==', query[x]);
-      }
-    }
-  }
+  let ref = util.parseQueryForRef(collection, query);
 
   const snapshot = await ref.get();
 

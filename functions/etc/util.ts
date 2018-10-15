@@ -1,4 +1,5 @@
 import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
+import _ from 'lodash';
 
 const compose = (...fns: Array<((d: any) => any)>) => (x: ((d: any) => any)) =>
   fns.reduceRight((acc, fn) => fn(acc), x);
@@ -30,6 +31,30 @@ const promisify = (f: any, ...params: any[]) => {
   });
 };
 
+const parseQueryForRef = (ref, query) => {
+  const paginationQueries = ['orderBy', 'reverse'];
+
+  if (!_.isEmpty(query)) {
+    for (let x in query) {
+      if (paginationQueries.includes(x)) {
+        // for pagination
+        switch (x) {
+          case 'orderBy':
+            ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+            break;
+          default:
+            break;
+        }
+      } else {
+        // for other queries
+        ref = ref.where(x, '==', query[x]);
+      }
+    }
+  }
+
+  return ref;
+};
+
 export = {
   compose,
   getKey,
@@ -38,5 +63,6 @@ export = {
   promisify,
   snapshotToArray,
   toArray,
-  toObject
+  toObject,
+  parseQueryForRef
 };
