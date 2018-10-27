@@ -49,8 +49,7 @@ async function get(id: string) {
 
 async function list(query: object) {
   let ref = collection;
-
-  if (_.isEmpty(query)) {
+  if (!_.isEmpty(query)) {
     for (const x in query) {
       if (x === 'orderBy') {
         ref = collection.orderBy(query[x], query.reverse ? 'desc' : 'asc');
