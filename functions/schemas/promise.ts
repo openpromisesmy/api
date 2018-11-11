@@ -12,6 +12,25 @@ const promiseStatusValues = [
   'Retracted'
 ];
 
+const malaysianStates = [
+  'Johor',
+  'Kedah',
+  'Kelantan',
+  'Kuala Lumpur',
+  'Labuan',
+  'Melaka',
+  'Negeri Sembilan',
+  'Pahang',
+  'Perak',
+  'Perlis',
+  'Pulau Pinang',
+  'Putrajaya',
+  'Sabah',
+  'Sarawak',
+  'Selangor',
+  'Terengganu'
+];
+
 export interface IPromise {
   category?: string;
   contributor_id: string;
@@ -25,6 +44,7 @@ export interface IPromise {
   source_date: string;
   source_name: string;
   source_url: string;
+  state?: string;
   status: string;
   title: string;
   updated_at: string;
@@ -52,6 +72,7 @@ export const create = joi.object().keys({
     .string()
     .uri()
     .required(),
+  state: joi.string().valid(malaysianStates),
   status: joi
     .string()
     .allow(promiseStatusValues)
@@ -78,6 +99,7 @@ export const update = joi.object().keys({
     .required(),
   source_name: joi.string(),
   source_url: joi.string().uri(),
+  state: joi.string().valid(malaysianStates),
   status: joi
     .string()
     .allow(promiseStatusValues)
