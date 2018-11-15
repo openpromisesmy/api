@@ -13,7 +13,7 @@ const db = admin.firestore();
 const politician = politicianModel();
 const contributor = contributorModel();
 
-let collection = db.collection('promises');
+const collection = db.collection('promises');
 
 export = () => ({
   add,
