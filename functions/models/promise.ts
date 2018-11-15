@@ -13,7 +13,7 @@ const db = admin.firestore();
 const politician = politicianModel();
 const contributor = contributorModel();
 
-const collection = db.collection('promises');
+let collection = db.collection('promises');
 
 export = () => ({
   add,
@@ -41,13 +41,13 @@ async function add(data: IPromise) {
       return { status: 404, message: 'Invalid Contributor' };
     }
 
-    const ref = await collection.add(data);
+    const collection = await collection.add(data);
 
-    if (_.isEmpty(ref)) {
+    if (_.isEmpty(collection)) {
       throw new Error('Fail to add');
     }
 
-    return { id: ref.id };
+    return { id: collection.id };
   } catch (e) {
     if (e.status) {
       return e;
@@ -66,29 +66,31 @@ async function get(id: string) {
 }
 
 async function list(query: object) {
-  let ref = collection;
-
-  // apply ref modification when there are query params
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {
       switch (key) {
         case 'pageSize':
-          ref = collection.limit(Number(value));
+          collection = collection.limit(Number(value));
           break;
         case 'startAfter':
-          ref = collection.startAfter(value);
+          collection = collection.startAfter(value);
           break;
         case 'orderBy':
-          ref = collection.orderBy(value, query.reverse ? 'desc' : 'asc');
+          collection = collection.orderBy(
+            value,
+            query.reverse ? 'desc' : 'asc'
+          );
+          break;
+        case 'reverse':
           break;
         default:
-          ref = collection.where(key, '==', value);
+          collection = collection.where(key, '==', value);
           break;
       }
     });
   }
 
-  const snapshot = await ref.get();
+  const snapshot = await collection.get();
   return util.snapshotToArray(snapshot);
 }
 
