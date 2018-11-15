@@ -66,31 +66,29 @@ async function get(id: string) {
 }
 
 async function list(query: object) {
+  let ref = collection;
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {
       switch (key) {
         case 'pageSize':
-          collection = collection.limit(Number(value));
+          ref = ref.limit(Number(value));
           break;
         case 'startAfter':
-          collection = collection.startAfter(value);
+          ref = ref.startAfter(value);
           break;
         case 'orderBy':
-          collection = collection.orderBy(
-            value,
-            query.reverse ? 'desc' : 'asc'
-          );
+          ref = ref.orderBy(value, query.reverse ? 'desc' : 'asc');
           break;
         case 'reverse':
           break;
         default:
-          collection = collection.where(key, '==', value);
+          ref = ref.where(key, '==', value);
           break;
       }
     });
   }
 
-  const snapshot = await collection.get();
+  const snapshot = await ref.get();
   return util.snapshotToArray(snapshot);
 }
 
