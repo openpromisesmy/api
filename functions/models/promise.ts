@@ -41,9 +41,9 @@ async function add(data: IPromise) {
       return { status: 404, message: 'Invalid Contributor' };
     }
 
-    const collection = await collection.add(data);
+    const res = await collection.add(data);
 
-    if (_.isEmpty(collection)) {
+    if (_.isEmpty(res)) {
       throw new Error('Fail to add');
     }
 
