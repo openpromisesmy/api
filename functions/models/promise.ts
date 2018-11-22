@@ -47,7 +47,7 @@ async function add(data: IPromise) {
       throw new Error('Fail to add');
     }
 
-    return { id: collection.id };
+    return { id: res.id };
   } catch (e) {
     if (e.status) {
       return e;
