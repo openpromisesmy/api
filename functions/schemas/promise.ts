@@ -33,11 +33,11 @@ const malaysianStates = [
 
 export interface IPromise {
   category?: string;
-  context: string;
+  context?: string;
   contributor_id: string;
   cover_image?: string;
   created_at: string;
-  description: string;
+  description?: string;
   live: boolean;
   notes?: string;
   politician_id: string;
@@ -50,14 +50,13 @@ export interface IPromise {
   status: string;
   title: string;
   updated_at: string;
-  elaboration: string;
-  notes: string;
-  deadline: string;
-  review_date: string;
-  clauses: {
-    broken: string;
-    fulfilled: string;
-    progress: string;
+  elaboration?: string;
+  deadline?: string;
+  review_date?: string;
+  clauses?: {
+    broken?: string;
+    fulfilled?: string;
+    progress?: string;
   };
 }
 
