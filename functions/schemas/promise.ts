@@ -48,6 +48,16 @@ export interface IPromise {
   status: string;
   title: string;
   updated_at: string;
+  context: string;
+  elaboration: string;
+  note: string;
+  deadline: string;
+  review_date: string;
+  clauses: {
+    broken: string;
+    progress: string;
+    fulfilled: string;
+  };
 }
 
 export const create = joi.object().keys({
@@ -81,7 +91,17 @@ export const create = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(util.now, 'Time of update'),
+  context: joi.string(),
+  elaboration: joi.string(),
+  note: joi.string(),
+  deadline: joi.date().iso(),
+  review_date: joi.date().iso(),
+  clauses: joi.object().keys({
+    progress: joi.string(),
+    broken: joi.string(),
+    fulfilled: joi.string()
+  })
 });
 
 export const update = joi.object().keys({
@@ -108,5 +128,15 @@ export const update = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(util.now, 'Time of update'),
+  context: joi.string(),
+  elaboration: joi.string(),
+  note: joi.string(),
+  deadline: joi.date().iso(),
+  review_date: joi.date().iso(),
+  clauses: joi.object().keys({
+    progress: joi.string(),
+    broken: joi.string(),
+    fulfilled: joi.string()
+  })
 });
