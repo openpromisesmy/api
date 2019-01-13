@@ -35,6 +35,8 @@ export interface IPromise {
   category?: string;
   context?: string;
   contributor_id: string;
+  clauses?: Clauses;
+  contact_details: ContactDetails;
   cover_image?: string;
   created_at: string;
   description?: string;
@@ -53,13 +55,19 @@ export interface IPromise {
   elaboration?: string;
   deadline?: string;
   review_date?: string;
-  clauses?: Clauses;
 }
 
 interface Clauses {
   broken?: string;
   fulfilled?: string;
   progress?: string;
+}
+
+interface ContactDetails {
+  email?: string;
+  facebook_url?: string;
+  twitter_url?: string;
+  phone_number?: string;
 }
 
 const shared = {
