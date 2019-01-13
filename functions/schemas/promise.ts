@@ -35,6 +35,8 @@ export interface IPromise {
   category?: string;
   context?: string;
   contributor_id: string;
+  clauses?: IClauses;
+  contact_details: IContactDetails;
   cover_image?: string;
   created_at: string;
   description?: string;
@@ -53,14 +55,22 @@ export interface IPromise {
   elaboration?: string;
   deadline?: string;
   review_date?: string;
-  clauses?: {
-    broken?: string;
-    fulfilled?: string;
-    progress?: string;
-  };
 }
 
-export const create = joi.object().keys({
+interface IClauses {
+  broken?: string;
+  fulfilled?: string;
+  progress?: string;
+}
+
+interface IContactDetails {
+  email?: string;
+  facebook_url?: string;
+  twitter_url?: string;
+  phone_number?: string;
+}
+
+const shared = {
   category: joi.string(),
   clauses: joi.object().keys({
     broken: joi.string(),
@@ -68,17 +78,10 @@ export const create = joi.object().keys({
     progress: joi.string()
   }),
   context: joi.string(),
-  contributor_id: joi.string().required(),
   cover_image: joi.string().uri(),
-  created_at: joi
-    .date()
-    .iso()
-    .default(util.now, 'Time of creation'),
   deadline: joi.date().iso(),
   description: joi.string(),
   elaboration: joi.string(),
-  live: joi.boolean().default(false),
-  notes: joi.string(),
   politician_id: joi.string().required(),
   post_url: joi.string(),
   quote: joi.string().required(),
@@ -93,11 +96,22 @@ export const create = joi.object().keys({
     .uri()
     .required(),
   state: joi.string().valid(malaysianStates),
+  title: joi.string().required()
+};
+
+export const create = joi.object().keys({
+  ...shared,
+  contributor_id: joi.string().required(),
+  created_at: joi
+    .date()
+    .iso()
+    .default(util.now, 'Time of creation'),
+  live: joi.boolean().default(false),
+  notes: joi.string(),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  title: joi.string().required(),
   updated_at: joi
     .date()
     .iso()
@@ -105,36 +119,14 @@ export const create = joi.object().keys({
 });
 
 export const update = joi.object().keys({
-  category: joi.string(),
-  clauses: joi.object().keys({
-    broken: joi.string(),
-    fulfilled: joi.string(),
-    progress: joi.string()
-  }),
-  context: joi.string(),
+  ...shared,
   contributor_id: joi.string(),
-  cover_image: joi.string().uri(),
-  deadline: joi.date().iso(),
-  description: joi.string(),
-  elaboration: joi.string(),
   live: joi.boolean(),
   notes: joi.string(),
-  politician_id: joi.string(),
-  post_url: joi.string(),
-  quote: joi.string(),
-  review_date: joi.date().iso(),
-  source_date: joi
-    .string()
-    .isoDate()
-    .required(),
-  source_name: joi.string(),
-  source_url: joi.string().uri(),
-  state: joi.string().valid(malaysianStates),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  title: joi.string(),
   updated_at: joi
     .date()
     .iso()
