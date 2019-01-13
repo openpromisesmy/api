@@ -53,11 +53,13 @@ export interface IPromise {
   elaboration?: string;
   deadline?: string;
   review_date?: string;
-  clauses?: {
-    broken?: string;
-    fulfilled?: string;
-    progress?: string;
-  };
+  clauses?: Clauses;
+}
+
+interface Clauses {
+  broken?: string;
+  fulfilled?: string;
+  progress?: string;
 }
 
 const shared = {
