@@ -3,6 +3,7 @@ import util from '../etc/util';
 
 export interface IPolitician {
   brief: string;
+  contact_details: IContactDetails;
   contributor_id: string;
   created_at: string;
   description?: string;
@@ -14,7 +15,25 @@ export interface IPolitician {
   updated_at: string;
 }
 
+interface IContactDetails {
+  email?: string;
+  facebook_url?: string;
+  twitter_url?: string;
+  phone_number?: string;
+}
+
+// todo: do the rest
+const shared = {
+  contact_details: joi.object().keys({
+    email: joi.string().email(),
+    facebook_url: joi.string().uri(),
+    phone_number: joi.string(),
+    twitter_url: joi.string().uri()
+  })
+};
+
 export const create = joi.object().keys({
+  ...shared,
   brief: joi.string().required(),
   contributor_id: joi.string().required(),
   created_at: joi
@@ -37,6 +56,7 @@ export const create = joi.object().keys({
 });
 
 export const update = joi.object().keys({
+  ...shared,
   brief: joi.string(),
   contributor_id: joi.string(),
   description: joi.string(),
