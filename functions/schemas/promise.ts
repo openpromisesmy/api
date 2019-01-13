@@ -35,8 +35,8 @@ export interface IPromise {
   category?: string;
   context?: string;
   contributor_id: string;
-  clauses?: Clauses;
-  contact_details: ContactDetails;
+  clauses?: IClauses;
+  contact_details: IContactDetails;
   cover_image?: string;
   created_at: string;
   description?: string;
@@ -57,13 +57,13 @@ export interface IPromise {
   review_date?: string;
 }
 
-interface Clauses {
+interface IClauses {
   broken?: string;
   fulfilled?: string;
   progress?: string;
 }
 
-interface ContactDetails {
+interface IContactDetails {
   email?: string;
   facebook_url?: string;
   twitter_url?: string;
@@ -82,7 +82,10 @@ const shared = {
   deadline: joi.date().iso(),
   description: joi.string(),
   elaboration: joi.string(),
+  politician_id: joi.string().required(),
+  post_url: joi.string(),
   quote: joi.string().required(),
+  review_date: joi.date().iso(),
   source_date: joi
     .string()
     .isoDate()
@@ -92,11 +95,8 @@ const shared = {
     .string()
     .uri()
     .required(),
-  title: joi.string().required(),
-  post_url: joi.string(),
-  review_date: joi.date().iso(),
   state: joi.string().valid(malaysianStates),
-  politician_id: joi.string().required()
+  title: joi.string().required()
 };
 
 export const create = joi.object().keys({
