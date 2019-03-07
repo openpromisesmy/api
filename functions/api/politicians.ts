@@ -5,6 +5,7 @@ import * as functions from 'firebase-functions';
 import express from 'express';
 import _ from 'lodash';
 
+import { firebaseAuth } from '../etc/middlewares';
 import PoliticianModel from '../models/politician';
 
 import { ValidationError } from 'joi';
@@ -23,9 +24,9 @@ app.use(cors({ origin: true }));
 
 app.get('/ping', healthCheck);
 
-app.post('/', createPolitician);
-app.post('/:id', updatePolitician);
-app.delete('/:id', deletePolitician);
+app.post('/', firebaseAuth, createPolitician);
+app.post('/:id', firebaseAuth, updatePolitician);
+app.delete('/:id', firebaseAuth, deletePolitician);
 
 app.get('/', listPoliticians);
 app.get('/all', listAllPoliticians);
