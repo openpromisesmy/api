@@ -10,6 +10,10 @@ import { IContributor } from '../schemas/contributor';
 
 import { ValidationError } from 'joi';
 
+import middlewares from '../etc/middlewares';
+
+const { firebaseAuth } = middlewares;
+
 // contributors.get('/')
 // contributors.post('/').json({ profile_image: 'https://assets.openpromises.com/DSCF8873.jpg', name: 'Umar Rasydan', email: 'umarrasydan@gmail.com', contact: '+60172562786', status: 'Admin', live: true })
 // contributors.post('/-L6kq7u9sLz9fI2GuQ-h').json({name:'Umar Rasydan Romli'})
@@ -24,12 +28,12 @@ app.use(cors({ origin: true }));
 
 app.get('/ping', healthCheck);
 
-app.post('/', createContributor);
-app.post('/:id', updateContributor);
-app.delete('/:id', deleteContributor);
+app.post('/', firebaseAuth, createContributor);
+app.post('/:id', firebaseAuth, updateContributor);
+app.delete('/:id', firebaseAuth, deleteContributor);
 
-app.get('/', listContributors);
-app.get('/:id', getContributor);
+app.get('/', firebaseAuth, listContributors);
+app.get('/:id', firebaseAuth, getContributor);
 
 export = functions.https.onRequest(app);
 
