@@ -8,6 +8,10 @@ import PromiseUpdateModel from '../models/promiseUpdate';
 
 import { ValidationError } from 'joi';
 
+import middlewares from '../etc/middlewares';
+
+const { firebaseAuth } = middlewares;
+
 const promiseUpdateModel = PromiseUpdateModel();
 
 const app = express();
@@ -16,9 +20,9 @@ app.use(cors({ origin: true }));
 
 app.get('/ping', healthCheck);
 
-app.post('/', createPromiseUpdate);
-app.post('/:id', updatePromiseUpdate);
-app.delete('/:id', deletePromiseUpdate);
+app.post('/', firebaseAuth, createPromiseUpdate);
+app.post('/:id', firebaseAuth, updatePromiseUpdate);
+app.delete('/:id', firebaseAuth, deletePromiseUpdate);
 
 app.get('/all', listAllPromiseUpdates);
 app.get('/', listPromiseUpdates);
