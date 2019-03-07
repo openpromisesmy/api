@@ -32,8 +32,8 @@ app.get('/ping', healthCheck);
 app.post('/', firebaseAuth, createPromise);
 app.get('/all', firebaseAuth, routePermissions, listAllPromises);
 
-app.post('/:id', updatePromise);
-app.delete('/:id', deletePromise);
+app.post('/:id', firebaseAuth, updatePromise);
+app.delete('/:id', firebaseAuth, deletePromise);
 
 app.get('/', listPromises);
 app.get('/:id', getPromise);
