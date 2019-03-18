@@ -54,6 +54,7 @@ export interface IPromise {
   elaboration?: string;
   deadline?: string;
   review_date?: string;
+  list_ids: Array<string>;
 }
 
 interface IClauses {
@@ -104,6 +105,10 @@ export const create = joi.object().keys({
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
+  list_ids: joi
+    .array()
+    .items(joi.string())
+    .default([]),
   updated_at: joi
     .date()
     .iso()
@@ -119,6 +124,7 @@ export const update = joi.object().keys({
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
+  list_ids: joi.array().items(joi.string()),
   updated_at: joi
     .date()
     .iso()
