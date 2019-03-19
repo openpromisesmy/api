@@ -5,19 +5,12 @@ import * as functions from 'firebase-functions';
 import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
-const { firebaseAuth } = middlewares;
+const { firebaseAuth, notImplemented } = middlewares;
 
 const app = express();
 
 app.use(cors({ origin: true }));
 app.use(express.json());
-
-// TODO:
-// export this to a separate module
-//
-const notImplemented = (req: express.Request, res: express.Response) => {
-  res.sendStatus(501);
-};
 
 app.post('/', firebaseAuth, notImplemented);
 
