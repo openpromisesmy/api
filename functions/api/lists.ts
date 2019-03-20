@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
-const { firebaseAuth, notImplemented } = middlewares;
+const { firebaseAuth } = middlewares;
 
 const app = express();
 
@@ -23,3 +23,11 @@ app.post('/:id', firebaseAuth, notImplemented);
 app.delete('/:id', firebaseAuth, notImplemented);
 
 export = functions.https.onRequest(app);
+
+function notImplemented(
+  req: express.Request,
+  res: express.Response,
+  next?: Function
+) {
+  res.sendStatus(501);
+}

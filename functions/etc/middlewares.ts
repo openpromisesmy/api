@@ -24,19 +24,10 @@ function _asyncValidateContributor(dataToValidate: object) {
   });
 }
 
-function notImplemented(
-  req: express.Request,
-  res: express.Response,
-  next?: Function
-) {
-  res.sendStatus(501);
-}
-
 export = {
   firebaseAuth,
   logger,
-  routePermissions,
-  notImplemented
+  routePermissions
 };
 
 async function firebaseAuth(
