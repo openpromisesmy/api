@@ -10,10 +10,8 @@ async function get(req: express.Request, res: express.Response) {
       );
     }
 
-    const List = ListModel();
     const { id } = req.params;
-
-    const doc = await List.get(id);
+    const doc = await ListModel().get(id);
 
     if (!doc) return res.sendStatus(404);
 
