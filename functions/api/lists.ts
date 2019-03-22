@@ -6,6 +6,7 @@ import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
 import getAllLists from './lists/list';
+import getList from './lists/get';
 
 const { firebaseAuth } = middlewares;
 
@@ -18,7 +19,7 @@ app.post('/', firebaseAuth, notImplemented);
 
 app.get('/all', firebaseAuth, getAllLists);
 
-app.get('/:id', firebaseAuth, notImplemented);
+app.get('/:id', firebaseAuth, getList);
 
 app.post('/:id', firebaseAuth, notImplemented);
 
