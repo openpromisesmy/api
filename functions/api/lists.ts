@@ -5,6 +5,7 @@ import * as functions from 'firebase-functions';
 import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
+import createList from './lists/create';
 import getList from './lists/get';
 import getAllLists from './lists/list';
 
@@ -15,7 +16,7 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-app.post('/', firebaseAuth, notImplemented);
+app.post('/', firebaseAuth, createList);
 
 app.get('/all', firebaseAuth, getAllLists);
 
