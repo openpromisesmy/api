@@ -1,6 +1,7 @@
 import joi = require('joi');
 
 export interface IList {
+  contributor_id: string;
   title: string;
   promise_ids: string[];
   created_at: string;
@@ -8,6 +9,7 @@ export interface IList {
 }
 
 export const create = joi.object().keys({
+  contributor_id: joi.string(),
   created_at: joi
     .date()
     .iso()
@@ -24,6 +26,7 @@ export const create = joi.object().keys({
 });
 
 export const update = joi.object().keys({
+  contributor_id: joi.string(),
   promise_ids: joi.array().items(joi.string()),
   title: joi.string(),
   updated_at: joi
