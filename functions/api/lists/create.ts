@@ -8,14 +8,14 @@ async function createList(req: express.Request, res: express.Response) {
 
     const list = await ListModel().add(validatedList);
 
-    return list.id && res.status(200).json(list);
+    return res.status(200).json(list);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
     }
 
     console.log(e);
-    return res.status(500).end();
+    return res.sendStatus(500);
   }
 }
 
