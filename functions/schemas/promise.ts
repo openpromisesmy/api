@@ -39,6 +39,7 @@ export interface IPromise {
   cover_image?: string;
   created_at: string;
   description?: string;
+  list_ids: string[];
   live: boolean;
   notes?: string;
   politician_id: string;
@@ -54,7 +55,6 @@ export interface IPromise {
   elaboration?: string;
   deadline?: string;
   review_date?: string;
-  list_ids: Array<string>;
 }
 
 interface IClauses {
@@ -99,16 +99,16 @@ export const create = joi.object().keys({
     .date()
     .iso()
     .default(util.now, 'Time of creation'),
+  list_ids: joi
+    .array()
+    .items(joi.string())
+    .default([]),
   live: joi.boolean().default(false),
   notes: joi.string(),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  list_ids: joi
-    .array()
-    .items(joi.string())
-    .default([]),
   updated_at: joi
     .date()
     .iso()
@@ -118,13 +118,13 @@ export const create = joi.object().keys({
 export const update = joi.object().keys({
   ...shared,
   contributor_id: joi.string(),
+  list_ids: joi.array().items(joi.string()),
   live: joi.boolean(),
   notes: joi.string(),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
-  list_ids: joi.array().items(joi.string()),
   updated_at: joi
     .date()
     .iso()

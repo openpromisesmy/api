@@ -5,8 +5,8 @@ import * as functions from 'firebase-functions';
 import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
-import getAllLists from './lists/list';
 import getList from './lists/get';
+import getAllLists from './lists/list';
 
 const { firebaseAuth } = middlewares;
 
@@ -30,7 +30,7 @@ export = functions.https.onRequest(app);
 function notImplemented(
   req: express.Request,
   res: express.Response,
-  next?: Function
+  next?: express.NextFunction
 ) {
   res.sendStatus(501);
 }
