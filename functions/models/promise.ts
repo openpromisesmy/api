@@ -26,35 +26,97 @@ export = () => ({
   updateSchema
 });
 
+async function getListIdIfInvalid(listId: string): Promise<undefined | string> {
+  const list = db.collection('lists').doc(listId);
+  const snapshot = await list.get();
+
+  if (snapshot.exists) return undefined;
+
+  return listId;
+}
+
+async function findByListIdAndAddPromiseId(
+  listId: string,
+  promiseId: string,
+  transaction: any
+): Promise<undefined> {
+  const listRef = db.collection('lists').doc(listId);
+  const snapshot = await transaction.get(listRef);
+
+  const { promise_ids: promiseIds } = snapshot.data();
+
+  transaction.update(listRef, {
+    promise_ids: promiseIds.concat(promiseId)
+  });
+
+  return undefined;
+}
+
+async function ensurePoliticianExistsById(politicianId: string) {
+  const politicianRef = db.collection('politicians').doc(politicianId);
+
+  return politicianRef.get().then((politician: any) => {
+    if (politician.exists) return;
+    throw { status: 404, message: 'Invalid Politician' };
+  });
+}
+
+async function ensureContributorExistsById(contributorId: string) {
+  const contributorRef = db.collection('contributors').doc(contributorId);
+
+  return contributorRef.get().then((contributor: any) => {
+    if (contributor.exists) return;
+    throw { status: 404, message: 'Invalid Contributor' };
+  });
+}
+
+async function ensureAllListsExistById(listIds: string[]) {
+  const validations = listIds.map(getListIdIfInvalid);
+
+  return Promise.all(validations).then(listIds => {
+    const [invalidId] = listIds.filter(id => id !== undefined);
+
+    if (invalidId) {
+      throw {
+        status: 404,
+        message: `Invalid List with id "${invalidId}"`
+      };
+    }
+  });
+}
+
+async function findAllListsByIdAndAddPromiseId(
+  listIds: string[],
+  promiseId: string,
+  transaction: any
+) {
+  const updates = listIds.map(listId => {
+    return findByListIdAndAddPromiseId(listId, promiseId, transaction);
+  });
+
+  return Promise.all(updates);
+}
+
 async function add(data: IPromise) {
-  try {
-    const [pol, con] = await Promise.all([
-      politician.get(data.politician_id),
-      contributor.get(data.contributor_id)
-    ]);
+  return db
+    .runTransaction(async (transaction: any) => {
+      await ensurePoliticianExistsById(data.politician_id);
+      await ensureContributorExistsById(data.contributor_id);
 
-    if (_.isEmpty(pol)) {
-      return { status: 404, message: 'Invalid Politician' };
-    }
+      const ref = db.collection('promises').doc();
 
-    if (_.isEmpty(con)) {
-      return { status: 404, message: 'Invalid Contributor' };
-    }
+      transaction.update(ref, data);
 
-    const res = await collection.add(data);
+      await ensureAllListsExistById(data.list_ids);
+      await findAllListsByIdAndAddPromiseId(data.list_ids, ref.id, transaction);
 
-    if (_.isEmpty(res)) {
-      throw new Error('Fail to add');
-    }
+      return { id: ref.id };
+    })
+    .catch((e: any) => {
+      if (e.status) return e;
 
-    return { id: res.id };
-  } catch (e) {
-    if (e.status) {
-      return e;
-    }
-
-    throw e;
-  }
+      throw e;
+    });
 }
 
 async function get(id: string) {
