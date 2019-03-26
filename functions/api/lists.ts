@@ -18,9 +18,9 @@ app.use(express.json());
 
 app.post('/', firebaseAuth, createList);
 
-app.get('/all', firebaseAuth, getAllLists);
+app.get('/', getAllLists);
 
-app.get('/:id', firebaseAuth, getList);
+app.get('/:id', getList);
 
 app.post('/:id', firebaseAuth, notImplemented);
 
