@@ -2,7 +2,6 @@ import cors from 'cors';
 import express from 'express';
 import * as functions from 'firebase-functions';
 
-import boolParser from 'express-query-boolean';
 import middlewares from '../etc/middlewares';
 
 import createList from './lists/create';
