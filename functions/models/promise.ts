@@ -177,7 +177,7 @@ async function update(id: string, updateData: object) {
     console.log('remove promise_id from all List');
   }
   if (previouslyHasListIds && updateHasListIds) {
-    const change = detectArrayChanges(promise.list_ids, updateData);
+    const change = detectArrayChanges(promise.list_ids, updateData.list_ids);
     console.log(change);
   }
 
