@@ -4,7 +4,7 @@ import * as functions from 'firebase-functions';
 
 import middlewares from '../etc/middlewares';
 
-import createList from './lists/create';
+import addList from './lists/add';
 import getList from './lists/get';
 import listLists from './lists/list';
 
@@ -15,7 +15,7 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-app.post('/', firebaseAuth, createList);
+app.post('/', firebaseAuth, addList);
 
 app.get('/', listLists);
 

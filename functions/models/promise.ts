@@ -162,30 +162,45 @@ async function list(query: object) {
   return snapshotToArray(snapshot);
 }
 
-async function update(id: string, updateData: object) {
-  const promise = await get(id);
-  const previouslyNoListIds = !promise.list_ids || promise.list_ids.length < 1;
-  const previouslyHasListIds = !previouslyNoListIds;
-  const updateHasListIds =
-    updateData.list_ids && updateData.list_ids.length > 0;
-  const updateDoesNotHaveListIds = !updateHasListIds;
+async function update(id: string, data: IPromise) {
+  return db
+    .runTransaction(async (transaction: any) => {
+      const promise = await get(id);
+      const previouslyNoListIds =
+        !promise.list_ids || promise.list_ids.length < 1;
+      const previouslyHasListIds = !previouslyNoListIds;
+      const updateHasListIds = data.list_ids && data.list_ids.length > 0;
+      const updateDoesNotHaveListIds = !updateHasListIds;
 
-  if (previouslyNoListIds && updateHasListIds) {
-    console.log('just update Lists with this promise_id');
-  }
-  if (previouslyHasListIds && updateDoesNotHaveListIds) {
-    console.log('remove promise_id from all List');
-  }
-  if (previouslyHasListIds && updateHasListIds) {
-    const change = detectArrayChanges(promise.list_ids, updateData.list_ids);
-    console.log(change);
-  }
+      if (updateHasListIds) {
+        await ensureAllListsExistById(data.list_ids);
+      }
 
-  if (_.isEmpty(promise)) {
-    return { status: 404, message: 'Invalid Promise' };
-  }
+      if (previouslyNoListIds && updateHasListIds) {
+        console.log('just update Lists with this promise_id');
+        await findAllListsByIdAndAddPromiseId(data.list_ids, id, transaction);
+      }
+      if (previouslyHasListIds && updateDoesNotHaveListIds) {
+        console.log('remove promise_id from all List');
+      }
+      if (previouslyHasListIds && updateHasListIds) {
+        const change = detectArrayChanges(promise.list_ids, data.list_ids);
+        console.log(change);
+      }
 
-  return collection.doc(id).update(updateData);
+      if (_.isEmpty(promise)) {
+        return { status: 404, message: 'Invalid Promise' };
+      }
+
+      return collection.doc(id).update(data);
+    })
+    .catch((e: any) => {
+      if (e.status) {
+        return e;
+      }
+
+      throw e;
+    });
 }
 
 async function remove(id: string) {
