@@ -35,36 +35,12 @@ const promisify = (f: any, ...params: any[]) => {
   });
 };
 
-const parseQueryForRef = (ref: CollectionReference, query: object) => {
-  const paginationQueries = ['orderBy', 'reverse'];
-
-  if (!_.isEmpty(query)) {
-    for (const x in query) {
-      if (paginationQueries.includes(x)) {
-        // for pagination
-        switch (x) {
-          case 'orderBy':
-            ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
-            break;
-          default:
-            break;
-        }
-      } else {
-        // for other queries
-        ref = ref.where(x, '==', query[x]);
-      }
-    }
-  }
-
-  return ref;
-};
-
 export = {
   compose,
   getKey,
   getValue,
   now,
-  parseQueryForRef,
+  parseQueryForRef: require('./parseQueryForRef'),
   promisify,
   snapshotToArray,
   toArray,
