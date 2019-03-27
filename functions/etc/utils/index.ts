@@ -29,5 +29,6 @@ export = {
   promisify: require('./promisify'),
   snapshotToArray,
   toArray,
-  toObject
+  toObject,
+  detectArrayChanges: require('./detectArrayChanges')
 };

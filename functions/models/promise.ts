@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import util from '../etc/util';
+import { detectArrayChanges, snapshotToArray, toObject } from '../etc/utils';
 import {
   create as createSchema,
   IPromise,
@@ -27,10 +27,12 @@ export = () => ({
 });
 
 async function getListIdIfInvalid(listId: string): Promise<undefined | string> {
-  const list = db.collection('lists').doc(listId);
-  const snapshot = await list.get();
+  const listRef = db.collection('lists').doc(listId);
+  const snapshot = await listRef.get();
 
-  if (snapshot.exists) return undefined;
+  if (snapshot.exists) {
+    return undefined;
+  }
 
   return listId;
 }
@@ -55,8 +57,10 @@ async function findByListIdAndAddPromiseId(
 async function ensurePoliticianExistsById(politicianId: string) {
   const politicianRef = db.collection('politicians').doc(politicianId);
 
-  return politicianRef.get().then((politician: any) => {
-    if (politician.exists) return;
+  return politicianRef.get().then((thisPolitician: any) => {
+    if (thisPolitician.exists) {
+      return;
+    }
     throw { status: 404, message: 'Invalid Politician' };
   });
 }
@@ -64,8 +68,10 @@ async function ensurePoliticianExistsById(politicianId: string) {
 async function ensureContributorExistsById(contributorId: string) {
   const contributorRef = db.collection('contributors').doc(contributorId);
 
-  return contributorRef.get().then((contributor: any) => {
-    if (contributor.exists) return;
+  return contributorRef.get().then((thisContributor: any) => {
+    if (thisContributor.exists) {
+      return;
+    }
     throw { status: 404, message: 'Invalid Contributor' };
   });
 }
@@ -73,13 +79,13 @@ async function ensureContributorExistsById(contributorId: string) {
 async function ensureAllListsExistById(listIds: string[]) {
   const validations = listIds.map(getListIdIfInvalid);
 
-  return Promise.all(validations).then(listIds => {
-    const [invalidId] = listIds.filter(id => id !== undefined);
+  return Promise.all(validations).then(thisListIds => {
+    const [invalidId] = thisListIds.filter(id => id !== undefined);
 
     if (invalidId) {
       throw {
-        status: 404,
-        message: `Invalid List with id "${invalidId}"`
+        message: `Invalid List with id "${invalidId}"`,
+        status: 404
       };
     }
   });
@@ -113,7 +119,9 @@ async function add(data: IPromise) {
       return { id: ref.id };
     })
     .catch((e: any) => {
-      if (e.status) return e;
+      if (e.status) {
+        return e;
+      }
 
       throw e;
     });
@@ -124,7 +132,7 @@ async function get(id: string) {
 
   const promise = doc.data();
 
-  return _.isEmpty(promise) ? {} : util.toObject(id, promise);
+  return _.isEmpty(promise) ? {} : toObject(id, promise);
 }
 
 async function list(query: object) {
@@ -151,11 +159,27 @@ async function list(query: object) {
   }
 
   const snapshot = await ref.get();
-  return util.snapshotToArray(snapshot);
+  return snapshotToArray(snapshot);
 }
 
 async function update(id: string, updateData: object) {
   const promise = await get(id);
+  const previouslyNoListIds = !promise.list_ids || promise.list_ids.length < 1;
+  const previouslyHasListIds = !previouslyNoListIds;
+  const updateHasListIds =
+    updateData.list_ids && updateData.list_ids.length > 0;
+  const updateDoesNotHaveListIds = !updateHasListIds;
+
+  if (previouslyNoListIds && updateHasListIds) {
+    console.log('just update Lists with this promise_id');
+  }
+  if (previouslyHasListIds && updateDoesNotHaveListIds) {
+    console.log('remove promise_id from all List');
+  }
+  if (previouslyHasListIds && updateHasListIds) {
+    const change = detectArrayChanges(promise.list_ids, updateData.list_ids);
+    console.log(change);
+  }
 
   if (_.isEmpty(promise)) {
     return { status: 404, message: 'Invalid Promise' };
@@ -182,8 +206,8 @@ async function stats() {
       .get()
   ]);
 
-  const promises = util.snapshotToArray(servicesSnapshot[0]);
-  const politicians = util.snapshotToArray(servicesSnapshot[1]);
+  const promises = snapshotToArray(servicesSnapshot[0]);
+  const politicians = snapshotToArray(servicesSnapshot[1]);
 
   const livePromisesByLivePoliticians = _filterPromisesWithLivePoliticians(
     promises,
