@@ -1,8 +1,4 @@
-import {
-  CollectionReference,
-  DocumentData,
-  QuerySnapshot
-} from '@google-cloud/firestore';
+import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
 import _ from 'lodash';
 
 const compose = (...fns: Array<((d: any) => any)>) => (x: ((d: any) => any)) =>
@@ -23,17 +19,6 @@ const snapshotToArray = (snapshot: QuerySnapshot) => {
   });
   return array;
 };
-const promisify = (f: any, ...params: any[]) => {
-  return new Promise((resolve, reject) => {
-    f(...params, (e: ErrorEvent, result: any) => {
-      if (e) {
-        return reject(e);
-      }
-
-      return resolve(result);
-    });
-  });
-};
 
 export = {
   compose,
@@ -41,7 +26,7 @@ export = {
   getValue,
   now,
   parseQueryForRef: require('./parseQueryForRef'),
-  promisify,
+  promisify: require('./promisify'),
   snapshotToArray,
   toArray,
   toObject
