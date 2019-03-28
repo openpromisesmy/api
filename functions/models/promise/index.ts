@@ -59,6 +59,25 @@ async function findByListIdAndAddPromiseId(
   return undefined;
 }
 
+async function findByListIdAndRemovePromiseId(
+  listId: string,
+  promiseId: string,
+  transaction: any
+): Promise<undefined> {
+  const listRef = db.collection('lists').doc(listId);
+  const snapshot = await transaction.get(listRef);
+
+  const { promise_ids: promiseIds } = snapshot.data();
+
+  const updatedPromiseIds = promiseIds.filter(x => x !== promiseId);
+
+  transaction.update(listRef, {
+    promise_ids: updatedPromiseIds
+  });
+
+  return undefined;
+}
+
 export async function ensurePoliticianExistsById(politicianId: string) {
   const politicianRef = db.collection('politicians').doc(politicianId);
 
