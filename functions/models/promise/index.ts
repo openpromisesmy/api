@@ -9,6 +9,7 @@ import contributorModel from '../contributor';
 import politicianModel from '../politician';
 import add from './add';
 import update from './update';
+import { detectArrayChanges } from '../../etc/utils';
 
 export const db = admin.firestore();
 const politician = politicianModel();
@@ -28,7 +29,7 @@ export default {
   ensurePoliticianExistsById,
   ensureContributorExistsById,
   ensureAllListsExistById,
-  findAllListsByIdAndAddPromiseId
+  updatePromiseIdInLists
 };
 
 async function getListIdIfInvalid(listId: string): Promise<undefined | string> {
@@ -115,16 +116,33 @@ export async function ensureAllListsExistById(listIds: string[]) {
   });
 }
 
-export async function findAllListsByIdAndAddPromiseId(
-  listIds: string[],
-  promiseId: string,
-  transaction: any
-) {
-  const updates = listIds.map(listId => {
+interface IUpdatePromiseIdInListsParam {
+  previousListIds: string[];
+  updatedListIds: string[];
+  promiseId: string;
+  transaction: any;
+}
+
+export async function updatePromiseIdInLists({
+  previousListIds,
+  updatedListIds,
+  promiseId,
+  transaction
+}: IUpdatePromiseIdInListsParam) {
+  const { additions, removals } = detectArrayChanges(
+    previousListIds,
+    updatedListIds
+  );
+
+  const additionOps = additions.map(listId => {
     return findByListIdAndAddPromiseId(listId, promiseId, transaction);
   });
 
-  return Promise.all(updates);
+  const removalOps = removals.map(listId => {
+    return findByListIdAndRemovePromiseId(listId, promiseId, transaction);
+  });
+
+  return Promise.all([...additionOps, ...removalOps]);
 }
 
 export async function get(id: string) {

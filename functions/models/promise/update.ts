@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import { detectArrayChanges } from '../../etc/utils';
 import { IPromise } from '../../schemas/promise';
 import {
   db,
   get,
   ensureAllListsExistById,
-  findAllListsByIdAndAddPromiseId,
+  updatePromiseIdInLists,
   collection
 } from './index';
 
@@ -31,18 +30,13 @@ const update = db => async (id: string, data: IPromise) => {
           await ensureAllListsExistById(data.list_ids);
         }
 
-        const change = detectArrayChanges(promise.list_ids, data.list_ids);
-        console.log(change);
+        await updatePromiseIdInLists({
+          previousListIds: promise.list_ids,
+          updatedListIds: data.list_ids,
+          promiseId: id,
+          transaction
+        });
 
-        if (previouslyNone && updateHas) {
-          console.log('just update Lists with this promise_id');
-          await findAllListsByIdAndAddPromiseId(data.list_ids, id, transaction);
-        }
-        if (previouslyHas && updateNone) {
-          console.log('remove promise_id from all List');
-        }
-        if (previouslyHas && updateHas) {
-        }
         return collection.doc(id).update(data);
       })
       .catch((e: any) => {
