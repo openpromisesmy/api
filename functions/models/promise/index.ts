@@ -1,30 +1,35 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import { detectArrayChanges, snapshotToArray, toObject } from '../etc/utils';
+import { snapshotToArray, toObject } from '../../etc/utils';
 import {
   create as createSchema,
-  IPromise,
   update as updateSchema
-} from '../schemas/promise';
-import contributorModel from './contributor';
-import politicianModel from './politician';
+} from '../../schemas/promise';
+import contributorModel from '../contributor';
+import politicianModel from '../politician';
+import add from './add';
+import update from './update';
 
-const db = admin.firestore();
+export const db = admin.firestore();
 const politician = politicianModel();
 const contributor = contributorModel();
 
-const collection = db.collection('promises');
+export const collection = db.collection('promises');
 
-export = () => ({
-  add,
+export default {
+  add: add(db),
   createSchema,
   get,
   list,
   remove,
   stats,
-  update,
-  updateSchema
-});
+  update: update(db),
+  updateSchema,
+  ensurePoliticianExistsById,
+  ensureContributorExistsById,
+  ensureAllListsExistById,
+  findAllListsByIdAndAddPromiseId
+};
 
 async function getListIdIfInvalid(listId: string): Promise<undefined | string> {
   const listRef = db.collection('lists').doc(listId);
@@ -54,7 +59,7 @@ async function findByListIdAndAddPromiseId(
   return undefined;
 }
 
-async function ensurePoliticianExistsById(politicianId: string) {
+export async function ensurePoliticianExistsById(politicianId: string) {
   const politicianRef = db.collection('politicians').doc(politicianId);
 
   return politicianRef.get().then((thisPolitician: any) => {
@@ -65,7 +70,7 @@ async function ensurePoliticianExistsById(politicianId: string) {
   });
 }
 
-async function ensureContributorExistsById(contributorId: string) {
+export async function ensureContributorExistsById(contributorId: string) {
   const contributorRef = db.collection('contributors').doc(contributorId);
 
   return contributorRef.get().then((thisContributor: any) => {
@@ -76,7 +81,7 @@ async function ensureContributorExistsById(contributorId: string) {
   });
 }
 
-async function ensureAllListsExistById(listIds: string[]) {
+export async function ensureAllListsExistById(listIds: string[]) {
   const validations = listIds.map(getListIdIfInvalid);
 
   return Promise.all(validations).then(thisListIds => {
@@ -91,7 +96,7 @@ async function ensureAllListsExistById(listIds: string[]) {
   });
 }
 
-async function findAllListsByIdAndAddPromiseId(
+export async function findAllListsByIdAndAddPromiseId(
   listIds: string[],
   promiseId: string,
   transaction: any
@@ -103,31 +108,7 @@ async function findAllListsByIdAndAddPromiseId(
   return Promise.all(updates);
 }
 
-async function add(data: IPromise) {
-  return db
-    .runTransaction(async (transaction: any) => {
-      await ensurePoliticianExistsById(data.politician_id);
-      await ensureContributorExistsById(data.contributor_id);
-
-      const ref = db.collection('promises').doc();
-
-      transaction.update(ref, data);
-
-      await ensureAllListsExistById(data.list_ids);
-      await findAllListsByIdAndAddPromiseId(data.list_ids, ref.id, transaction);
-
-      return { id: ref.id };
-    })
-    .catch((e: any) => {
-      if (e.status) {
-        return e;
-      }
-
-      throw e;
-    });
-}
-
-async function get(id: string) {
+export async function get(id: string) {
   const doc = await collection.doc(id).get();
 
   const promise = doc.data();
@@ -160,47 +141,6 @@ async function list(query: object) {
 
   const snapshot = await ref.get();
   return snapshotToArray(snapshot);
-}
-
-async function update(id: string, data: IPromise) {
-  return db
-    .runTransaction(async (transaction: any) => {
-      const promise = await get(id);
-      const previouslyNoListIds =
-        !promise.list_ids || promise.list_ids.length < 1;
-      const previouslyHasListIds = !previouslyNoListIds;
-      const updateHasListIds = data.list_ids && data.list_ids.length > 0;
-      const updateDoesNotHaveListIds = !updateHasListIds;
-
-      if (updateHasListIds) {
-        await ensureAllListsExistById(data.list_ids);
-      }
-
-      if (previouslyNoListIds && updateHasListIds) {
-        console.log('just update Lists with this promise_id');
-        await findAllListsByIdAndAddPromiseId(data.list_ids, id, transaction);
-      }
-      if (previouslyHasListIds && updateDoesNotHaveListIds) {
-        console.log('remove promise_id from all List');
-      }
-      if (previouslyHasListIds && updateHasListIds) {
-        const change = detectArrayChanges(promise.list_ids, data.list_ids);
-        console.log(change);
-      }
-
-      if (_.isEmpty(promise)) {
-        return { status: 404, message: 'Invalid Promise' };
-      }
-
-      return collection.doc(id).update(data);
-    })
-    .catch((e: any) => {
-      if (e.status) {
-        return e;
-      }
-
-      throw e;
-    });
 }
 
 async function remove(id: string) {

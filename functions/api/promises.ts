@@ -19,8 +19,6 @@ const { firebaseAuth, routePermissions } = middlewares;
 // promises.get('/-L6grrLSYEBLbHIxpeGy')
 // promises.delete('/-L6gfTkNClzZy7w9t_9e')
 
-const promiseModel = PromiseModel();
-
 const app = express();
 
 app.use(cors({ origin: true }));
@@ -48,7 +46,7 @@ async function createPromise(req: express.Request, res: express.Response) {
   try {
     const validatedPromise = await _asyncPromiseValidateCreate(req.body);
 
-    const promise = await promiseModel.add(validatedPromise);
+    const promise = await PromiseModel.add(validatedPromise);
 
     return promise.status
       ? res.status(promise.status).json(promise)
@@ -69,7 +67,7 @@ async function createPromise(req: express.Request, res: express.Response) {
 // only live Promises shown
 async function listPromises(req: express.Request, res: express.Response) {
   try {
-    const promises = await promiseModel.list({ live: true, ...req.query });
+    const promises = await PromiseModel.list({ live: true, ...req.query });
 
     return promises.status
       ? res.status(promises.status).json(promises)
@@ -83,7 +81,7 @@ async function listPromises(req: express.Request, res: express.Response) {
 // lists All Promises, for admin
 async function listAllPromises(req: express.Request, res: express.Response) {
   try {
-    const promises = await promiseModel.list(req.query);
+    const promises = await PromiseModel.list(req.query);
 
     return promises.status
       ? res.status(promises.status).json(promises)
@@ -96,7 +94,7 @@ async function listAllPromises(req: express.Request, res: express.Response) {
 
 async function getPromise(req: express.Request, res: express.Response) {
   try {
-    const promise = await promiseModel.get(req.params.id);
+    const promise = await PromiseModel.get(req.params.id);
 
     return _.isEmpty(promise) ? res.status(404).end() : res.json(promise);
   } catch (e) {
@@ -109,7 +107,7 @@ async function updatePromise(req: express.Request, res: express.Response) {
   try {
     const validatedPromise = await _asyncPromiseValidateUpdate(req.body);
 
-    const updatedPromise = await promiseModel.update(
+    const updatedPromise = await PromiseModel.update(
       req.params.id,
       validatedPromise
     );
@@ -129,7 +127,7 @@ async function updatePromise(req: express.Request, res: express.Response) {
 
 async function deletePromise(req: express.Request, res: express.Response) {
   try {
-    await promiseModel.remove(req.params.id);
+    await PromiseModel.remove(req.params.id);
 
     return res.status(204).end();
   } catch (e) {
@@ -140,7 +138,7 @@ async function deletePromise(req: express.Request, res: express.Response) {
 
 function _asyncPromiseValidateCreate(dataToValidate: object) {
   return new Promise((resolve, reject) => {
-    promiseModel.createSchema.validate(
+    PromiseModel.createSchema.validate(
       dataToValidate,
       (e: ValidationError, validatedData: object) => {
         if (e) {
@@ -155,7 +153,7 @@ function _asyncPromiseValidateCreate(dataToValidate: object) {
 
 function _asyncPromiseValidateUpdate(dataToValidate: object) {
   return new Promise((resolve, reject) => {
-    promiseModel.updateSchema.validate(
+    PromiseModel.updateSchema.validate(
       dataToValidate,
       (e: ValidationError, validatedData: object) => {
         if (e) {

@@ -6,11 +6,10 @@ import * as functions from 'firebase-functions';
 
 import contributorModel from '../models/contributor';
 import politicianModel from '../models/politician';
-import promiseModel from '../models/promise';
+import PromiseModel from '../models/promise';
 
 const contributors = contributorModel();
 const politicians = politicianModel();
-const promises = promiseModel();
 
 // stats.get('/ping')
 // stats.get('/general_stats')
@@ -32,7 +31,7 @@ async function generalStats(req: express.Request, res: express.Response) {
     const allStats = await Promise.all([
       contributors.stats(),
       politicians.stats(),
-      promises.stats()
+      PromiseModel.stats()
     ]);
 
     return res.json(_buildGeneralStats(allStats));
