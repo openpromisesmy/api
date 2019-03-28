@@ -13,7 +13,15 @@ function detectArrayChanges(originalArr, updatedArr) {
     }
   });
 
-  return store;
+  const additions = Object.keys(store).filter(key => {
+    return store[key] === 1;
+  });
+
+  const removals = Object.keys(store).filter(key => {
+    return store[key] === -1;
+  });
+
+  return { additions, removals };
 }
 
 module.exports = detectArrayChanges;
