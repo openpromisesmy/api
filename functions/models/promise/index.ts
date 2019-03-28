@@ -1,13 +1,14 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import { detectArrayChanges, snapshotToArray, toObject } from '../etc/utils';
+import { detectArrayChanges, snapshotToArray, toObject } from '../../etc/utils';
 import {
   create as createSchema,
   IPromise,
   update as updateSchema
-} from '../schemas/promise';
-import contributorModel from './contributor';
-import politicianModel from './politician';
+} from '../../schemas/promise';
+import contributorModel from '../contributor';
+import politicianModel from '../politician';
+import add from './add';
 
 const db = admin.firestore();
 const politician = politicianModel();
@@ -16,7 +17,7 @@ const contributor = contributorModel();
 const collection = db.collection('promises');
 
 export = () => ({
-  add,
+  add: add(db),
   createSchema,
   get,
   list,
@@ -54,7 +55,7 @@ async function findByListIdAndAddPromiseId(
   return undefined;
 }
 
-async function ensurePoliticianExistsById(politicianId: string) {
+export async function ensurePoliticianExistsById(politicianId: string) {
   const politicianRef = db.collection('politicians').doc(politicianId);
 
   return politicianRef.get().then((thisPolitician: any) => {
@@ -65,7 +66,7 @@ async function ensurePoliticianExistsById(politicianId: string) {
   });
 }
 
-async function ensureContributorExistsById(contributorId: string) {
+export async function ensureContributorExistsById(contributorId: string) {
   const contributorRef = db.collection('contributors').doc(contributorId);
 
   return contributorRef.get().then((thisContributor: any) => {
@@ -76,7 +77,7 @@ async function ensureContributorExistsById(contributorId: string) {
   });
 }
 
-async function ensureAllListsExistById(listIds: string[]) {
+export async function ensureAllListsExistById(listIds: string[]) {
   const validations = listIds.map(getListIdIfInvalid);
 
   return Promise.all(validations).then(thisListIds => {
@@ -91,7 +92,7 @@ async function ensureAllListsExistById(listIds: string[]) {
   });
 }
 
-async function findAllListsByIdAndAddPromiseId(
+export async function findAllListsByIdAndAddPromiseId(
   listIds: string[],
   promiseId: string,
   transaction: any
@@ -101,30 +102,6 @@ async function findAllListsByIdAndAddPromiseId(
   });
 
   return Promise.all(updates);
-}
-
-async function add(data: IPromise) {
-  return db
-    .runTransaction(async (transaction: any) => {
-      await ensurePoliticianExistsById(data.politician_id);
-      await ensureContributorExistsById(data.contributor_id);
-
-      const ref = db.collection('promises').doc();
-
-      transaction.update(ref, data);
-
-      await ensureAllListsExistById(data.list_ids);
-      await findAllListsByIdAndAddPromiseId(data.list_ids, ref.id, transaction);
-
-      return { id: ref.id };
-    })
-    .catch((e: any) => {
-      if (e.status) {
-        return e;
-      }
-
-      throw e;
-    });
 }
 
 async function get(id: string) {
