@@ -6,10 +6,9 @@ import {
   IPromiseUpdate,
   update as updateSchema
 } from '../schemas/promiseUpdate';
-import promiseModel from './promise';
+import PromiseModel from './promise';
 
 const db = admin.firestore();
-const promise = promiseModel();
 
 const collection = db.collection('promiseUpdates');
 
@@ -25,7 +24,7 @@ export = () => ({
 
 async function add(data: IPromiseUpdate) {
   try {
-    const pro = await promise.get(data.promise_id);
+    const pro = await PromiseModel.get(data.promise_id);
 
     if (_.isEmpty(pro)) {
       return { status: 404, message: 'Invalid Promise' };
@@ -93,5 +92,5 @@ async function updateSourcePromiseStatus(promiseId: string) {
   const latestUpdate = _.last(promiseUpdates);
   const latestStatus = latestUpdate.status;
 
-  return promise.update(promiseId, { status: latestStatus });
+  return PromiseModel.update(promiseId, { status: latestStatus });
 }
