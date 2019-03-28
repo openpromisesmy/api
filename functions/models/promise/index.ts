@@ -1,20 +1,20 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import { detectArrayChanges, snapshotToArray, toObject } from '../../etc/utils';
+import { snapshotToArray, toObject } from '../../etc/utils';
 import {
   create as createSchema,
-  IPromise,
   update as updateSchema
 } from '../../schemas/promise';
 import contributorModel from '../contributor';
 import politicianModel from '../politician';
 import add from './add';
+import update from './update';
 
-const db = admin.firestore();
+export const db = admin.firestore();
 const politician = politicianModel();
 const contributor = contributorModel();
 
-const collection = db.collection('promises');
+export const collection = db.collection('promises');
 
 export default {
   add: add(db),
@@ -23,7 +23,7 @@ export default {
   list,
   remove,
   stats,
-  update,
+  update: update(db),
   updateSchema,
   ensurePoliticianExistsById,
   ensureContributorExistsById,
@@ -108,7 +108,7 @@ export async function findAllListsByIdAndAddPromiseId(
   return Promise.all(updates);
 }
 
-async function get(id: string) {
+export async function get(id: string) {
   const doc = await collection.doc(id).get();
 
   const promise = doc.data();
@@ -141,47 +141,6 @@ async function list(query: object) {
 
   const snapshot = await ref.get();
   return snapshotToArray(snapshot);
-}
-
-async function update(id: string, data: IPromise) {
-  return db
-    .runTransaction(async (transaction: any) => {
-      const promise = await get(id);
-      const previouslyNoListIds =
-        !promise.list_ids || promise.list_ids.length < 1;
-      const previouslyHasListIds = !previouslyNoListIds;
-      const updateHasListIds = data.list_ids && data.list_ids.length > 0;
-      const updateDoesNotHaveListIds = !updateHasListIds;
-
-      if (updateHasListIds) {
-        await ensureAllListsExistById(data.list_ids);
-      }
-
-      if (previouslyNoListIds && updateHasListIds) {
-        console.log('just update Lists with this promise_id');
-        await findAllListsByIdAndAddPromiseId(data.list_ids, id, transaction);
-      }
-      if (previouslyHasListIds && updateDoesNotHaveListIds) {
-        console.log('remove promise_id from all List');
-      }
-      if (previouslyHasListIds && updateHasListIds) {
-        const change = detectArrayChanges(promise.list_ids, data.list_ids);
-        console.log(change);
-      }
-
-      if (_.isEmpty(promise)) {
-        return { status: 404, message: 'Invalid Promise' };
-      }
-
-      return collection.doc(id).update(data);
-    })
-    .catch((e: any) => {
-      if (e.status) {
-        return e;
-      }
-
-      throw e;
-    });
 }
 
 async function remove(id: string) {
