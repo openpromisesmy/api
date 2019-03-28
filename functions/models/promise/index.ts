@@ -16,7 +16,7 @@ const contributor = contributorModel();
 
 const collection = db.collection('promises');
 
-export = () => ({
+export default {
   add: add(db),
   createSchema,
   get,
@@ -24,8 +24,12 @@ export = () => ({
   remove,
   stats,
   update,
-  updateSchema
-});
+  updateSchema,
+  ensurePoliticianExistsById,
+  ensureContributorExistsById,
+  ensureAllListsExistById,
+  findAllListsByIdAndAddPromiseId
+};
 
 async function getListIdIfInvalid(listId: string): Promise<undefined | string> {
   const listRef = db.collection('lists').doc(listId);
