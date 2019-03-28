@@ -1,36 +1,38 @@
 import admin from 'firebase-admin';
-
 import util = require('../../etc/util');
-
 import { IList } from '../../schemas/list';
 
+type Params = { live?: boolean };
+
 async function list(
-  query: any,
+  params: Params,
   dbOverride?: admin.firestore.Firestore
 ): Promise<object[]> {
   const db = dbOverride || admin.firestore();
-  const snapshot = await filter(query, db).then(ref => ref.get());
+  const ref = await filter(db.collection('lists'), params, db);
+  const snapshot = await ref.get();
 
   return util.snapshotToArray(snapshot);
 }
 
 async function filter(
-  query: any,
+  query: admin.firestore.Query,
+  params: Params,
   db: admin.firestore.Firestore
 ): Promise<admin.firestore.Query> {
-  let queryChain: admin.firestore.Query = db.collection('lists');
+  let result = query;
 
-  for (const prop in query) {
+  for (const prop in params) {
     switch (prop) {
       case 'live':
-        queryChain = queryChain.where(prop, '==', query[prop]);
+        result = result.where(prop, '==', params[prop]);
         break;
       default:
         break;
     }
   }
 
-  return queryChain;
+  return result;
 }
 
 export default list;
