@@ -275,6 +275,14 @@ describe('list schema', () => {
         })
         .catch(done);
     });
+
+    it('accepts the "description" field', async () => {
+      const attrs = { title: 'public safety', description: 'description' };
+      const result: any = await createSchema.validate(attrs);
+
+      expect(result.description).to.be.a('string');
+      expect(result.description).to.equal(attrs.description);
+    });
   });
 
   describe('update', () => {
@@ -454,6 +462,14 @@ describe('list schema', () => {
           done();
         })
         .catch(done);
+    });
+
+    it('accepts the "description" field', async () => {
+      const attrs = { title: 'public safety', description: 'description' };
+      const result: any = await updateSchema.validate(attrs);
+
+      expect(result.description).to.be.a('string');
+      expect(result.description).to.equal(attrs.description);
     });
   });
 
