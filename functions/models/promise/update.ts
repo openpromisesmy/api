@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import { detectArrayChanges } from '../../etc/utils';
 import { IPromise } from '../../schemas/promise';
 import {
   db,
   get,
   ensureAllListsExistById,
-  findAllListsByIdAndAddPromiseId,
+  updatePromiseIdInLists,
   collection
 } from './index';
 
@@ -14,12 +13,13 @@ const update = db => async (id: string, data: IPromise) => {
   if (_.isEmpty(promise)) {
     return { status: 404, message: 'Invalid Promise' };
   }
-  const previouslyNoListIds = !promise.list_ids || promise.list_ids.length < 1;
-  const previouslyHasListIds = !previouslyNoListIds;
-  const updateHasListIds = data.list_ids && data.list_ids.length > 0;
-  const updateDoesNotHaveListIds = !updateHasListIds;
+  const previouslyNone = !promise.list_ids || promise.list_ids.length < 1;
+  const previouslyHas = !previouslyNone;
+  const updateHas = data.list_ids && data.list_ids.length > 0;
+  const updateNone = !updateHas;
+  const updateDoesNotInvolveListIds = !data.list_ids;
 
-  if (previouslyNoListIds && updateDoesNotHaveListIds) {
+  if ((previouslyNone && updateNone) || updateDoesNotInvolveListIds) {
     return await db
       .collection('promises')
       .doc(id)
@@ -27,20 +27,17 @@ const update = db => async (id: string, data: IPromise) => {
   } else {
     return db
       .runTransaction(async (transaction: any) => {
-        if (updateHasListIds) {
+        if (updateHas) {
           await ensureAllListsExistById(data.list_ids);
         }
-        if (previouslyNoListIds && updateHasListIds) {
-          console.log('just update Lists with this promise_id');
-          await findAllListsByIdAndAddPromiseId(data.list_ids, id, transaction);
-        }
-        if (previouslyHasListIds && updateDoesNotHaveListIds) {
-          console.log('remove promise_id from all List');
-        }
-        if (previouslyHasListIds && updateHasListIds) {
-          const change = detectArrayChanges(promise.list_ids, data.list_ids);
-          console.log(change);
-        }
+
+        await updatePromiseIdInLists({
+          previousListIds: promise.list_ids,
+          updatedListIds: data.list_ids,
+          promiseId: id,
+          transaction
+        });
+
         return collection.doc(id).update(data);
       })
       .catch((e: any) => {
