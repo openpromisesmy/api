@@ -7,6 +7,7 @@ export interface IList {
   promise_ids: string[];
   created_at: string;
   updated_at: string;
+  description?: string;
 }
 
 export const create = joi.object().keys({
@@ -24,7 +25,8 @@ export const create = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(() => new Date(), 'the time of update')
+    .default(() => new Date(), 'the time of update'),
+  description: joi.string().optional()
 });
 
 export const update = joi.object().keys({
