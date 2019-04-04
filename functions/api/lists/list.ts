@@ -3,7 +3,7 @@ import ListModel from '../../models/list';
 
 async function list(req: express.Request, res: express.Response) {
   try {
-    const docs = await ListModel().list({});
+    const docs = await ListModel().list({ live: true });
 
     res.json(docs);
   } catch (e) {
