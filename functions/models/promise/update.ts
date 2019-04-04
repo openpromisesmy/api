@@ -17,8 +17,9 @@ const update = db => async (id: string, data: IPromise) => {
   const previouslyHas = !previouslyNone;
   const updateHas = data.list_ids && data.list_ids.length > 0;
   const updateNone = !updateHas;
+  const updateDoesNotInvolveListIds = !data.list_ids;
 
-  if (previouslyNone && updateNone) {
+  if ((previouslyNone && updateNone) || updateDoesNotInvolveListIds) {
     return await db
       .collection('promises')
       .doc(id)
