@@ -37,5 +37,6 @@ export const update = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(() => new Date(), 'the time of update')
+    .default(() => new Date(), 'the time of update'),
+  description: joi.string().optional()
 });
