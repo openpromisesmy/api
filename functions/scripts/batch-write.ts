@@ -4,7 +4,10 @@ import serviceAccount from './secret.json';
 
 // define here
 const config = {
-  COLLECTION_NAME: null
+  COLLECTION_NAME: 'promises',
+  MANIFESTO_URL:
+    'kempen.s3.amazonaws.com/manifesto/Manifesto_text/Manifesto_PH_EN.pdf',
+  MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx'
 };
 
 // WARNING
@@ -12,7 +15,7 @@ const config = {
 // THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION
 // USE MINDFULLY
 // TO ENABLE, CHANGE acknowledged to true
-const acknowledged = false;
+const acknowledged = true;
 if (!acknowledged) {
   throw 'Operation stopped. You have not acknowledged the warning.';
 }
@@ -24,9 +27,8 @@ admin.initializeApp({
 const db = admin.firestore();
 const batch = db.batch();
 
-console.log(`batch writing ${config.COLLECTION_NAME}`);
-
 let result;
+let counter = 0;
 
 (async () => {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
@@ -35,10 +37,18 @@ let result;
   result.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
     const updateData = {}; // update here
-    console.log(doc.data());
+    const sourceUrlIsManifesto =
+      doc.source_url.indexOf(config.MANIFESTO_URL) > -1;
+    if (sourceUrlIsManifesto) {
+      if (doc.list_ids) console.log(doc.list_ids);
+      counter++;
+    }
+    // WARNING: this line below alters the data
     // batch.update(ref, updateData);
   });
+  console.log({ counter, result: result.length });
 
+  // WARNING: uncomment below to commit the change
   // await batch.commit();
 })().catch(e => {
   console.log(e);
