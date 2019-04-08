@@ -40,27 +40,14 @@ let alreadyDone = 0;
   result.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
 
-    const sourceUrlIsManifesto =
-      doc.source_url.indexOf(config.MANIFESTO_URL) > -1;
-    const alreadyPartOfList =
-      doc.list_ids && doc.list_ids.indexOf(config.MANIFESTO_LIST_ID) > -1;
+    const condition = null; // condition here
 
-    if (sourceUrlIsManifesto) {
-      totalMatching++;
-      if (alreadyPartOfList) {
-        alreadyDone++;
-      } else {
-        const updateData = { list_ids: [config.MANIFESTO_LIST_ID] }; // update here
-        batch.update(ref, updateData);
-
-        notUpdated++;
-      }
-      if (doc.list_ids) console.log(doc.list_ids);
+    if (condition) {
+      const updateData = {}; // update here
+      // WARNING: uncomment below
+      // batch.update(ref, updateData);
     }
-
-    // WARNING: this line below alters the data
   });
-  console.log({ totalMatching, notUpdated, alreadyDone });
 
   // WARNING: uncomment below to commit the change
   // await batch.commit();
