@@ -2,6 +2,11 @@ import admin from 'firebase-admin';
 import util from '../etc/util';
 import serviceAccount from './secret.json';
 
+// define here
+const config = {
+  COLLECTION_NAME: null
+};
+
 // WARNING
 // DANGER!
 // THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION
@@ -19,30 +24,31 @@ admin.initializeApp({
 const db = admin.firestore();
 const batch = db.batch();
 
-const collectionName = '';
-console.log(`batch writing ${collectionName}`);
+console.log(`batch writing ${config.COLLECTION_NAME}`);
 
 let result;
 
 (async () => {
-  const snapshot = await db.collection(collectionName).get();
+  const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   result = util.snapshotToArray(snapshot);
   result.forEach(doc => {
-    const ref = db.collection(collectionName).doc(doc.id);
-    batch.update(ref, { live: true });
+    const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
+    const updateData = {}; // update here
+    console.log(doc.data());
+    // batch.update(ref, updateData);
   });
 
-  await batch.commit();
+  // await batch.commit();
 })().catch(e => {
   console.log(e);
 });
 
 // IF READING FROM JSON
-// const json = require(`./${collectionName}`);
+// const json = require(`./${COLLECTION_NAME}`);
 // for (let child in json) {
 //   const id = child;
 //   const object = json[id];
-//   var ref = db.collection(collectionName).doc(id);
+//   var ref = db.collection(COLLECTION_NAME).doc(id);
 //   batch.set(ref, object);
 // }
