@@ -2,6 +2,9 @@ import admin from 'firebase-admin';
 import util from '../etc/util';
 import serviceAccount from './secret.json';
 
+// WARNING
+// run gcloud beta firestore export before running this
+
 // define here
 const config = {
   COLLECTION_NAME: 'promises',
