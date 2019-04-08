@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import util from '../etc/util';
-import serviceAccount from '../secrets/google-key.json';
+import serviceAccount from './secret.json';
 
 // WARNING
 // DANGER!
@@ -8,6 +8,9 @@ import serviceAccount from '../secrets/google-key.json';
 // USE MINDFULLY
 // TO ENABLE, CHANGE acknowledged to true
 const acknowledged = false;
+if (!acknowledged) {
+  throw 'Operation stopped. You have not acknowledged the warning.';
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -23,12 +26,6 @@ let result;
 
 (async () => {
   const snapshot = await db.collection(collectionName).get();
-
-  if (!acknowledged) {
-    console.log('Operation stopped. You have not acknowledged the warning.');
-
-    return;
-  }
 
   result = util.snapshotToArray(snapshot);
   result.forEach(doc => {
