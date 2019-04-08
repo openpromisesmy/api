@@ -28,7 +28,9 @@ const db = admin.firestore();
 const batch = db.batch();
 
 let result;
-let counter = 0;
+let totalMatching = 0;
+let notUpdated = 0;
+let alreadyDone = 0;
 
 (async () => {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
@@ -36,17 +38,28 @@ let counter = 0;
   result = util.snapshotToArray(snapshot);
   result.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
-    const updateData = {}; // update here
+
     const sourceUrlIsManifesto =
       doc.source_url.indexOf(config.MANIFESTO_URL) > -1;
+    const alreadyPartOfList =
+      doc.list_ids && doc.list_ids.indexOf(config.MANIFESTO_LIST_ID) > -1;
+
     if (sourceUrlIsManifesto) {
+      totalMatching++;
+      if (alreadyPartOfList) {
+        alreadyDone++;
+      } else {
+        const updateData = { list_ids: [config.MANIFESTO_LIST_ID] }; // update here
+        batch.update(ref, updateData);
+
+        notUpdated++;
+      }
       if (doc.list_ids) console.log(doc.list_ids);
-      counter++;
     }
+
     // WARNING: this line below alters the data
-    // batch.update(ref, updateData);
   });
-  console.log({ counter, result: result.length });
+  console.log({ totalMatching, notUpdated, alreadyDone });
 
   // WARNING: uncomment below to commit the change
   // await batch.commit();
