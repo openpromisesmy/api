@@ -15,7 +15,7 @@ const config = {
 const WARNING_TEXT =
   ' \n WARNING!! \n\n run gcloud beta firestore export before running this \n\n DANGER!!! \n\n THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION \n USE MINDFULLY \n TO ENABLE, CHANGE acknowledged to true';
 
-const acknowledged = false;
+const acknowledged = true;
 if (!acknowledged) {
   console.error(WARNING_TEXT);
   throw 'Operation stopped. You have not acknowledged the warning.';
@@ -33,10 +33,11 @@ let totalMatching = 0;
 let notUpdated = 0;
 let alreadyDone = 0;
 
-(async () => {
+async function batchWrite() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   result = util.snapshotToArray(snapshot);
+  console.log(result.length);
   result.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
 
@@ -51,9 +52,9 @@ let alreadyDone = 0;
 
   // WARNING: uncomment below to commit the change
   // await batch.commit();
-})().catch(e => {
-  console.log(e);
-});
+}
+
+batchWrite();
 
 // IF READING FROM JSON
 // const json = require(`./${COLLECTION_NAME}`);
