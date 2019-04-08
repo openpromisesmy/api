@@ -18,7 +18,7 @@ const config = {
 // THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION
 // USE MINDFULLY
 // TO ENABLE, CHANGE acknowledged to true
-const acknowledged = true;
+const acknowledged = false;
 if (!acknowledged) {
   throw 'Operation stopped. You have not acknowledged the warning.';
 }
