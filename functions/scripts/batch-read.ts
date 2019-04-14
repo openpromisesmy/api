@@ -48,10 +48,14 @@ async function readAll() {
   const hasOtherValue = matchedDocuments.filter(
     document => document.state && document.state !== 'Sabah'
   );
+  const valueUndefined = matchedDocuments.filter(
+    document => document.state === undefined
+  );
   const result = {
     matchedDocuments,
     alreadyReflecting,
-    hasOtherValue
+    hasOtherValue,
+    valueUndefined
   };
   return result;
 }
