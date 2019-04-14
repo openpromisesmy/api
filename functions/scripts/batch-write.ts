@@ -15,7 +15,11 @@ const config = {
 const WARNING_TEXT =
   ' \n WARNING!! \n\n run gcloud beta firestore export before running this \n\n DANGER!!! \n\n THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION \n USE MINDFULLY \n TO ENABLE, CHANGE acknowledged to true';
 
-const acknowledged = fale;
+//// glcoud instructions: ////
+// gcloud config set project openpromises-8526c
+// gcloud beta firestore export gs://openpromises-8526c.appspot.com
+
+const acknowledged = false;
 if (!acknowledged) {
   console.error(WARNING_TEXT);
   throw 'Operation stopped. You have not acknowledged the warning.';
@@ -34,6 +38,7 @@ let notUpdated = 0;
 let alreadyDone = 0;
 
 async function batchWrite() {
+  console.log(config.TARGET_PROMISES);
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   result = util.snapshotToArray(snapshot);
