@@ -37,7 +37,6 @@ function findKeywordInObjectFields({ object, fields, keyword }) {
 function printLength(obj) {
   const key = Object.keys(obj)[0];
   const length = obj[key].length;
-  console.log({ [key]: length });
 }
 
 async function readAll() {
@@ -57,9 +56,12 @@ async function readAll() {
   const hasOtherValue = matchedDocuments.filter(
     document => document.state && document.state !== 'Sabah'
   );
-  printLength({ matchedDocuments });
-  printLength({ alreadyReflecting });
-  printLength({ hasOtherValue });
+  const result = {
+    matchedDocuments,
+    alreadyReflecting,
+    hasOtherValue
+  };
+  return result;
 }
 
-readAll();
+export default readAll();
