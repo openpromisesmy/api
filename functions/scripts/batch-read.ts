@@ -12,7 +12,6 @@ const config = {
 
 function findKeywordInField(keyword, value) {
   const present = value.toLowerCase().includes(keyword.toLowerCase());
-  if (present) console.log('START\n', value, '\nEND\n');
   return present ? value : false;
 }
 
@@ -29,6 +28,7 @@ function findKeywordInObjectFields({ object, fields, keyword }) {
 function printLength(obj) {
   const key = Object.keys(obj)[0];
   const length = obj[key].length;
+  console.log(key, ':', length);
 }
 
 async function readAll() {
