@@ -9,6 +9,7 @@ import {
 import contributorModel from './contributor';
 
 const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
 const contributor = contributorModel();
 const collection = db.collection('politicians');
 

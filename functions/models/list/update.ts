@@ -8,6 +8,7 @@ async function update(
   dbOverride?: admin.firestore.Firestore
 ) {
   const db = dbOverride || admin.firestore();
+  db.settings({ timestampsInSnapshots: true });
   const result = await db
     .collection('lists')
     .doc(id)

@@ -26,6 +26,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
 const batch = db.batch();
 
 let result;

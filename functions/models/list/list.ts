@@ -9,6 +9,7 @@ async function list(
   dbOverride?: admin.firestore.Firestore
 ): Promise<object[]> {
   const db = dbOverride || admin.firestore();
+  db.settings({ timestampsInSnapshots: true });
   const ref = await filter(db.collection('lists'), params, db);
   const snapshot = await ref.get();
 

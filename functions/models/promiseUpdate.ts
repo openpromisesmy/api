@@ -9,6 +9,7 @@ import {
 import PromiseModel from './promise';
 
 const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
 
 const collection = db.collection('promiseUpdates');
 

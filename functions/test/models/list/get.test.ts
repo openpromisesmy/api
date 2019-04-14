@@ -19,6 +19,7 @@ describe('the get method of the List model', () => {
 
   beforeEach(async () => {
     db = new FirebaseMock().firestore();
+    db.settings({ timestampsInSnapshots: true });
     recordRef = await db.collection('lists').add(record);
   });
 

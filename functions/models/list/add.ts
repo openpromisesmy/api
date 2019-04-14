@@ -7,6 +7,7 @@ async function add(
   dbOverride?: admin.firestore.Firestore
 ): Promise<{ id: string }> {
   const db = dbOverride || admin.firestore();
+  db.settings({ timestampsInSnapshots: true });
   const ref = await db.collection('lists').add(record);
 
   return { id: ref.id };
