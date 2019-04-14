@@ -1,16 +1,19 @@
-import admin from 'firebase-admin';
 import util from '../etc/util';
-import serviceAccount from './secret.json';
+import db from './db';
+
+// INSTRUCTIONS:
+// 1. set read conditions in batch-read.ts
+// 2. ensure output is array of only the documents that require updating
+// 3. acknowledge
+// 4. uncomment warnings
 
 // define here
 const config = {
   COLLECTION_NAME: 'promises',
-  MANIFESTO_URL:
-    'kempen.s3.amazonaws.com/manifesto/Manifesto_text/Manifesto_PH_EN.pdf',
-  MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx'
+  MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx',
+  READ_RESULT_PROMISE_OBJECT: require('./batch-read').default,
+  NEW_VALUE: 'Sabah'
 };
-
-// WARNING
 
 const WARNING_TEXT =
   ' \n WARNING!! \n\n run gcloud beta firestore export before running this \n\n DANGER!!! \n\n THIS SCRIPT WILL UPDATE ALL DOCUMENTS UNDER THE COLLECTION \n USE MINDFULLY \n TO ENABLE, CHANGE acknowledged to true';
@@ -25,11 +28,6 @@ if (!acknowledged) {
   throw 'Operation stopped. You have not acknowledged the warning.';
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
 const batch = db.batch();
 
 let result;
@@ -38,20 +36,15 @@ let notUpdated = 0;
 let alreadyDone = 0;
 
 async function batchWrite() {
-  console.log(config.TARGET_PROMISES);
-  const snapshot = await db.collection(config.COLLECTION_NAME).get();
+  const targetPromises = await config.TARGET_PROMISES;
+  // const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
-  result = util.snapshotToArray(snapshot);
-  result.forEach(doc => {
+  // result = util.snapshotToArray(snapshot);
+  targetPromises.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
-
-    const condition = null; // condition here
-
-    if (condition) {
-      const updateData = {}; // update here
-      // WARNING: uncomment below
-      // batch.update(ref, updateData);
-    }
+    const updateData = {}; // update here
+    // WARNING: uncomment below to run update
+    // batch.update(ref, updateData);
   });
 
   // WARNING: uncomment below to commit the change
