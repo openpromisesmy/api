@@ -1,6 +1,5 @@
-import admin from 'firebase-admin';
 import util from '../etc/util';
-import serviceAccount from './secret.json';
+import db from './db';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
 // USE batch-write instead
@@ -10,13 +9,6 @@ const config = {
   MATCH_KEYWORD: 'sabah',
   CONCERNED_FIELDS: ['quote', 'title']
 };
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
-db.settings({ timestampsInSnapshots: true });
 
 function findKeywordInField(keyword, value) {
   const present = value.toLowerCase().includes(keyword.toLowerCase());
