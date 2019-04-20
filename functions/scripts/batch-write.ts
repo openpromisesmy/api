@@ -1,6 +1,6 @@
 import util from '../etc/util';
 import db from './db';
-
+import batchRead from './batch-read';
 // INSTRUCTIONS:
 // 1. set read conditions in batch-read.ts
 // 2. ensure output is array of only the documents that require updating
@@ -11,7 +11,7 @@ import db from './db';
 const config = {
   COLLECTION_NAME: 'promises',
   MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx',
-  READ_RESULT_PROMISE_OBJECT: require('./batch-read').default,
+  BATCH_READ: batchRead,
   NEW_VALUE: 'Sabah'
 };
 
@@ -22,12 +22,6 @@ const WARNING_TEXT =
 // gcloud config set project openpromises-8526c
 // gcloud beta firestore export gs://openpromises-8526c.appspot.com
 
-const acknowledged = false;
-if (!acknowledged) {
-  console.error(WARNING_TEXT);
-  throw 'Operation stopped. You have not acknowledged the warning.';
-}
-
 const batch = db.batch();
 
 let result;
@@ -36,7 +30,16 @@ let notUpdated = 0;
 let alreadyDone = 0;
 
 async function batchWrite() {
-  const targetPromises = await config.TARGET_PROMISES;
+  const readResult = await config.BATCH_READ();
+
+  const acknowledged = false;
+  if (!acknowledged) {
+    console.error(WARNING_TEXT);
+    throw 'Operation stopped. You have not acknowledged the warning.';
+  }
+
+  const targetPromises = readResult.matchedDocuments;
+
   // const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   // result = util.snapshotToArray(snapshot);
