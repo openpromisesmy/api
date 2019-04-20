@@ -32,14 +32,14 @@ let alreadyDone = 0;
 
 async function batchWrite() {
   const readResult = await config.BATCH_READ();
+  const targetPromises = readResult.matchedDocuments;
+  // console.log({targetPromises})
 
   const acknowledged = false;
   if (!acknowledged) {
     console.error(WARNING_TEXT);
     throw 'Operation stopped. You have not acknowledged the warning.';
   }
-
-  const targetPromises = readResult.matchedDocuments;
 
   // const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
