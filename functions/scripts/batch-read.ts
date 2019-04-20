@@ -60,4 +60,4 @@ async function readAll() {
   return result;
 }
 
-export default readAll();
+export default readAll;
