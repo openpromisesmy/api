@@ -31,7 +31,7 @@ function printLength(obj) {
   console.log(key, ':', length);
 }
 
-async function readAll() {
+async function batchRead() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   const allDocuments = util.snapshotToArray(snapshot);
@@ -60,4 +60,4 @@ async function readAll() {
   return result;
 }
 
-export default readAll;
+export default batchRead;
