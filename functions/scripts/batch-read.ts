@@ -6,6 +6,8 @@ import db from './db';
 
 const config = {
   COLLECTION_NAME: 'promises',
+  MATCH_PROPERTY: 'politician_id',
+  MATCH_VALUE: '-L6lZDRxNJ9pFJ9y0TGo',
   MATCH_KEYWORD: 'sabah',
   CONCERNED_FIELDS: ['quote', 'title']
 };
@@ -35,18 +37,24 @@ async function batchRead() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
   const allDocuments = util.snapshotToArray(snapshot);
-  const matchedDocuments = allDocuments.filter(item =>
-    findKeywordInObjectFields({
-      object: item,
-      fields: config.CONCERNED_FIELDS,
-      keyword: config.MATCH_KEYWORD
-    })
+  // matchedDocuments option A - find by single property-value match
+  const matchedDocuments = allDocuments.filter(
+    item => item[config.MATCH_PROPERTY] === config.MATCH_VALUE
   );
+  // matchedDocuments option B - find by presence of keyword in selected fields
+  // const matchedDocuments = allDocuments.filter(item =>
+  //   findKeywordInObjectFields({
+  //     object: item,
+  //     fields: config.CONCERNED_FIELDS,
+  //     keyword: config.MATCH_KEYWORD
+  //   })
+  // );
+
   const alreadyReflecting = matchedDocuments.filter(
-    document => document.state === 'Sabah'
+    document => document.state === config.MATCH_KEYWORD
   );
   const hasOtherValue = matchedDocuments.filter(
-    document => document.state && document.state !== 'Sabah'
+    document => document.state && document.state !== config.MATCH_KEYWORD
   );
   const valueUndefined = matchedDocuments.filter(
     document => document.state === undefined
