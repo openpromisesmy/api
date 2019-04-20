@@ -12,7 +12,8 @@
     "precommit": "pretty-quick --staged",
     "build": "tsc",
     "test":
-      "NODE_ENV=test ./node_modules/mocha/bin/mocha -r ts-node/register --recursive \"test/**/*.test.ts\""
+      "NODE_ENV=test ./node_modules/mocha/bin/mocha -r ts-node/register --recursive \"test/**/*.test.ts\"",
+    "tsc:watch": "tsc -w"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
