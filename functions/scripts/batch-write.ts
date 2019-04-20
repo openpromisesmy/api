@@ -22,6 +22,8 @@ const WARNING_TEXT =
 // gcloud config set project openpromises-8526c
 // gcloud beta firestore export gs://openpromises-8526c.appspot.com
 
+const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
 const batch = db.batch();
 
 let result;

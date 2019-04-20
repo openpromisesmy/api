@@ -8,6 +8,7 @@ import {
 } from '../schemas/contributor';
 
 const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
 const collection = db.collection('contributors');
 
 export = () => ({

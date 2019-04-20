@@ -11,7 +11,9 @@ import add from './add';
 import update from './update';
 import { detectArrayChanges } from '../../etc/utils';
 
-export const db = admin.firestore();
+const db = admin.firestore();
+db.settings({ timestampsInSnapshots: true });
+
 const politician = politicianModel();
 const contributor = contributorModel();
 
@@ -19,6 +21,7 @@ export const collection = db.collection('promises');
 
 export default {
   add: add(db),
+  db,
   createSchema,
   get,
   list,
