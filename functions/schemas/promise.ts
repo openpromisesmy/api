@@ -1,5 +1,5 @@
 import joi from 'joi';
-import util from '../etc/util';
+import utils from '../etc/utils';
 
 const promiseStatusValues = [
   'Review Needed',
@@ -98,7 +98,7 @@ export const create = joi.object().keys({
   created_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of creation'),
+    .default(utils.now, 'Time of creation'),
   list_ids: joi
     .array()
     .items(joi.string())
@@ -112,7 +112,7 @@ export const create = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(utils.now, 'Time of update')
 });
 
 export const update = joi.object().keys({
@@ -128,5 +128,5 @@ export const update = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(utils.now, 'Time of update')
 });
