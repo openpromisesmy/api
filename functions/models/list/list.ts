@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import util = require('../../etc/util');
+import utils = require('../../etc/utils');
 import { IList } from '../../schemas/list';
 
 type Params = { live?: boolean };
@@ -13,7 +13,7 @@ async function list(
   const ref = await filter(db.collection('lists'), params, db);
   const snapshot = await ref.get();
 
-  return util.snapshotToArray(snapshot);
+  return utils.snapshotToArray(snapshot);
 }
 
 async function filter(

@@ -2,7 +2,7 @@ const ITEM_ADDED = 1;
 const ITEM_REMOVED = -1;
 
 function detectArrayChanges(originalArr = [], updatedArr = []) {
-  const store = {};
+  const store: any = {};
   originalArr.forEach(item => {
     store[item] = -1;
   });

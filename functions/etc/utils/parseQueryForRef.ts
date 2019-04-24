@@ -1,8 +1,9 @@
 import { CollectionReference } from '@google-cloud/firestore';
 import _ from 'lodash';
 
-const parseQueryForRef = (ref: CollectionReference, query: object) => {
+const parseQueryForRef = (ref: CollectionReference, query: any) => {
   const paginationQueries = ['orderBy', 'reverse'];
+  let result: any = ref;
 
   if (!_.isEmpty(query)) {
     for (const x in query) {
@@ -10,19 +11,19 @@ const parseQueryForRef = (ref: CollectionReference, query: object) => {
         // for pagination
         switch (x) {
           case 'orderBy':
-            ref = ref.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+            result = result.orderBy(query[x], query.reverse ? 'desc' : 'asc');
             break;
           default:
             break;
         }
       } else {
         // for other queries
-        ref = ref.where(x, '==', query[x]);
+        result = result.where(x, '==', query[x]);
       }
     }
   }
 
-  return ref;
+  return result;
 };
 
 module.exports = parseQueryForRef;
