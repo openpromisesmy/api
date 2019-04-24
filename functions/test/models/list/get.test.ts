@@ -9,7 +9,9 @@ import get from '../../../models/list/get';
 describe('the get method of the List model', () => {
   const record: IList = {
     title: 'public safety',
+    live: true,
     promise_ids: ['abc1', 'abc2', 'abc3'],
+    contributor_id: '123',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
