@@ -12,7 +12,7 @@ import update from './update';
 import { detectArrayChanges } from '../../etc/utils';
 
 const db = admin.firestore();
-db.settings({ timestampsInSnapshots: true });
+// db.settings({ timestampsInSnapshots: true });
 
 const politician = politicianModel();
 const contributor = contributorModel();

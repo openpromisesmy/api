@@ -1,4 +1,4 @@
-import util from '../etc/util';
+import util from '../etc/utils';
 import db from './db';
 import batchRead from './batch-read';
 // INSTRUCTIONS:

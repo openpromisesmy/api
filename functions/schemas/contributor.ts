@@ -1,6 +1,6 @@
 import joi from 'joi';
 // import joiPhoneNumber from 'joi-phone-number';
-import util = require('../etc/util');
+import util = require('../etc/utils');
 // joi.extend(joiPhoneNumber);
 // TODO: resolve phoneNumber
 
