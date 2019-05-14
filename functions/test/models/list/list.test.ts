@@ -3,35 +3,26 @@ import FirebaseMock from 'mock-cloud-firestore';
 
 import 'mocha';
 import { expect } from 'chai';
-import { IList } from '../../../schemas/list';
+import listFactory from '../../support/factories/list';
 import list from '../../../models/list/list';
 
 describe('the list method of the List model', () => {
-  const records: Array<IList> = [
-    {
-      title: 'public safety',
-      contributor_id: '123',
-      live: true,
-      promise_ids: ['abc1', 'abc2', 'abc3'],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
+  const records = [
+    listFactory.build({
+      live: true
+    }),
+    listFactory.build({
       title: 'economics',
       contributor_id: '456',
       live: true,
-      promise_ids: [],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
+      promise_ids: []
+    }),
+    listFactory.build({
       title: 'public health',
       contributor_id: '123',
       live: true,
-      promise_ids: ['bcd4'],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
+      promise_ids: ['bcd4']
+    })
   ];
 
   let db: any;
@@ -55,22 +46,18 @@ describe('the list method of the List model', () => {
 
   it('queries lists based on the "live" field if specified', async () => {
     const nonLiveLists = [
-      {
+      listFactory.build({
         title: 'public health',
         contributor_id: '123',
         live: false,
-        promise_ids: ['bcd4'],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      },
-      {
+        promise_ids: ['bcd4']
+      }),
+      listFactory.build({
         title: 'public safety',
         contributor_id: '456',
         live: false,
-        promise_ids: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
+        promise_ids: []
+      })
     ];
 
     const nonLiveListRefs = await Promise.all(
