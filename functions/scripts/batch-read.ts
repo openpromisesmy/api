@@ -1,4 +1,4 @@
-import util from '../etc/util';
+import util from '../etc/utils';
 import db from './db';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT

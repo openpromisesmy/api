@@ -1,5 +1,5 @@
 import joi from 'joi';
-import util from '../etc/util';
+import util from '../etc/utils';
 
 export interface IPolitician {
   brief: string;

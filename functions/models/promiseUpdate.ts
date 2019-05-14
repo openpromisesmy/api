@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import util from '../etc/util';
+import util from '../etc/utils';
 import {
   create as createSchema,
   IPromiseUpdate,
@@ -9,7 +9,7 @@ import {
 import PromiseModel from './promise';
 
 const db = admin.firestore();
-db.settings({ timestampsInSnapshots: true });
+// db.settings({ timestampsInSnapshots: true });
 
 const collection = db.collection('promiseUpdates');
 
