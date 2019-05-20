@@ -8,7 +8,6 @@ import {
 describe.only('lead schema', () => {
   describe('create', () => {
     const validAttrs: any = {
-      // TODO: move me to a factory
       assigned_tracker: 'b5hqf73',
       created_at: '2019-05-20T13:14:41.489Z',
       link: 'https://example.org/foo/bar/quix',
@@ -312,7 +311,6 @@ describe.only('lead schema', () => {
 
   describe('update', () => {
     const validAttrs: any = {
-      // TODO: move me to a factory
       assigned_tracker: 'b5hqf73',
       created_at: '2019-05-20T13:14:41.489Z',
       id: 'gam3s42f3f2',
