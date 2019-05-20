@@ -78,6 +78,21 @@ describe.only('lead schema', () => {
 
         throw new Error('Expected validation to fail.');
       });
+
+      it('expects the "type" to be a supported value', async () => {
+        const attrs: any = { ...validAttrs, type: 'foo' };
+
+        try {
+          await createSchema.validate(attrs);
+        } catch (err) {
+          expectValidationError(err).withMessage(
+            '"type" must be one of [promise, promiseUpdate]'
+          );
+          return;
+        }
+
+        throw new Error('Expected validation to fail.');
+      });
     });
 
     describe('"submitter" field', () => {
@@ -407,6 +422,21 @@ describe.only('lead schema', () => {
           await updateSchema.validate(attrs);
         } catch (err) {
           expectValidationError(err).withMessage('"type" must be a string');
+          return;
+        }
+
+        throw new Error('Expected validation to fail.');
+      });
+
+      it('expects the "type" to be a supported value', async () => {
+        const attrs: any = { ...validAttrs, type: 'foo' };
+
+        try {
+          await updateSchema.validate(attrs);
+        } catch (err) {
+          expectValidationError(err).withMessage(
+            '"type" must be one of [promise, promiseUpdate]'
+          );
           return;
         }
 

@@ -27,7 +27,10 @@ export const create = joi.object().keys({
   reviewed_by: joi.string().required(),
   review_status: joi.string().required(),
   submitter: joi.string().required(),
-  type: joi.string().required(),
+  type: joi
+    .string()
+    .valid('promise', 'promiseUpdate')
+    .required(),
   updated_at: joi
     .date()
     .iso()
@@ -47,7 +50,10 @@ export const update = joi.object().keys({
   reviewed_by: joi.string().required(),
   review_status: joi.string().required(),
   submitter: joi.string().required(),
-  type: joi.string().required(),
+  type: joi
+    .string()
+    .valid('promise', 'promiseUpdate')
+    .required(),
   updated_at: joi
     .date()
     .iso()
