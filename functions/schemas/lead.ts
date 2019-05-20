@@ -1,7 +1,7 @@
 import joi from 'joi';
 import utils from '../etc/utils';
 
-interface ILead {
+export interface ILead {
   assigned_tracker: string;
   created_at: string;
   link: string;
@@ -14,7 +14,7 @@ interface ILead {
   updated_at: string;
 }
 
-const create = joi.object().keys({
+export const create = joi.object().keys({
   assigned_tracker: joi.string().required(),
   created_at: joi
     .date()
@@ -33,7 +33,7 @@ const create = joi.object().keys({
     .default(utils.now, 'Time of update')
 });
 
-const update = joi.object().keys({
+export const update = joi.object().keys({
   assigned_tracker: joi.string().required(),
   created_at: joi
     .date()
@@ -51,6 +51,3 @@ const update = joi.object().keys({
     .iso()
     .default(utils.now, 'Time of update')
 });
-
-export const create;
-export const update;
