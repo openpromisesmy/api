@@ -2,26 +2,25 @@ import 'mocha';
 import { expect } from 'chai';
 import {
   create as createSchema,
-  update as updateSchema,
-  ILead
+  update as updateSchema
 } from '../../schemas/lead';
 
 describe.only('lead schema', () => {
-  const validAttrs: any = {
-    // TODO: move me to a factory
-    assigned_tracker: 'b5hqf73',
-    created_at: '2019-05-20T13:14:41.489Z',
-    link: 'https://example.org/foo/bar/quix',
-    notes: 'Lorem Ipsum Dignitatum.',
-    original_promise: 'fg4867',
-    reviewed_by: 'g4342f',
-    review_status: 'pending',
-    submitter: 'f43g423',
-    type: 'promise',
-    updated_at: '2019-05-20T13:14:41.489Z'
-  };
-
   describe('create', () => {
+    const validAttrs: any = {
+      // TODO: move me to a factory
+      assigned_tracker: 'b5hqf73',
+      created_at: '2019-05-20T13:14:41.489Z',
+      link: 'https://example.org/foo/bar/quix',
+      notes: 'Lorem Ipsum Dignitatum.',
+      original_promise: 'fg4867',
+      reviewed_by: 'g4342f',
+      review_status: 'pending',
+      submitter: 'f43g423',
+      type: 'promise',
+      updated_at: '2019-05-20T13:14:41.489Z'
+    };
+
     describe('"link" field', () => {
       it('expects the "link" to be present', async () => {
         const attrs: any = { ...validAttrs };
@@ -312,6 +311,21 @@ describe.only('lead schema', () => {
   });
 
   describe('update', () => {
+    const validAttrs: any = {
+      // TODO: move me to a factory
+      assigned_tracker: 'b5hqf73',
+      created_at: '2019-05-20T13:14:41.489Z',
+      id: 'gam3s42f3f2',
+      link: 'https://example.org/foo/bar/quix',
+      notes: 'Lorem Ipsum Dignitatum.',
+      original_promise: 'fg4867',
+      reviewed_by: 'g4342f',
+      review_status: 'pending',
+      submitter: 'f43g423',
+      type: 'promise',
+      updated_at: '2019-05-20T13:14:41.489Z'
+    };
+
     describe('"link" field', () => {
       it('expects the "link" to be present', async () => {
         const attrs: any = { ...validAttrs };
@@ -335,6 +349,36 @@ describe.only('lead schema', () => {
           await updateSchema.validate(attrs);
         } catch (err) {
           expectValidationError(err).withMessage('"link" must be a string');
+          return;
+        }
+
+        throw new Error('Expected validation to fail.');
+      });
+    });
+
+    describe('"id" field', () => {
+      it('expects the "id" to be present', async () => {
+        const attrs: any = { ...validAttrs };
+
+        delete attrs.id;
+
+        try {
+          await updateSchema.validate(attrs);
+        } catch (err) {
+          expectValidationError(err).withMessage('"id" is required');
+          return;
+        }
+
+        throw new Error('Expected validation to fail.');
+      });
+
+      it('expects the "id" to be a string', async () => {
+        const attrs: any = { ...validAttrs, id: 52765 };
+
+        try {
+          await updateSchema.validate(attrs);
+        } catch (err) {
+          expectValidationError(err).withMessage('"id" must be a string');
           return;
         }
 

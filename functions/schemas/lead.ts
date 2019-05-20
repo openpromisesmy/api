@@ -40,6 +40,7 @@ export const update = joi.object().keys({
     .date()
     .iso()
     .default(utils.now, 'Time of creation'),
+  id: joi.string().required(),
   link: joi.string().required(),
   notes: joi.string().required(),
   original_promise: joi.string().required(),
