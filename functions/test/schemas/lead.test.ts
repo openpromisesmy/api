@@ -7,7 +7,7 @@ import {
 } from '../../schemas/lead';
 
 describe.only('lead schema', () => {
-  const validAttrs: ILead = {
+  const validAttrs: any = {
     // TODO: move me to a factory
     assigned_tracker: 'b5hqf73',
     created_at: '2019-05-20T13:14:41.489Z',

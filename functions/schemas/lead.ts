@@ -4,6 +4,7 @@ import utils from '../etc/utils';
 export interface ILead {
   assigned_tracker: string;
   created_at: string;
+  id: string;
   link: string;
   notes: string;
   original_promise: string;
