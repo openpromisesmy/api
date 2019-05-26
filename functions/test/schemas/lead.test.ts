@@ -5,7 +5,7 @@ import {
   update as updateSchema
 } from '../../schemas/lead';
 
-describe.only('lead schema', () => {
+describe('lead schema', () => {
   describe('create', () => {
     const validAttrs: any = {
       assigned_tracker: 'b5hqf73',
