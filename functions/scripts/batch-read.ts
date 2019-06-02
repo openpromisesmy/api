@@ -6,13 +6,13 @@ import db from './db';
 
 const config = {
   COLLECTION_NAME: 'promises',
-  MATCH_PROPERTY: 'politician_id',
-  MATCH_VALUE: '-L6lZDRxNJ9pFJ9y0TGo',
+  CONCERNED_FIELDS: ['quote', 'title'],
   MATCH_KEYWORD: 'sabah',
-  CONCERNED_FIELDS: ['quote', 'title']
+  MATCH_PROPERTY: 'politician_id',
+  MATCH_VALUE: '-L6lZDRxNJ9pFJ9y0TGo'
 };
 
-function findKeywordInField(keyword, value) {
+function findKeywordInField(keyword: string, value: string) {
   const present = value.toLowerCase().includes(keyword.toLowerCase());
   return present ? value : false;
 }
@@ -62,9 +62,9 @@ async function batchRead() {
     document => document.state === undefined
   );
   const result = {
-    matchedDocuments,
     alreadyReflecting,
     hasOtherValue,
+    matchedDocuments,
     valueUndefined
   };
   return result;

@@ -9,9 +9,9 @@ import db from './db';
 
 // define here
 const config = {
+  BATCH_READ: batchRead,
   COLLECTION_NAME: 'promises',
   MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx',
-  BATCH_READ: batchRead,
   NEW_VALUE: 'Sabah'
 };
 
@@ -27,10 +27,10 @@ const db = admin.firestore();
 db.settings({ timestampsInSnapshots: true });
 const batch = db.batch();
 
-let result;
-const totalMatching = 0;
-const notUpdated = 0;
-const alreadyDone = 0;
+// const result;
+// const totalMatching = 0;
+// const notUpdated = 0;
+// const alreadyDone = 0;
 
 async function batchWrite() {
   const readResult = await config.BATCH_READ();

@@ -8,8 +8,8 @@ export interface ILead {
   link: string;
   notes: string;
   original_promise: string;
-  reviewed_by: string;
   review_status: string;
+  reviewed_by: string;
   submitter: string;
   type: string;
   updated_at: string;
@@ -24,8 +24,8 @@ export const create = joi.object().keys({
   link: joi.string().required(),
   notes: joi.string().required(),
   original_promise: joi.string().required(),
-  reviewed_by: joi.string().required(),
   review_status: joi.string().required(),
+  reviewed_by: joi.string().required(),
   submitter: joi.string().required(),
   type: joi
     .string()
@@ -47,8 +47,8 @@ export const update = joi.object().keys({
   link: joi.string().required(),
   notes: joi.string().required(),
   original_promise: joi.string().required(),
-  reviewed_by: joi.string().required(),
   review_status: joi.string().required(),
+  reviewed_by: joi.string().required(),
   submitter: joi.string().required(),
   type: joi
     .string()
