@@ -1,6 +1,6 @@
 import util from '../etc/utils';
-import db from './db';
 import batchRead from './batch-read';
+import db from './db';
 // INSTRUCTIONS:
 // 1. set read conditions in batch-read.ts
 // 2. ensure output is array of only the documents that require updating
@@ -28,9 +28,9 @@ db.settings({ timestampsInSnapshots: true });
 const batch = db.batch();
 
 let result;
-let totalMatching = 0;
-let notUpdated = 0;
-let alreadyDone = 0;
+const totalMatching = 0;
+const notUpdated = 0;
+const alreadyDone = 0;
 
 async function batchWrite() {
   const readResult = await config.BATCH_READ();
@@ -40,7 +40,9 @@ async function batchWrite() {
   const acknowledged = false;
   if (!acknowledged) {
     console.error(WARNING_TEXT);
-    throw 'Operation stopped. You have not acknowledged the warning.';
+    throw new Error(
+      'Operation stopped. You have not acknowledged the warning.'
+    );
   }
 
   // const snapshot = await db.collection(config.COLLECTION_NAME).get();

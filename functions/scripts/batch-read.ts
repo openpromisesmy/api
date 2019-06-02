@@ -22,7 +22,9 @@ function findKeywordInObjectFields({ object, fields, keyword }) {
   fields.forEach(field => {
     const value = object[field];
     const valueWithKeyword = findKeywordInField(keyword, value);
-    if (valueWithKeyword) keywordExists = true;
+    if (valueWithKeyword) {
+      keywordExists = true;
+    }
   });
   return keywordExists ? object : null;
 }

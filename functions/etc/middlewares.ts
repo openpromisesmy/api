@@ -84,7 +84,7 @@ async function firebaseAuth(
     // }
 
     if (contributors.length > 0) {
-      const contributor = <IContributor>_.first(contributors);
+      const contributor = _.first(contributors) as IContributor;
       const status = contributor.status;
       res.locals.scope = status; // TODO, rename to role
     }
