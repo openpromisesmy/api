@@ -1,6 +1,7 @@
 import express from 'express';
 import admin from 'firebase-admin';
 import ContributorModel from '../models/contributor';
+import { IContributor } from '../schemas/contributor';
 
 import { IncomingHttpHeaders } from 'http';
 import _ from 'lodash';
@@ -58,39 +59,41 @@ async function firebaseAuth(
     const decodedToken = await admin.auth().verifyIdToken(sentToken);
     const contributors = await contributorModel.list({ email });
 
+    // commented out 3 June 2019. This create logic caused an error. Also, it's currently handled by the front end. Upon GoogleSignin, if no user is found, frontend will post user using firebase token.
     // WHEN contributor does not exist yet, create
-    if (_.isEmpty(contributors)) {
-      try {
-        const validatedContributor = await _asyncValidateContributor(user);
+    // if (_.isEmpty(contributors)) {
+    //   try {
+    //     const validatedContributor = await _asyncValidateContributor(user);
 
-        const newContributor = await contributorModel.add(validatedContributor);
+    //     const newContributor = await contributorModel.add(validatedContributor);
 
-        // TODO: verify that this works
-        // accessing the result property might need modification
-        const contributorId = Object.keys(newContributor.id)[0];
-        req.body.contributor_id = contributorId;
-        res.locals.scope = newContributor.status;
+    //     // TODO: verify that this works
+    //     // accessing the result property might need modification
+    //     const contributorId = Object.keys(newContributor.id)[0];
+    //     req.body.contributor_id = contributorId;
+    //     res.locals.scope = newContributor.status;
 
-        return next();
-      } catch (e) {
-        if (e.name === 'ValidationError') {
-          return res.status(400).send(e.message);
-        }
+    //     return next();
+    //   } catch (e) {
+    //     if (e.name === 'ValidationError') {
+    //       return res.status(400).send(e.message);
+    //     }
 
-        return res.status(500).end();
-      }
+    //     return res.status(500).end();
+    //   }
+    // }
+
+    if (contributors.length > 0) {
+      const contributor = <IContributor>_.first(contributors);
+      const status = contributor.status;
+      res.locals.scope = status; // TODO, rename to role
     }
-
-    const contributor = _.first(contributors);
     // WHEN contributor already exists, attach contributor_id
     if (decodedToken.email !== email) {
       console.error('Sent email does not match decoded token email.');
 
       return res.status(400).send('You need to be authorized to do this.');
     }
-
-    const status = contributor.status;
-    res.locals.scope = status; // TODO, rename to role
 
     return next();
   } catch (e) {
