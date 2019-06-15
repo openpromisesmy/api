@@ -1,9 +1,9 @@
 import { IPromise } from '../../schemas/promise';
 import {
-  ensurePoliticianExistsById,
-  ensureContributorExistsById,
   ensureAllListsExistById,
-  findAllListsByIdAndAddPromiseId
+  ensureContributorExistsById,
+  ensurePoliticianExistsById,
+  updatePromiseIdInLists
 } from './index';
 
 const add = db => async (data: IPromise) => {
@@ -15,11 +15,12 @@ const add = db => async (data: IPromise) => {
     return db
       .runTransaction(async (transaction: any) => {
         await ensureAllListsExistById(data.list_ids);
-        await findAllListsByIdAndAddPromiseId(
-          data.list_ids,
-          addResult.id,
-          transaction
-        );
+        await updatePromiseIdInLists({
+          previousListIds: data.list_ids,
+          promiseId: addResult.id,
+          transaction,
+          updatedListIds: [...data.list_ids, addResult.id]
+        });
         return { id: addResult.id };
       })
       .catch((e: any) => {
