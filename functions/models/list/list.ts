@@ -1,20 +1,16 @@
 import admin from 'firebase-admin';
 import utils = require('../../etc/utils');
-import { IList } from '../../schemas/list';
 
 type Params = { live?: boolean };
 
-async function list(
-  params: Params,
-  dbOverride?: admin.firestore.Firestore
-): Promise<object[]> {
-  const db = dbOverride || admin.firestore();
-  // db.settings({ timestampsInSnapshots: true });
+const list: Function = (db: admin.firestore.Firestore) => async (
+  params: Params
+): Promise<object[]> => {
   const ref = await filter(db.collection('lists'), params, db);
   const snapshot = await ref.get();
 
   return utils.snapshotToArray(snapshot);
-}
+};
 
 async function filter(
   query: admin.firestore.Query,
