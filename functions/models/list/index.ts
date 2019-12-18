@@ -8,7 +8,7 @@ db.settings({ timestampsInSnapshots: true });
 
 export = () => ({
   add: add(db),
-  update,
+  update: update(db),
   get: get(db),
   list: list(db)
 });
