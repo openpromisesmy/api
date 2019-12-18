@@ -10,5 +10,5 @@ export = () => ({
   add: add(db),
   update,
   get: get(db),
-  list
+  list: list(db)
 });
