@@ -6,7 +6,7 @@ import middlewares from '../etc/middlewares';
 
 import addList from './lists/add';
 import getList from './lists/get';
-import listLists from './lists/list';
+import listLiveLists from './lists/listLive';
 
 const { firebaseAuth } = middlewares;
 
@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.post('/', firebaseAuth, addList);
 
-app.get('/', listLists);
+app.get('/', listLiveLists);
 
 app.get('/:id', getList);
 
