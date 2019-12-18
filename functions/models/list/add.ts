@@ -1,16 +1,12 @@
-import admin from 'firebase-admin';
-
 import { IList } from '../../schemas/list';
+import admin = require('firebase-admin');
 
-async function add(
-  record: IList,
-  dbOverride?: admin.firestore.Firestore
-): Promise<{ id: string }> {
-  const db = dbOverride || admin.firestore();
-  db.settings({ timestampsInSnapshots: true });
+const add: Function = (db: admin.firestore.Firestore) => async (
+  record: IList
+): Promise<{ id: string }> => {
   const ref = await db.collection('lists').add(record);
 
   return { id: ref.id };
-}
+};
 
 export default add;
