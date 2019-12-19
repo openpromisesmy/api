@@ -15,9 +15,6 @@ import { detectArrayChanges } from '../../etc/utils';
 const db = admin.firestore();
 // db.settings({ timestampsInSnapshots: true });
 
-const politician = politicianModel();
-const contributor = contributorModel();
-
 export const collection = db.collection('promises');
 
 export default {
