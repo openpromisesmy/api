@@ -1,7 +1,9 @@
 import admin = require('firebase-admin');
+import _ from 'lodash';
+import utils from '../../etc/utils';
 
 const list = (db: admin.firestore.Firestore) => async (query: object) => {
-  let ref = db.collection('lists');
+  let ref = db.collection('promises');
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {
       switch (key) {
@@ -24,7 +26,7 @@ const list = (db: admin.firestore.Firestore) => async (query: object) => {
   }
 
   const snapshot = await ref.get();
-  return snapshotToArray(snapshot);
+  return utils.snapshotToArray(snapshot);
 };
 
 export default list;
