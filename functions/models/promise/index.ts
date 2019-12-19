@@ -70,7 +70,7 @@ async function findByListIdAndRemovePromiseId(
 
   const { promise_ids: promiseIds } = snapshot.data();
 
-  const updatedPromiseIds = promiseIds.filter(x => x !== promiseId);
+  const updatedPromiseIds = promiseIds.filter((x: string) => x !== promiseId);
 
   transaction.update(listRef, {
     promise_ids: updatedPromiseIds
