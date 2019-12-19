@@ -134,11 +134,11 @@ export async function updatePromiseIdInLists({
     updatedListIds
   );
 
-  const additionOps = additions.map(listId => {
+  const additionOps = additions.map((listId: string) => {
     return findByListIdAndAddPromiseId(listId, promiseId, transaction);
   });
 
-  const removalOps = removals.map(listId => {
+  const removalOps = removals.map((listId: string) => {
     return findByListIdAndRemovePromiseId(listId, promiseId, transaction);
   });
 
