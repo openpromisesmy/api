@@ -1,15 +1,14 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import { snapshotToArray, toObject } from '../../etc/utils';
+import { snapshotToArray } from '../../etc/utils';
 import {
   create as createSchema,
   update as updateSchema
 } from '../../schemas/promise';
-import contributorModel from '../contributor';
-import politicianModel from '../politician';
 import add from './add';
 import update from './update';
 import list from './list';
+import get from './get';
 import { detectArrayChanges } from '../../etc/utils';
 
 const db = admin.firestore();
@@ -21,7 +20,7 @@ export default {
   add: add(db),
   db,
   createSchema,
-  get,
+  get: get(db),
   list: list(db),
   remove,
   stats,
@@ -144,14 +143,6 @@ export async function updatePromiseIdInLists({
   });
 
   return Promise.all([...additionOps, ...removalOps]);
-}
-
-export async function get(id: string) {
-  const doc = await collection.doc(id).get();
-
-  const promise = doc.data();
-
-  return _.isEmpty(promise) ? {} : toObject(id, promise);
 }
 
 async function remove(id: string) {
