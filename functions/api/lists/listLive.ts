@@ -5,7 +5,7 @@ async function list(req: express.Request, res: express.Response) {
   try {
     const docs = await ListModel().list({ live: true });
 
-    res.json(docs);
+    return res.json(docs);
   } catch (e) {
     console.error(e);
     res.sendStatus(500);
