@@ -1,21 +1,18 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
-import { snapshotToArray, toObject } from '../../etc/utils';
+import { snapshotToArray } from '../../etc/utils';
 import {
   create as createSchema,
   update as updateSchema
 } from '../../schemas/promise';
-import contributorModel from '../contributor';
-import politicianModel from '../politician';
 import add from './add';
 import update from './update';
+import list from './list';
+import get from './get';
 import { detectArrayChanges } from '../../etc/utils';
 
 const db = admin.firestore();
 // db.settings({ timestampsInSnapshots: true });
-
-const politician = politicianModel();
-const contributor = contributorModel();
 
 export const collection = db.collection('promises');
 
@@ -23,8 +20,8 @@ export default {
   add: add(db),
   db,
   createSchema,
-  get,
-  list,
+  get: get(db),
+  list: list(db),
   remove,
   stats,
   update: update(db),
@@ -73,7 +70,7 @@ async function findByListIdAndRemovePromiseId(
 
   const { promise_ids: promiseIds } = snapshot.data();
 
-  const updatedPromiseIds = promiseIds.filter(x => x !== promiseId);
+  const updatedPromiseIds = promiseIds.filter((x: string) => x !== promiseId);
 
   transaction.update(listRef, {
     promise_ids: updatedPromiseIds
@@ -137,50 +134,15 @@ export async function updatePromiseIdInLists({
     updatedListIds
   );
 
-  const additionOps = additions.map(listId => {
+  const additionOps = additions.map((listId: string) => {
     return findByListIdAndAddPromiseId(listId, promiseId, transaction);
   });
 
-  const removalOps = removals.map(listId => {
+  const removalOps = removals.map((listId: string) => {
     return findByListIdAndRemovePromiseId(listId, promiseId, transaction);
   });
 
   return Promise.all([...additionOps, ...removalOps]);
-}
-
-export async function get(id: string) {
-  const doc = await collection.doc(id).get();
-
-  const promise = doc.data();
-
-  return _.isEmpty(promise) ? {} : toObject(id, promise);
-}
-
-async function list(query: object) {
-  let ref = collection;
-  if (!_.isEmpty(query)) {
-    _.forIn(query, (value: any, key: string) => {
-      switch (key) {
-        case 'pageSize':
-          ref = ref.limit(Number(value));
-          break;
-        case 'startAfter':
-          ref = ref.startAfter(value);
-          break;
-        case 'orderBy':
-          ref = ref.orderBy(value, query.reverse ? 'desc' : 'asc');
-          break;
-        case 'reverse':
-          break;
-        default:
-          ref = ref.where(key, '==', value);
-          break;
-      }
-    });
-  }
-
-  const snapshot = await ref.get();
-  return snapshotToArray(snapshot);
 }
 
 async function remove(id: string) {

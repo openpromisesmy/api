@@ -33,6 +33,7 @@
     "@types/chai": "^4.1.7",
     "@types/cors": "^2.8.4",
     "@types/joi": "^13.4.2",
+    "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.6",
     "chai": "^4.2.0",
     "factory.ts": "0.4.5",
