@@ -9,6 +9,7 @@ import contributorModel from '../contributor';
 import politicianModel from '../politician';
 import add from './add';
 import update from './update';
+import list from './list';
 import { detectArrayChanges } from '../../etc/utils';
 
 const db = admin.firestore();
@@ -24,7 +25,7 @@ export default {
   db,
   createSchema,
   get,
-  list,
+  list: list(db),
   remove,
   stats,
   update: update(db),
@@ -154,33 +155,6 @@ export async function get(id: string) {
   const promise = doc.data();
 
   return _.isEmpty(promise) ? {} : toObject(id, promise);
-}
-
-async function list(query: object) {
-  let ref = collection;
-  if (!_.isEmpty(query)) {
-    _.forIn(query, (value: any, key: string) => {
-      switch (key) {
-        case 'pageSize':
-          ref = ref.limit(Number(value));
-          break;
-        case 'startAfter':
-          ref = ref.startAfter(value);
-          break;
-        case 'orderBy':
-          ref = ref.orderBy(value, query.reverse ? 'desc' : 'asc');
-          break;
-        case 'reverse':
-          break;
-        default:
-          ref = ref.where(key, '==', value);
-          break;
-      }
-    });
-  }
-
-  const snapshot = await ref.get();
-  return snapshotToArray(snapshot);
 }
 
 async function remove(id: string) {
