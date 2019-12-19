@@ -5,8 +5,9 @@ import {
   ensurePoliticianExistsById,
   updatePromiseIdInLists
 } from './index';
+import admin = require('firebase-admin');
 
-const add = db => async (data: IPromise) => {
+const add = (db: admin.firestore.Firestore) => async (data: IPromise) => {
   await ensurePoliticianExistsById(data.politician_id);
   await ensureContributorExistsById(data.contributor_id);
   const addResult = await db.collection('promises').add(data);
