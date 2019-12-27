@@ -181,12 +181,14 @@ async function stats() {
 }
 
 function _filterPromisesWithLivePoliticians(
-  promises: object[],
-  politicians: object[]
+  promises: admin.firestore.DocumentData[],
+  politicians: admin.firestore.DocumentData[]
 ) {
   return promises.reduce(
-    (acc: object[], p: object) =>
-      politicians.find((pl: object) => pl.id === p.politician_id)
+    (acc: object[], p: admin.firestore.DocumentData) =>
+      politicians.find(
+        (pl: admin.firestore.DocumentData) => pl.id === p.politician_id
+      )
         ? acc.concat(
             Object.assign({}, p, {
               status: p.status ? p.status : 'Review Needed'
