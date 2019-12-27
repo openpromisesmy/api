@@ -7,6 +7,7 @@ import {
   update as updateSchema
 } from '../schemas/promiseUpdate';
 import PromiseModel from './promise';
+import { DocumentData } from '@google-cloud/firestore';
 
 const db = admin.firestore();
 // db.settings({ timestampsInSnapshots: true });
@@ -49,15 +50,18 @@ async function add(data: IPromiseUpdate) {
   }
 }
 
-async function get(id: string) {
+async function get(id: string): Promise<DocumentData> {
   const doc = await collection.doc(id).get();
   const data = doc.data();
-
-  return _.isEmpty(data) ? {} : util.toObject(id, data);
+  if (data === undefined) {
+    return {};
+  } else {
+    return util.toObject(id, data);
+  }
 }
 
 // add in query for promise_id, and source_date (asc)
-async function list(query: object) {
+async function list(query: object): Promise<DocumentData[]> {
   const ref = util.parseQueryForRef(collection, query);
 
   const snapshot = await ref.get();
@@ -65,7 +69,7 @@ async function list(query: object) {
   return util.snapshotToArray(snapshot);
 }
 
-async function update(id: string, data: object) {
+async function update(id: string, data: DocumentData): Promise<DocumentData> {
   const promiseUpdate = await get(id);
 
   if (_.isEmpty(promiseUpdate)) {
@@ -91,7 +95,10 @@ async function updateSourcePromiseStatus(promiseId: string) {
   });
 
   const latestUpdate = _.last(promiseUpdates);
-  const latestStatus = latestUpdate.status;
-
-  return PromiseModel.update(promiseId, { status: latestStatus });
+  if (latestUpdate === undefined) {
+    return;
+  } else {
+    const latestStatus = latestUpdate.status;
+    return PromiseModel.update(promiseId, { status: latestStatus });
+  }
 }

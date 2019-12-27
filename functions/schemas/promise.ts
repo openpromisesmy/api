@@ -57,6 +57,32 @@ export interface IPromise {
   review_date?: string;
 }
 
+export interface IUpdatePromise {
+  category?: string;
+  context?: string;
+  contributor_id?: string;
+  clauses?: IClauses;
+  cover_image?: string;
+  created_at?: string;
+  description?: string;
+  list_ids?: string[];
+  live?: boolean;
+  notes?: string;
+  politician_id?: string;
+  post_url?: string;
+  quote?: string;
+  source_date?: string;
+  source_name?: string;
+  source_url?: string;
+  state?: string;
+  status?: string;
+  title?: string;
+  updated_at?: string;
+  elaboration?: string;
+  deadline?: string;
+  review_date?: string;
+}
+
 interface IClauses {
   broken?: string;
   fulfilled?: string;
