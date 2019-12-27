@@ -2,7 +2,11 @@ import admin = require('firebase-admin');
 import _ from 'lodash';
 import utils from '../../etc/utils';
 
-const list = (db: admin.firestore.Firestore) => async (query: object) => {
+interface IQuery {
+  reverse?: boolean;
+}
+
+const list = (db: admin.firestore.Firestore) => async (query: IQuery) => {
   let ref = db.collection('promises');
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {

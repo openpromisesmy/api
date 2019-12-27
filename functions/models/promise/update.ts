@@ -1,15 +1,19 @@
 import _ from 'lodash';
-import { IPromise } from '../../schemas/promise';
+import { IUpdatePromise } from '../../schemas/promise';
+import admin from 'firebase-admin';
+
 import {
-  db,
-  get,
   ensureAllListsExistById,
   updatePromiseIdInLists,
   collection
 } from './index';
+import promiseModel from './index';
 
-const update = db => async (id: string, data: IPromise) => {
-  const promise = await get(id);
+const update = (db: admin.firestore.Firestore) => async (
+  id: string,
+  data: IUpdatePromise
+) => {
+  const promise = await promiseModel.get(id);
   if (_.isEmpty(promise)) {
     return { status: 404, message: 'Invalid Promise' };
   }

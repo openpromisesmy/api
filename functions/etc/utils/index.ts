@@ -9,7 +9,10 @@ const toArray = (fireObj: DocumentData) =>
     (acc, key) => acc.concat({ ...fireObj[key], id: key }),
     []
   );
-const toObject = (id: string, fireObj: DocumentData) => ({ ...fireObj, id });
+const toObject = (id: string, fireObj: DocumentData): DocumentData => ({
+  ...fireObj,
+  id
+});
 const getKey = (obj: any) => Object.keys(obj)[0];
 const getValue = (obj: any) => obj[getKey(obj)];
 const snapshotToArray = (snapshot: QuerySnapshot) => {
