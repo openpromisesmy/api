@@ -1,6 +1,9 @@
 import util from '../etc/utils';
 import batchRead from './batch-read';
 import db from './db';
+import firebase from 'firebase-admin';
+import { DocumentData } from '@google-cloud/firestore';
+
 // INSTRUCTIONS:
 // 1. set read conditions in batch-read.ts
 // 2. ensure output is array of only the documents that require updating
@@ -23,8 +26,6 @@ const WARNING_TEXT =
 // gcloud config set project openpromises-8526c
 // gcloud beta firestore export gs://openpromises-8526c.appspot.com
 
-const db = admin.firestore();
-db.settings({ timestampsInSnapshots: true });
 const batch = db.batch();
 
 // const result;
@@ -34,7 +35,7 @@ const batch = db.batch();
 
 async function batchWrite() {
   const readResult = await config.BATCH_READ();
-  const targetPromises = readResult.matchedDocuments;
+  const targetPromises: DocumentData[] = readResult.matchedDocuments;
   // console.log({targetPromises})
 
   const acknowledged = false;

@@ -1,5 +1,7 @@
 import util from '../etc/utils';
 import db from './db';
+import { DocumentData } from '@google-cloud/firestore';
+import { FindKeywordInObjectFieldsParams, PrintLengthParams } from './types';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
 // USE batch-write instead
@@ -17,7 +19,11 @@ function findKeywordInField(keyword: string, value: string) {
   return present ? value : false;
 }
 
-function findKeywordInObjectFields({ object, fields, keyword }) {
+function findKeywordInObjectFields({
+  object,
+  fields,
+  keyword
+}: FindKeywordInObjectFieldsParams) {
   let keywordExists = false;
   fields.forEach(field => {
     const value = object[field];
@@ -29,7 +35,7 @@ function findKeywordInObjectFields({ object, fields, keyword }) {
   return keywordExists ? object : null;
 }
 
-function printLength(obj) {
+function printLength(obj: PrintLengthParams) {
   const key = Object.keys(obj)[0];
   const length = obj[key].length;
   console.log(key, ':', length);
@@ -38,7 +44,7 @@ function printLength(obj) {
 async function batchRead() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
-  const allDocuments = util.snapshotToArray(snapshot);
+  const allDocuments: DocumentData[] = util.snapshotToArray(snapshot);
   // matchedDocuments option A - find by single property-value match
   const matchedDocuments = allDocuments.filter(
     item => item[config.MATCH_PROPERTY] === config.MATCH_VALUE
