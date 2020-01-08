@@ -1,3 +1,4 @@
+import { DocumentData } from '@google-cloud/firestore';
 import admin from 'firebase-admin';
 import _ from 'lodash';
 import util from '../etc/utils';
@@ -7,7 +8,6 @@ import {
   update as updateSchema
 } from '../schemas/promiseUpdate';
 import PromiseModel from './promise';
-import { DocumentData } from '@google-cloud/firestore';
 
 const db = admin.firestore();
 // db.settings({ timestampsInSnapshots: true });

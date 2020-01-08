@@ -1,6 +1,6 @@
+import { DocumentData } from '@google-cloud/firestore';
 import util from '../etc/utils';
 import db from './db';
-import { DocumentData } from '@google-cloud/firestore';
 import { FindKeywordInObjectFieldsParams, PrintLengthParams } from './types';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
