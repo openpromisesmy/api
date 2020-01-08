@@ -89,7 +89,7 @@ interface IClauses {
   progress?: string;
 }
 
-const shared = {
+const alwaysOptionalFields = {
   category: joi.string(),
   clauses: joi.object().keys({
     broken: joi.string(),
@@ -101,25 +101,13 @@ const shared = {
   deadline: joi.date().iso(),
   description: joi.string(),
   elaboration: joi.string(),
-  politician_id: joi.string().required(),
   post_url: joi.string(),
-  quote: joi.string().required(),
   review_date: joi.date().iso(),
-  source_date: joi
-    .string()
-    .isoDate()
-    .required(),
-  source_name: joi.string().required(),
-  source_url: joi
-    .string()
-    .uri()
-    .required(),
-  state: joi.string().valid(malaysianStates),
-  title: joi.string().required()
+  state: joi.string().valid(malaysianStates)
 };
 
 export const create = joi.object().keys({
-  ...shared,
+  ...alwaysOptionalFields,
   contributor_id: joi.string().required(),
   created_at: joi
     .date()
@@ -131,10 +119,22 @@ export const create = joi.object().keys({
     .default([]),
   live: joi.boolean().default(false),
   notes: joi.string(),
+  politician_id: joi.string().required(),
+  quote: joi.string().required(),
+  source_date: joi
+    .string()
+    .isoDate()
+    .required(),
+  source_name: joi.string().required(),
+  source_url: joi
+    .string()
+    .uri()
+    .required(),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
+  title: joi.string().required(),
   updated_at: joi
     .date()
     .iso()
@@ -142,15 +142,21 @@ export const create = joi.object().keys({
 });
 
 export const update = joi.object().keys({
-  ...shared,
+  ...alwaysOptionalFields,
   contributor_id: joi.string(),
   list_ids: joi.array().items(joi.string()),
   live: joi.boolean(),
   notes: joi.string(),
+  politician_id: joi.string(),
+  quote: joi.string(),
+  source_date: joi.string().isoDate(),
+  source_name: joi.string(),
+  source_url: joi.string().uri(),
   status: joi
     .string()
     .allow(promiseStatusValues)
     .default('Review Needed'),
+  title: joi.string().required(),
   updated_at: joi
     .date()
     .iso()
