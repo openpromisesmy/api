@@ -18,6 +18,19 @@ API calls require a token and email in the header
 
 ### Steps
 
+GET YOUR FIREBASE TOKEN
+go to openpromises.com
+log out if already logged in
+sign in
+open network tab
+look for the very last GET request that is to the path `?email=YOUR_EMAIL`
+click on that request and check its headers
+note the header item called `x-firebase-token`
+copy the value
+use this as the value for `x-firebase-token` in your API requests
+
+RUN THE API SERVER
+
 run `cd functions/`
 run `npm i`
 run `npm run tsc:watch` and leave terminal open
