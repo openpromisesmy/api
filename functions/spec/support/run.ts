@@ -1,8 +1,8 @@
-import jasmine from 'jasmine';
+import Jasmine from 'jasmine';
 
-const jasmineEnv = new Jasmine();
+const jasmineEnv = new Jasmine({});
 
-jasmineEnv.onComplete(haveAllTestsPassed => {
+jasmineEnv.onComplete((haveAllTestsPassed: boolean) => {
   if (haveAllTestsPassed) {
     process.exit(0);
   } else {
