@@ -14,7 +14,9 @@
     "logs": "(tsc || true) && firebase functions:log",
     "precommit": "pretty-quick --staged",
     "build": "tsc",
-    "tsc:watch": "tsc -w"
+    "tsc:watch": "tsc -w",
+    "test":
+      "NODE_ENV='test' ts-node node_modules/jasmine/bin/jasmine --config=./spec/support/jasmine.json"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
