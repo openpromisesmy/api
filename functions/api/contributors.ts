@@ -1,4 +1,5 @@
 import cors from 'cors';
+import admin from 'firebase-admin';
 import express from 'express';
 import _ from 'lodash';
 
@@ -47,7 +48,10 @@ async function createContributor(req: express.Request, res: express.Response) {
       req.body
     );
 
-    const contributor = await contributorModel.add(validatedContributor);
+    const contributor = await contributorModel.add(
+      validatedContributor,
+      admin.firestore()
+    );
 
     return contributor.id && res.status(200).json(contributor);
   } catch (e) {
@@ -62,7 +66,10 @@ async function createContributor(req: express.Request, res: express.Response) {
 
 async function listContributors(req: express.Request, res: express.Response) {
   try {
-    const contributors = await contributorModel.list(req.query);
+    const contributors = await contributorModel.list(
+      req.query,
+      admin.firestore()
+    );
 
     return res.json(contributors) || [];
   } catch (e) {
@@ -73,7 +80,10 @@ async function listContributors(req: express.Request, res: express.Response) {
 
 async function getContributor(req: express.Request, res: express.Response) {
   try {
-    const contributor = await contributorModel.get(req.params.id);
+    const contributor = await contributorModel.get(
+      req.params.id,
+      admin.firestore()
+    );
 
     return _.isEmpty(contributor)
       ? res.status(404).end()
@@ -92,7 +102,8 @@ async function updateContributor(req: express.Request, res: express.Response) {
 
     const contributor = await contributorModel.update(
       req.params.id,
-      validatedContributor
+      validatedContributor,
+      admin.firestore()
     );
 
     return contributor && contributor.status
@@ -110,7 +121,7 @@ async function updateContributor(req: express.Request, res: express.Response) {
 
 async function deleteContributor(req: express.Request, res: express.Response) {
   try {
-    await contributorModel.remove(req.params.id);
+    await contributorModel.remove(req.params.id, admin.firestore());
 
     return res.status(204).end();
   } catch (e) {
