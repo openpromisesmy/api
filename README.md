@@ -1,13 +1,29 @@
-## Firebase Prerequisites
+## Prerequisites
+
+### SETUP FIREBASE
 
 1.  Install Firebase CLI tool
     `npm i -g firebase-tools`
 2.  Login via Firebase
     `firebase login` (you will be brought to your browser. login using the google account that has been given access to the project)
-3.  Get Service Account Key
-    refer to https://cloud.google.com/storage/docs/authentication#generating-a-private-key
-    type of key = service account key
-    choose 'App Engine Service Default' when prompted
+
+<del>3. Get Service Account Key
+refer to https://cloud.google.com/storage/docs/authentication#generating-a-private-key
+type of key = service account key
+choose 'App Engine Service Default' when prompted</del>
+
+### OBTAIN A SERVICE ACCOUNT KEY
+
+* Request a senior Open Promises member to generate a service account key for you
+* Place the key under `${OP_API_PROJECT_ROOT}/functions/secrets/google-key.json`, where `OP_API_PROJECT_ROOT` is your local path to the OP API repo.
+
+###INSTALL THE GOOGLE CLOUD SDK
+
+* Go to https://cloud.google.com/sdk/install
+* Follow the instructions to install the Google Cloud SDK
+* Run the following command in your terminal: `$ gcloud auth application-default login`
+
+If you ignore this step, the OP API will throw an error: `Error: Could not load the default credentials.` whenever you send a request to it.
 
 ## Up and Running
 
@@ -21,7 +37,7 @@ API calls require a token and email in the header
 GET YOUR FIREBASE TOKEN
 go to openpromises.com
 log out if already logged in
-sign in
+select "Sign in with Google
 open network tab
 look for the very last GET request that is to the path `?email=YOUR_EMAIL`
 click on that request and check its headers
