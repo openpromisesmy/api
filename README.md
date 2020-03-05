@@ -51,7 +51,8 @@ run `cd functions/`
 run `npm i`
 run `npm run tsc:watch` and leave terminal open
 in a new terminal, run `npm run serve-h`
-perform http query`GET localhost:5000/promises` with these headers set:
+note the outputted hostname (let's refer to it as `HOSTNAME`)
+perform http query`GET HOSTNAME/promises` with these headers set:
 
 * `x-firebase-token`
 * `x-firebase-email`
