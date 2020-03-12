@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from 'express';
+import admin from 'firebase-admin';
 import _ from 'lodash';
 
 import * as functions from 'firebase-functions';
@@ -29,7 +30,7 @@ function healthCheck(req: express.Request, res: express.Response) {
 async function generalStats(req: express.Request, res: express.Response) {
   try {
     const allStats = await Promise.all([
-      contributors.stats(),
+      contributors.stats(admin.firestore()),
       politicians.stats(),
       PromiseModel.stats()
     ]);

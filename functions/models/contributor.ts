@@ -7,9 +7,7 @@ import {
   update as updateSchema
 } from '../schemas/contributor';
 
-const db = admin.firestore();
 // db.settings({ timestampsInSnapshots: true });
-const collection = db.collection('contributors');
 
 export = () => ({
   add,
@@ -23,8 +21,8 @@ export = () => ({
   updateSchema
 });
 
-async function add(data: IContributor) {
-  const ref = await collection.add(data);
+async function add(data: IContributor, db: admin.firestore.Firestore) {
+  const ref = await db.collection('contributors').add(data);
 
   if (_.isEmpty(ref)) {
     throw new Error('Fail to add');
@@ -33,8 +31,11 @@ async function add(data: IContributor) {
   return { id: ref.id };
 }
 
-async function get(id: string) {
-  const doc = await collection.doc(id).get();
+async function get(id: string, db: admin.firestore.Firestore) {
+  const doc = await db
+    .collection('contributors')
+    .doc(id)
+    .get();
 
   const data = doc.data();
   const contributor = _.isEmpty(data) ? {} : util.toObject(id, data);
@@ -42,7 +43,7 @@ async function get(id: string) {
   return contributor;
 }
 
-async function find(match: any) {
+async function find(match: any, db: admin.firestore.Firestore) {
   const snapshot = await admin
     .database()
     .ref('/contributors')
@@ -57,32 +58,47 @@ async function find(match: any) {
   return contributor;
 }
 
-async function list(query: object) {
+async function list(query: object, db: admin.firestore.Firestore) {
   const ref = _.isEmpty(query)
-    ? collection
-    : collection.where(util.getKey(query), '==', util.getValue(query));
+    ? db.collection('contributors')
+    : db
+        .collection('contributors')
+        .where(util.getKey(query), '==', util.getValue(query));
 
   const snapshot = await ref.get();
 
   return util.snapshotToArray(snapshot);
 }
 
-async function update(id: string, updateData: IContributor) {
-  const contributor: IContributor = await get(id);
+async function update(
+  id: string,
+  updateData: IContributor,
+  db: admin.firestore.Firestore
+) {
+  const contributor: IContributor = await get(id, db);
 
   if (_.isEmpty(contributor)) {
     return { status: 404, message: 'Invalid Contributor' };
   }
 
-  return collection.doc(id).update(updateData);
+  return db
+    .collection('contributors')
+    .doc(id)
+    .update(updateData);
 }
 
-async function remove(id: string) {
-  return collection.doc(id).delete();
+async function remove(id: string, db: admin.firestore.Firestore) {
+  return db
+    .collection('contributors')
+    .doc(id)
+    .delete();
 }
 
-async function stats() {
-  const snapshot = await collection.select().get();
+async function stats(db: admin.firestore.Firestore) {
+  const snapshot = await db
+    .collection('contributors')
+    .select()
+    .get();
 
   return { count: snapshot.size };
 }
