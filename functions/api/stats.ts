@@ -1,6 +1,6 @@
 import cors from 'cors';
-import admin from 'firebase-admin';
 import express from 'express';
+import admin from 'firebase-admin';
 import _ from 'lodash';
 
 import * as functions from 'firebase-functions';

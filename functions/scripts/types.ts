@@ -1,4 +1,4 @@
-export interface FindKeywordInObjectFieldsParams {
+export interface IFindKeywordInObjectFieldsParams {
   object: {
     [key: string]: any;
   };
@@ -6,6 +6,6 @@ export interface FindKeywordInObjectFieldsParams {
   keyword: string;
 }
 
-export interface PrintLengthParams {
+export interface IPrintLengthParams {
   [key: string]: any;
 }
