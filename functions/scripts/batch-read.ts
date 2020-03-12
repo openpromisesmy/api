@@ -1,7 +1,7 @@
 import { DocumentData } from '@google-cloud/firestore';
 import util from '../etc/utils';
 import db from './db';
-import { FindKeywordInObjectFieldsParams, PrintLengthParams } from './types';
+import { IFindKeywordInObjectFieldsParams, IPrintLengthParams } from './types';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
 // USE batch-write instead
@@ -23,7 +23,7 @@ function findKeywordInObjectFields({
   object,
   fields,
   keyword
-}: FindKeywordInObjectFieldsParams) {
+}: IFindKeywordInObjectFieldsParams) {
   let keywordExists = false;
   fields.forEach(field => {
     const value = object[field];
@@ -35,7 +35,7 @@ function findKeywordInObjectFields({
   return keywordExists ? object : null;
 }
 
-function printLength(obj: PrintLengthParams) {
+function printLength(obj: IPrintLengthParams) {
   const key = Object.keys(obj)[0];
   const length = obj[key].length;
   console.log(key, ':', length);
