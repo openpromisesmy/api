@@ -57,7 +57,10 @@ async function firebaseAuth(
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(sentToken);
-    const contributors = await contributorModel.list({ email });
+    const contributors = await contributorModel.list(
+      { email },
+      admin.firestore()
+    );
 
     // commented out 3 June 2019. This create logic caused an error. Also, it's currently handled by the front end. Upon GoogleSignin, if no user is found, frontend will post user using firebase token.
     // WHEN contributor does not exist yet, create
