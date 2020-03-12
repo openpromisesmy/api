@@ -6,17 +6,17 @@
   },
   "scripts": {
     "lint": "tslint -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
-    "serve": "(tsc || true) && firebase serve --only functions",
-    "serve-h": "(tsc || true) && firebase serve --only functions,hosting",
-    "shell": "(tsc || true) && firebase experimental:functions:shell",
+    "lint:fix":
+      "tslint --fix -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
+    "serve": "(tsc || true) && firebase serve",
     "start": "(tsc || true) && npm run shell",
     "deploy": "(tsc || true) && firebase deploy --only functions",
     "logs": "(tsc || true) && firebase functions:log",
     "precommit": "pretty-quick --staged",
     "build": "tsc",
+    "tsc:watch": "tsc -w",
     "test":
-      "NODE_ENV=test ./node_modules/mocha/bin/mocha -r ts-node/register --recursive \"test/**/*.test.ts\"",
-    "tsc:watch": "tsc -w"
+      "NODE_ENV='test' ts-node node_modules/jasmine/bin/jasmine --config=./spec/support/jasmine.json"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -30,15 +30,12 @@
     "lodash": "^4.17.13"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
     "@types/cors": "^2.8.4",
+    "@types/jasmine": "3.5.3",
     "@types/joi": "^13.4.2",
     "@types/lodash": "^4.14.149",
-    "@types/mocha": "^5.2.6",
-    "chai": "^4.2.0",
-    "factory.ts": "0.4.5",
     "husky": "^0.14.3",
-    "mocha": "^6.1.4",
+    "jasmine": "3.5.0",
     "mock-cloud-firestore": "0.9.2",
     "prettier": "1.11.1",
     "pretty-quick": "^1.6.0",
