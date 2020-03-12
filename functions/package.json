@@ -6,6 +6,8 @@
   },
   "scripts": {
     "lint": "tslint -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
+    "lint:fix":
+      "tslint --fix -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
     "serve": "(tsc || true) && firebase serve --only functions",
     "serve-h": "(tsc || true) && firebase serve --only functions,hosting",
     "shell": "(tsc || true) && firebase experimental:functions:shell",
