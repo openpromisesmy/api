@@ -2,7 +2,10 @@ import admin from 'firebase-admin';
 
 import * as functions from 'firebase-functions';
 
-admin.initializeApp(functions.config().firebase);
+const firebaseAdminConfig = {
+  credential: admin.credential.applicationDefault()
+};
+admin.initializeApp(firebaseAdminConfig);
 
 import contributors from './api/contributors';
 import lists from './api/lists';
