@@ -9,6 +9,8 @@
     "lint:fix":
       "tslint --fix -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
     "serve": "(tsc || true) && firebase serve",
+    "dev":
+      "(tsc || true) && GOOGLE_APPLICATION_CREDENTIALS='./secrets/google-key.json' firebase serve",
     "start": "(tsc || true) && npm run shell",
     "deploy": "(tsc || true) && firebase deploy --only functions",
     "logs": "(tsc || true) && firebase functions:log",
