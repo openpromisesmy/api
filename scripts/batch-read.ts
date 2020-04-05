@@ -1,5 +1,5 @@
 import { DocumentData } from '@google-cloud/firestore';
-import util from '../etc/utils';
+import utils from './utils';
 import db from './db';
 import { IFindKeywordInObjectFieldsParams, IPrintLengthParams } from './types';
 
@@ -43,8 +43,7 @@ function printLength(obj: IPrintLengthParams) {
 
 async function batchRead() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
-
-  const allDocuments: DocumentData[] = util.snapshotToArray(snapshot);
+  const allDocuments: DocumentData[] = utils.snapshotToArray(snapshot);
   // matchedDocuments option A - find by single property-value match
   const matchedDocuments = allDocuments.filter(
     item => item[config.MATCH_PROPERTY] === config.MATCH_VALUE

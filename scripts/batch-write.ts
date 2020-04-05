@@ -1,6 +1,6 @@
 import { DocumentData } from '@google-cloud/firestore';
 import firebase from 'firebase-admin';
-import util from '../etc/utils';
+import utils from './utils';
 import batchRead from './batch-read';
 import db from './db';
 
@@ -48,7 +48,7 @@ async function batchWrite() {
 
   // const snapshot = await db.collection(config.COLLECTION_NAME).get();
 
-  // result = util.snapshotToArray(snapshot);
+  // result = utils.snapshotToArray(snapshot);
   targetPromises.forEach(doc => {
     const ref = db.collection(config.COLLECTION_NAME).doc(doc.id);
     const updateData = {}; // update here
@@ -59,8 +59,6 @@ async function batchWrite() {
   // WARNING: uncomment below to commit the change
   // await batch.commit();
 }
-
-batchWrite();
 
 // IF READING FROM JSON
 // const json = require(`./${COLLECTION_NAME}`);
