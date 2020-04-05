@@ -73,6 +73,7 @@ async function batchRead() {
     matchedDocuments,
     valueUndefined
   };
+  console.log(result);
   return result;
 }
 

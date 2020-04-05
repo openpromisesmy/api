@@ -7,7 +7,9 @@ yarn-debug.log*
 yarn-error.log*
 
 functions/**/*.js
-
+scripts/*.js
+scripts/*.js.map
+scripts/dist
 functions/scripts/secret.json
 
 # Runtime data
