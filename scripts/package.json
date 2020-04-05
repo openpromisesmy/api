@@ -1,0 +1,21 @@
+{
+  "name": "batch-firebase-scripts",
+  "version": "1.0.0",
+  "description": "fill this up",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc -w",
+    "lint": "tslint"
+  },
+  "author": "nxmohamad@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^3.7.3",
+    "firebase-admin": "^8.10.0"
+  }
+}
