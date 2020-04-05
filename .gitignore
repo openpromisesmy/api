@@ -10,6 +10,7 @@ functions/**/*.js
 scripts/*.js
 scripts/*.js.map
 scripts/dist
+scripts/data
 functions/scripts/secret.json
 
 # Runtime data

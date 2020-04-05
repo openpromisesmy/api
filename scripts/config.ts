@@ -4,7 +4,9 @@ const READ = {
   CONCERNED_FIELDS: process.env.READ_CONCERNED_FIELDS.split(','),
   MATCH_KEYWORD: process.env.READ_MATCH_KEYWORD,
   MATCH_PROPERTY: process.env.READ_MATCH_PROPERTY,
-  MATCH_VALUE: process.env.READ_MATCH_VALUE
+  MATCH_VALUE: process.env.READ_MATCH_VALUE,
+  OUTPUT_DIR: './data/',
+  OUTPUT_FILE: process.env.READ_OUTPUT_FILE
 };
 
 const WRITE = {
