@@ -11,7 +11,7 @@ import filterArray from './filter-array';
 // update filterArray function to what's needed
 // ensure output is array of only the documents that require updating
 // acknowledge
-// uncomment warnings
+// uncomment warnings, search for 'WARNING:'
 
 const { COLLECTION_NAME } = config.DELETE;
 
@@ -35,7 +35,7 @@ const INPUT_FILEPATH = config.DELETE.INPUT_DIR + config.DELETE.INPUT_FILE;
 async function batchDelete() {
   const docs = readInputFile(INPUT_FILEPATH);
   const targetDocs = filterArray(docs);
-
+  // WARNING:
   const ACKNOWLEDGED = false;
   if (!ACKNOWLEDGED) {
     console.error(WARNING_TEXT);
@@ -50,8 +50,7 @@ async function batchDelete() {
   // result = utils.snapshotToArray(snapshot);
   targetDocs.forEach(doc => {
     const ref = db.collection(COLLECTION_NAME).doc(doc.id);
-    const updateData = {}; // update here
-    // WARNING: uncomment below to run update
+    // WARNING: uncomment below to run operation
     // batch.delete(ref);
   });
 
