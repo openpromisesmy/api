@@ -43,26 +43,26 @@ function printLength(obj: IPrintLengthParams) {
 }
 
 async function batchRead() {
-  const snapshot = await db.collection(config.COLLECTION_NAME).get();
+  const snapshot = await db.collection(COLLECTION_NAME).get();
   const allDocuments: DocumentData[] = utils.snapshotToArray(snapshot);
   // matchedDocuments option A - find by single property-value match
   const matchedDocuments = allDocuments.filter(
-    item => item[config.MATCH_PROPERTY] === config.MATCH_VALUE
+    item => item[MATCH_PROPERTY] === MATCH_VALUE
   );
   // matchedDocuments option B - find by presence of keyword in selected fields
   // const matchedDocuments = allDocuments.filter(item =>
   //   findKeywordInObjectFields({
   //     object: item,
-  //     fields: config.CONCERNED_FIELDS,
-  //     keyword: config.MATCH_KEYWORD
+  //     fields: CONCERNED_FIELDS,
+  //     keyword: MATCH_KEYWORD
   //   })
   // );
 
   const alreadyReflecting = matchedDocuments.filter(
-    document => document.state === config.MATCH_KEYWORD
+    document => document.state === MATCH_KEYWORD
   );
   const hasOtherValue = matchedDocuments.filter(
-    document => document.state && document.state !== config.MATCH_KEYWORD
+    document => document.state && document.state !== MATCH_KEYWORD
   );
   const valueUndefined = matchedDocuments.filter(
     document => document.state === undefined
