@@ -25,11 +25,6 @@ const WARNING_TEXT =
 
 const batch = db.batch();
 
-// const result;
-// const totalMatching = 0;
-// const notUpdated = 0;
-// const alreadyDone = 0;
-
 function readInputFile(filepath) {
   let raw = fs.readFileSync(filepath);
   return JSON.parse(raw.toString());
@@ -49,6 +44,7 @@ async function batchDelete() {
     );
   }
 
+  // below line is just for displaying the doc
   // const snapshot = await db.collection(COLLECTION_NAME).get();
 
   // result = utils.snapshotToArray(snapshot);
