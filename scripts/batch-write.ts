@@ -68,3 +68,5 @@ async function batchWrite() {
 //   var ref = db.collection(COLLECTION_NAME).doc(id);
 //   batch.set(ref, object);
 // }
+
+export default batchWrite;
