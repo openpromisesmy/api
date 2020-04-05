@@ -25,10 +25,18 @@ let WRITE = {
   NEW_VALUE: 'Sabah'
 };
 
+let DELETE = {
+  INPUT_DIR: process.env.DELETE_INPUT_DIR,
+  INPUT_FILE: process.env.DELETE_INPUT_FILE,
+  COLLECTION_NAME: process.env.DELETE_COLLECTION_NAME
+};
+
 READ = setValuesToUndefinedIfEmptyString(READ);
 WRITE = setValuesToUndefinedIfEmptyString(WRITE);
+DELETE = setValuesToUndefinedIfEmptyString(DELETE);
 
 export default {
   READ,
-  WRITE
+  WRITE,
+  DELETE
 };
