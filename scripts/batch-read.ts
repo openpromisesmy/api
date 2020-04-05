@@ -1,18 +1,19 @@
 import { DocumentData } from '@google-cloud/firestore';
 import utils from './utils';
+import config from './config';
 import db from './db';
 import { IFindKeywordInObjectFieldsParams, IPrintLengthParams } from './types';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
 // USE batch-write instead
 
-const config = {
-  COLLECTION_NAME: 'promises',
-  CONCERNED_FIELDS: ['quote', 'title'],
-  MATCH_KEYWORD: 'sabah',
-  MATCH_PROPERTY: 'politician_id',
-  MATCH_VALUE: '-L6lZDRxNJ9pFJ9y0TGo'
-};
+const {
+  COLLECTION_NAME,
+  CONCERNED_FIELDS,
+  MATCH_KEYWORD,
+  MATCH_PROPERTY,
+  MATCH_VALUE
+} = config;
 
 function findKeywordInField(keyword: string, value: string) {
   const present = value.toLowerCase().includes(keyword.toLowerCase());
