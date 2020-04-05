@@ -60,8 +60,6 @@ async function batchWrite() {
   // await batch.commit();
 }
 
-batchWrite();
-
 // IF READING FROM JSON
 // const json = require(`./${COLLECTION_NAME}`);
 // for (let child in json) {
