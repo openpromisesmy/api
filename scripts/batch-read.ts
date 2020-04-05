@@ -43,7 +43,6 @@ function printLength(obj: IPrintLengthParams) {
 
 async function batchRead() {
   const snapshot = await db.collection(config.COLLECTION_NAME).get();
-
   const allDocuments: DocumentData[] = utils.snapshotToArray(snapshot);
   // matchedDocuments option A - find by single property-value match
   const matchedDocuments = allDocuments.filter(
@@ -73,7 +72,6 @@ async function batchRead() {
     matchedDocuments,
     valueUndefined
   };
-  console.log(result);
   return result;
 }
 
