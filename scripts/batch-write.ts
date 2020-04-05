@@ -12,7 +12,6 @@ import db from './db';
 
 // define here
 const config = {
-  BATCH_READ: batchRead,
   COLLECTION_NAME: 'promises',
   MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx',
   NEW_VALUE: 'Sabah'
@@ -34,7 +33,7 @@ const batch = db.batch();
 // const alreadyDone = 0;
 
 async function batchWrite() {
-  const readResult = await config.BATCH_READ();
+  const readResult = await batchRead();
   const targetPromises: DocumentData[] = readResult.matchedDocuments;
   // console.log({targetPromises})
 
