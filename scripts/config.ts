@@ -31,6 +31,10 @@ let DELETE = {
   COLLECTION_NAME: process.env.DELETE_COLLECTION_NAME
 };
 
+let FILTER = {
+  KEY_TO_CHECK: 'name'
+};
+
 READ = setValuesToUndefinedIfEmptyString(READ);
 WRITE = setValuesToUndefinedIfEmptyString(WRITE);
 DELETE = setValuesToUndefinedIfEmptyString(DELETE);
@@ -38,5 +42,6 @@ DELETE = setValuesToUndefinedIfEmptyString(DELETE);
 export default {
   READ,
   WRITE,
-  DELETE
+  DELETE,
+  FILTER
 };
