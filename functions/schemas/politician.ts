@@ -2,7 +2,8 @@ import joi from 'joi';
 import util from '../etc/utils';
 
 export interface IPolitician {
-  brief: string;
+  administration_name: string;
+  brief?: string;
   contact_details: IContactDetails;
   contributor_id: string;
   created_at: string;
@@ -10,7 +11,7 @@ export interface IPolitician {
   live: boolean;
   name: string;
   primary_position: string;
-  profile_image: string;
+  profile_image?: string;
   status?: string;
   updated_at: string;
 }
@@ -24,17 +25,23 @@ interface IContactDetails {
 
 // todo: do the rest
 const shared = {
+  administration_name: joi.string().valid('Muhyiddin cabinet'),
+  brief: joi.string(),
+  constituency: joi.string(),
+  party: joi.string(),
+  term_end: joi.string(),
+  term_start: joi.string(),
   contact_details: joi.object().keys({
     email: joi.string().email(),
     facebook_url: joi.string().uri(),
     phone_number: joi.string(),
+    profile_image: joi.string().uri(),
     twitter_url: joi.string().uri()
   })
 };
 
 export const create = joi.object().keys({
   ...shared,
-  brief: joi.string().required(),
   contributor_id: joi.string().required(),
   created_at: joi
     .date()
@@ -44,10 +51,6 @@ export const create = joi.object().keys({
   live: joi.boolean().default(false),
   name: joi.string().required(),
   primary_position: joi.string().required(),
-  profile_image: joi
-    .string()
-    .uri()
-    .required(),
   status: joi.string(),
   updated_at: joi
     .date()
