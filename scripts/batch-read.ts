@@ -13,7 +13,7 @@ const {
   MATCH_KEYWORD,
   MATCH_PROPERTY,
   MATCH_VALUE
-} = config;
+} = config.READ;
 
 function findKeywordInField(keyword: string, value: string) {
   const present = value.toLowerCase().includes(keyword.toLowerCase());
