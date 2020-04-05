@@ -1,4 +1,6 @@
 import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
+import config from './config';
+import fs from 'fs';
 
 const toObject = (id: string, fireObj: DocumentData): DocumentData => ({
   ...fireObj,
@@ -12,4 +14,12 @@ const snapshotToArray = (snapshot: QuerySnapshot) => {
   return array;
 };
 
-export = { snapshotToArray };
+function writeArrayToJsonFile(array, filepath) {
+  fs.mkdir(config.READ.OUTPUT_DIR, { recursive: true }, err => {
+    if (err) throw err;
+    fs.writeFileSync(filepath, JSON.stringify(array));
+    console.log(`Wrote to ${filepath}`);
+  });
+}
+
+export = { snapshotToArray, writeArrayToJsonFile };
