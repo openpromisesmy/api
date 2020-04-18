@@ -2,7 +2,10 @@ import helpers from './helpers';
 
 function filterDocFunction(doc) {
   // write filtering logic here
-  return true;
+  return (
+    doc.administration_name &&
+    doc.administration_name.toLowerCase() === 'muhyiddin cabinet'
+  );
 }
 
 function filterDocuments(documents) {
@@ -10,7 +13,12 @@ function filterDocuments(documents) {
 }
 
 function transformDocument(doc) {
-  return doc;
+  let result = { ...doc };
+  result.cabinet_positions = {
+    administration_name: 'Muhyiddin Cabinet',
+    positions: [doc.primary_position]
+  };
+  return result;
 }
 
 function batchTransform(documents) {
