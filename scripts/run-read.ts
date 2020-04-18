@@ -1,6 +1,6 @@
 import batchRead from './lib/batch-read';
 import config from './config';
-import utils from './utils';
+import utils from './lib/utils';
 
 const filepath = config.READ.OUTPUT_DIR + config.READ.OUTPUT_FILE;
 

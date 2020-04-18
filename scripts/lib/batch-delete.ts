@@ -1,8 +1,8 @@
 import { DocumentData } from '@google-cloud/firestore';
 import firebase from 'firebase-admin';
-import utils from '../utils';
+import utils from './utils';
 import config from '../config';
-import db from '../db';
+import db from './db';
 import fs from 'fs';
 import filterArray from '../filter-array';
 
