@@ -45,10 +45,14 @@ function printLength(obj: IPrintLengthParams) {
 
 async function batchRead() {
   const allDocuments = await helpers.getAllFromColection(db)(COLLECTION_NAME);
+  // the matchObj can take on multiple sets of keys and values. currently we are using it only for one set
+  const matchObj = {
+    [MATCH_PROPERTY]: MATCH_VALUE
+  };
+  const matchedDocuments = helpers.matchDocuments(allDocuments, matchObj);
+  require('process').exit();
   // matchedDocuments option A - find by single property-value match
-  const matchedDocuments = allDocuments.filter(
-    item => item[MATCH_PROPERTY] === MATCH_VALUE
-  );
+
   // matchedDocuments option B - find by presence of keyword in selected fields
   // const matchedDocuments = allDocuments.filter(item =>
   //   findKeywordInObjectFields({

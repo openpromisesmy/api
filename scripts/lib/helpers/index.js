@@ -44,7 +44,28 @@ const getAllFromColection = db => collectionName =>
     const snapshot = yield db.collection(collectionName).get();
     return utils_1.default.snapshotToArray(snapshot);
   });
+function parseMatchObj(matchObj) {
+  const entries = Object.entries(matchObj);
+  let result = Object.assign({}, matchObj);
+  entries.forEach(entry => {
+    const [key, value] = entry;
+    if (value === 'true') result[key] = true;
+    if (value === 'false') result[key] = false;
+  });
+  return result;
+}
+function matchDocuments(documents, matchObj) {
+  const parsedMatchObj = parseMatchObj(matchObj);
+  const entries = Object.entries(parsedMatchObj);
+  let result = documents;
+  entries.forEach(entry => {
+    const [key, value] = entry;
+    result = documents.filter(item => item[key] === value);
+  });
+  return result;
+}
 exports.default = {
-  getAllFromColection
+  getAllFromColection,
+  matchDocuments
 };
 //# sourceMappingURL=index.js.map
