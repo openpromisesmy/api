@@ -9,6 +9,8 @@ yarn-error.log*
 functions/**/*.js
 scripts/*.js
 scripts/*.js.map
+scripts/lib/*.js
+scripts/lib/*.js.map
 scripts/dist
 scripts/data
 functions/scripts/secret.json

@@ -1,4 +1,4 @@
-import batchRead from './batch-read';
+import batchRead from './lib/batch-read';
 import config from './config';
 import utils from './utils';
 

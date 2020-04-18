@@ -1,3 +1,3 @@
-import batchWrite from './batch-write';
+import batchWrite from './lib/batch-write';
 
 batchWrite();
