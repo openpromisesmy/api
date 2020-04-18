@@ -44,7 +44,7 @@ function printLength(obj: IPrintLengthParams) {
 }
 
 async function batchRead() {
-  const allDocuments = helpers.getAllFromColection(db)(COLLECTION_NAME);
+  const allDocuments = await helpers.getAllFromColection(db)(COLLECTION_NAME);
   // matchedDocuments option A - find by single property-value match
   const matchedDocuments = allDocuments.filter(
     item => item[MATCH_PROPERTY] === MATCH_VALUE
@@ -59,13 +59,14 @@ async function batchRead() {
   // );
 
   const alreadyReflecting = matchedDocuments.filter(
-    document => document.state === MATCH_KEYWORD
+    document => document[MATCH_PROPERTY] === MATCH_KEYWORD
   );
   const hasOtherValue = matchedDocuments.filter(
-    document => document.state && document.state !== MATCH_KEYWORD
+    document =>
+      document[MATCH_PROPERTY] && document[MATCH_PROPERTY] !== MATCH_KEYWORD
   );
   const valueUndefined = matchedDocuments.filter(
-    document => document.state === undefined
+    document => document[MATCH_PROPERTY] === undefined
   );
   const result = {
     alreadyReflecting,

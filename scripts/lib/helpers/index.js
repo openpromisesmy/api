@@ -39,10 +39,10 @@ var __importDefault =
   };
 Object.defineProperty(exports, '__esModule', { value: true });
 const utils_1 = __importDefault(require('../utils'));
-const getAllFromColection = db => collection =>
+const getAllFromColection = db => collectionName =>
   __awaiter(void 0, void 0, void 0, function*() {
-    const snapshot = yield db.collection(COLLECTION_NAME).get();
-    const allDocuments = utils_1.default.snapshotToArray(snapshot);
+    const snapshot = yield db.collection(collectionName).get();
+    return utils_1.default.snapshotToArray(snapshot);
   });
 exports.default = {
   getAllFromColection

@@ -1,8 +1,9 @@
+import { DocumentData } from '@google-cloud/firestore';
 import utils from '../utils';
 
-const getAllFromColection = db => async collection => {
-  const snapshot = await db.collection(COLLECTION_NAME).get();
-  const allDocuments: DocumentData[] = utils.snapshotToArray(snapshot);
+const getAllFromColection = db => async collectionName => {
+  const snapshot = await db.collection(collectionName).get();
+  return utils.snapshotToArray(snapshot);
 };
 
 export default {
