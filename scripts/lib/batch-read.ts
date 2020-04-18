@@ -4,6 +4,7 @@ import config from '../config';
 import db from './db';
 import { IFindKeywordInObjectFieldsParams, IPrintLengthParams } from './types';
 import helpers from './helpers';
+import path from 'path';
 
 // DO NOT WRITE ANYTHING USING THIS SCRIPT
 // USE batch-write instead
@@ -45,6 +46,11 @@ function printLength(obj: IPrintLengthParams) {
 
 async function batchRead() {
   const allDocuments = await helpers.getAllFromColection(db)(COLLECTION_NAME);
+  helpers.writeArrayToJsonFile(
+    allDocuments,
+    path.resolve(`./data/read/all-${COLLECTION_NAME}.json`)
+  );
+  process.exit();
   // the matchObj can take on multiple sets of keys and values. currently we are using it only for one set
   const matchObj = {
     [MATCH_PROPERTY]: MATCH_VALUE
