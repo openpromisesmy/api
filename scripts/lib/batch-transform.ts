@@ -2,7 +2,10 @@ import helpers from './helpers';
 
 function filterDocFunction(doc) {
   // write filtering logic here
-  return doc.primary_position.includes('Member of Parliament');
+  return (
+    doc.administration_name &&
+    doc.administration_name.toLowerCase() === 'muhyiddin cabinet'
+  );
 }
 
 function filterDocuments(documents) {
@@ -11,11 +14,10 @@ function filterDocuments(documents) {
 
 function transformDocument(doc) {
   let result = { ...doc };
-  const parliamentaryConstituency = doc.primary_position.replace(
-    'Member of Parliament for ',
-    ''
-  );
-  result.mp_for = parliamentaryConstituency;
+  result.cabinet_positions = {
+    administration_name: 'Muhyiddin Cabinet',
+    positions: [doc.primary_position]
+  };
   return result;
 }
 
