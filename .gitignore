@@ -6,11 +6,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-functions/**/*.js
-scripts/*.js
-scripts/*.js.map
-scripts/lib/*.js
-scripts/lib/*.js.map
+*.js 
+*.js.map
 scripts/dist
 scripts/data
 functions/scripts/secret.json

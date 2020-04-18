@@ -1,4 +1,4 @@
-import utils from './utils';
+import utils from './lib/utils';
 require('dotenv').config();
 
 function setValuesToUndefinedIfEmptyString(object) {

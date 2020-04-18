@@ -1,5 +1,5 @@
 import { DocumentData, QuerySnapshot } from '@google-cloud/firestore';
-import config from './config';
+import config from '../config';
 import fs from 'fs';
 
 const toObject = (id: string, fireObj: DocumentData): DocumentData => ({
