@@ -5,6 +5,7 @@ import config from '../config';
 import db from './db';
 import fs from 'fs';
 import filterArray from '../filter-array';
+import helpers from './helpers';
 
 // INSTRUCTIONS:
 // set config in config.ts
@@ -25,15 +26,10 @@ const WARNING_TEXT =
 
 const batch = db.batch();
 
-function readInputFile(filepath) {
-  let raw = fs.readFileSync(filepath);
-  return JSON.parse(raw.toString());
-}
-
 const INPUT_FILEPATH = config.DELETE.INPUT_DIR + config.DELETE.INPUT_FILE;
 
 async function batchDelete() {
-  const docs = readInputFile(INPUT_FILEPATH);
+  const docs = helpers.readJsonFile(INPUT_FILEPATH);
   const targetDocs = filterArray(docs);
   // WARNING:
   const ACKNOWLEDGED = false;

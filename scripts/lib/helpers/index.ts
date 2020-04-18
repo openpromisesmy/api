@@ -1,5 +1,6 @@
 import { DocumentData } from '@google-cloud/firestore';
 import utils from '../utils';
+import fs from 'fs';
 
 const getAllFromColection = db => async collectionName => {
   const snapshot = await db.collection(collectionName).get();
@@ -28,7 +29,19 @@ function matchDocuments(documents, matchObj) {
   return result;
 }
 
+function readJsonFile(filepath) {
+  let raw = fs.readFileSync(filepath);
+  return JSON.parse(raw.toString());
+}
+
+function writeArrayToJsonFile(array, filepath) {
+  fs.writeFileSync(filepath, JSON.stringify(array));
+  console.log(`Wrote to ${filepath}`);
+}
+
 export default {
   getAllFromColection,
-  matchDocuments
+  matchDocuments,
+  readJsonFile,
+  writeArrayToJsonFile
 };
