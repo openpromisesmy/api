@@ -19,6 +19,11 @@ let READ = {
   OUTPUT_FILE: process.env.READ_OUTPUT_FILE
 };
 
+let TRANSFORM = {
+  INPUT_FILE: process.env.TRANSFORM_INPUT_FILE,
+  OUTPUT_FILE: process.env.TRANSFORM_OUTPUT_FILE
+};
+
 let WRITE = {
   COLLECTION_NAME: 'promises',
   MANIFESTO_LIST_ID: 'YtIeJ0L72ged8cpKmJWx',
@@ -36,11 +41,13 @@ let FILTER = {
 };
 
 READ = setValuesToUndefinedIfEmptyString(READ);
+TRANSFORM = setValuesToUndefinedIfEmptyString(TRANSFORM);
 WRITE = setValuesToUndefinedIfEmptyString(WRITE);
 DELETE = setValuesToUndefinedIfEmptyString(DELETE);
 
 export default {
   READ,
+  TRANSFORM,
   WRITE,
   DELETE,
   FILTER
