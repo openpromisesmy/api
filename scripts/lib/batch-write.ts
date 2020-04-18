@@ -1,8 +1,8 @@
 import { DocumentData } from '@google-cloud/firestore';
 import firebase from 'firebase-admin';
-import utils from './utils';
-import batchRead from './batch-read';
-import db from './db';
+import utils from '../utils';
+import batchRead from '../batch-read';
+import db from '../db';
 
 // INSTRUCTIONS:
 // 1. set read conditions in batch-read.ts
