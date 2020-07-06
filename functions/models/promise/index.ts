@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+import db from '../../services/db';
 import _ from 'lodash';
 import { snapshotToArray } from '../../etc/utils';
 import {
@@ -10,9 +11,6 @@ import update from './update';
 import list from './list';
 import get from './get';
 import { detectArrayChanges } from '../../etc/utils';
-
-const db = admin.firestore();
-// db.settings({ timestampsInSnapshots: true });
 
 export const collection = db.collection('promises');
 
