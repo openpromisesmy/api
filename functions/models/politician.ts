@@ -25,7 +25,7 @@ export = () => ({
 });
 
 async function add(data: IPolitician) {
-  const con = await contributor.get(data.contributor_id, admin.firestore());
+  const con = await contributor.get(data.contributor_id, db);
 
   if (_.isEmpty(con)) {
     return { status: 404, message: 'Invalid Contributor' };
