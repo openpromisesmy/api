@@ -1,5 +1,4 @@
 import admin from 'firebase-admin';
-import db from '../services/db';
 import _ from 'lodash';
 import util from '../etc/utils';
 import {
@@ -7,8 +6,6 @@ import {
   IContributor,
   update as updateSchema
 } from '../schemas/contributor';
-
-// db.settings({ timestampsInSnapshots: true });
 
 export = () => ({
   add,
