@@ -1,5 +1,4 @@
 import { DocumentData } from '@google-cloud/firestore';
-import db from '../services/db';
 import _ from 'lodash';
 import util from '../etc/utils';
 import {
@@ -7,6 +6,7 @@ import {
   IPromiseUpdate,
   update as updateSchema
 } from '../schemas/promiseUpdate';
+import db from '../services/db';
 import PromiseModel from './promise';
 
 const collection = db.collection('promiseUpdates');

@@ -1,4 +1,3 @@
-import db from '../services/db';
 import _ from 'lodash';
 import util from '../etc/utils';
 import {
@@ -6,6 +5,7 @@ import {
   IPolitician,
   update as updateSchema
 } from '../schemas/politician';
+import db from '../services/db';
 import contributorModel from './contributor';
 
 const contributor = contributorModel();

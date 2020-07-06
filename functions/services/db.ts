@@ -4,7 +4,7 @@ import admin from 'firebase-admin';
 const isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) {
-  const serviceAccount = require('../secrets/google-key.json');
+  import serviceAccount = require('../secrets/google-key.json');
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 } else {
   // admin.initializeApp(functions.config().firebase);
