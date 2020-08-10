@@ -11,7 +11,6 @@ import {
 export = () => ({
   add,
   createSchema,
-  find,
   get,
   list,
   remove,
@@ -49,21 +48,6 @@ async function get(
 
 interface MatchObject {
   [key: string]: any;
-}
-
-async function find(match: MatchObject, db: admin.firestore.Firestore) {
-  const snapshot = await admin
-    .database()
-    .ref('/contributors')
-    .orderByChild(Object.keys(match)[0])
-    .equalTo(Object.keys(match).map(key => match[key][0])) // TODO: check whether this even works
-    .once('value');
-
-  const data = snapshot.val();
-  const id = Object.keys(data)[0];
-  const contributor = _.isEmpty(data) ? {} : util.toObject(id, data[id]);
-
-  return contributor;
 }
 
 async function list(query: object, db: admin.firestore.Firestore) {
