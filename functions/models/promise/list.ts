@@ -1,12 +1,11 @@
 import admin = require('firebase-admin');
 import _ from 'lodash';
 import utils from '../../etc/utils';
+import { RefHead } from '../types';
 
 interface IQuery {
   reverse?: boolean;
 }
-
-type RefHead = admin.firestore.CollectionReference | admin.firestore.Query;
 
 const list = (db: admin.firestore.Firestore) => async (query: IQuery) => {
   let ref = db.collection('promises');
