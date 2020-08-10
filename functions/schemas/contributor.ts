@@ -1,6 +1,6 @@
 import joi from 'joi';
 // import joiPhoneNumber from 'joi-phone-number';
-import util = require('../etc/utils');
+import { now } from '../etc/utils';
 // joi.extend(joiPhoneNumber);
 // TODO: resolve phoneNumber
 
@@ -21,7 +21,7 @@ export const create = joi.object().keys({
   created_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of creation'),
+    .default(now, 'Time of creation'),
   email: joi
     .string()
     .email()
@@ -36,7 +36,7 @@ export const create = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(now, 'Time of update')
 });
 
 export const update = joi.object().keys({
@@ -51,5 +51,5 @@ export const update = joi.object().keys({
   updated_at: joi
     .date()
     .iso()
-    .default(util.now, 'Time of update')
+    .default(now, 'Time of update')
 });

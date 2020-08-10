@@ -1,34 +1,35 @@
 import admin from 'firebase-admin';
 import utils = require('../../etc/utils');
 import _ from 'lodash';
+import { RefHead } from '../types';
 
 type Query = { live?: boolean; reverse: boolean };
 const list: Function = (db: admin.firestore.Firestore) => async (
   query: Query
 ): Promise<object[]> => {
-  const collection = db.collection('lists');
-  let ref = collection;
+  const ref = db.collection('lists');
+  let head: RefHead = ref;
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {
       switch (key) {
         case 'pageSize':
-          ref = ref.limit(Number(value));
+          head = head.limit(Number(value));
           break;
         case 'startAfter':
-          ref = ref.startAfter(value);
+          head = head.startAfter(value);
           break;
         case 'orderBy':
-          ref = ref.orderBy(value, query.reverse ? 'desc' : 'asc');
+          head = head.orderBy(value, query.reverse ? 'desc' : 'asc');
           break;
         case 'reverse':
           break;
         default:
-          ref = ref.where(key, '==', value);
+          head = head.where(key, '==', value);
           break;
       }
     });
   }
-  const snapshot = await ref.get();
+  const snapshot = await head.get();
 
   return utils.snapshotToArray(snapshot);
 };

@@ -48,9 +48,7 @@ async function createPromise(req: express.Request, res: express.Response) {
 
     const promise = await PromiseModel.add(validatedPromise);
 
-    return promise.status
-      ? res.status(promise.status).json(promise)
-      : res.json(promise);
+    return promise;
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -83,9 +81,7 @@ async function listAllPromises(req: express.Request, res: express.Response) {
   try {
     const promises = await PromiseModel.list(req.query);
 
-    return promises.status
-      ? res.status(promises.status).json(promises)
-      : res.json(promises);
+    return promises;
   } catch (e) {
     console.log(e);
     return res.status(500).end();
