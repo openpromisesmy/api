@@ -95,7 +95,7 @@ async function getPolitician(req: express.Request, res: express.Response) {
 async function updatePolitician(req: express.Request, res: express.Response) {
   try {
     const validatedPolitician = await _asyncPoliticianValidateUpdate(req.body);
-
+    // TODO: we need to handle when politician is updated from live to not live, all their promises needs to be made not live too
     const politician = await politicianModel.update(
       req.params.id,
       validatedPolitician
