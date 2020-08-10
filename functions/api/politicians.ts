@@ -73,9 +73,7 @@ async function listAllPoliticians(req: express.Request, res: express.Response) {
   try {
     const politicians = await politicianModel.list(req.query);
 
-    return politicians.status
-      ? res.status(politicians.status).json(politicians)
-      : res.json(politicians);
+    return politicians && res.json(politicians);
   } catch (e) {
     console.log(e);
     return res.status(500).end();
