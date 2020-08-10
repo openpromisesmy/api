@@ -23,6 +23,8 @@ const snapshotToArray = (snapshot: QuerySnapshot) => {
   return array;
 };
 
+export const detectArrayChanges = require('./detectArrayChanges');
+
 export = {
   compose,
   getKey,
@@ -33,5 +35,5 @@ export = {
   snapshotToArray,
   toArray,
   toObject,
-  detectArrayChanges: require('./detectArrayChanges')
+  detectArrayChanges
 };

@@ -10,7 +10,11 @@ const get = (db: admin.firestore.Firestore) => async (id: string) => {
 
   const promise = doc.data();
 
-  return _.isEmpty(promise) ? {} : utils.toObject(id, promise);
+  if (_.isEmpty(promise) || promise == undefined) {
+    return {};
+  } else {
+    return utils.toObject(id, promise);
+  }
 };
 
 export default get;

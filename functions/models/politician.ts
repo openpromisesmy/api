@@ -7,6 +7,7 @@ import {
 } from '../schemas/politician';
 import db from '../services/db';
 import contributorModel from './contributor';
+import { RefHead } from './types';
 
 const contributor = contributorModel();
 const collection = db.collection('politicians');
@@ -46,19 +47,24 @@ async function get(id: string) {
   return _.isEmpty(coll) ? {} : util.toObject(id, coll);
 }
 
-async function list(query: object) {
+interface Query {
+  [key: string]: string;
+}
+
+async function list(query: Query) {
   let ref = collection;
+  let head: RefHead = ref;
   if (!_.isEmpty(query)) {
     for (const x in query) {
       if (x === 'orderBy') {
-        ref = collection.orderBy(query[x], query.reverse ? 'desc' : 'asc');
+        head = collection.orderBy(query[x], query.reverse ? 'desc' : 'asc');
       } else {
-        ref = collection.where(x, '==', query[x]);
+        head = collection.where(x, '==', query[x]);
       }
     }
   }
 
-  const snapshot = await ref.get();
+  const snapshot = await head.get();
 
   return util.snapshotToArray(snapshot);
 }
