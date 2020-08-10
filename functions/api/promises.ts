@@ -10,7 +10,8 @@ import * as functions from 'firebase-functions';
 import middlewares from '../etc/middlewares';
 import PromiseModel from '../models/promise';
 
-import { ValidationError } from 'joi';
+import { ValidationError, IPOptions } from 'joi';
+import { IPromise } from '../schemas/promise';
 
 const { firebaseAuth, routePermissions } = middlewares;
 // promises.get('/')
@@ -130,11 +131,13 @@ async function deletePromise(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncPromiseValidateCreate(dataToValidate: object) {
+function _asyncPromiseValidateCreate(
+  dataToValidate: IPromise
+): Promise<IPromise> {
   return new Promise((resolve, reject) => {
     PromiseModel.createSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IPromise) => {
         if (e) {
           return reject(e);
         }

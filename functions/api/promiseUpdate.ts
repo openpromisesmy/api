@@ -9,6 +9,7 @@ import PromiseUpdateModel from '../models/promiseUpdate';
 import { ValidationError } from 'joi';
 
 import middlewares from '../etc/middlewares';
+import { IPromiseUpdate } from '../schemas/promiseUpdate';
 
 const { firebaseAuth } = middlewares;
 
@@ -45,9 +46,7 @@ async function createPromiseUpdate(
 
     const promiseUpdate = await promiseUpdateModel.add(validatedPromiseUpdate);
 
-    return promiseUpdate.status
-      ? res.status(promiseUpdate.status).json(promiseUpdate)
-      : res.json(promiseUpdate);
+    return promiseUpdate && res.json(promiseUpdate);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -139,11 +138,13 @@ async function deletePromiseUpdate(
   }
 }
 
-function _asyncPromiseUpdateValidateCreate(dataToValidate: object) {
+function _asyncPromiseUpdateValidateCreate(
+  dataToValidate: IPromiseUpdate
+): Promise<IPromiseUpdate> {
   return new Promise((resolve, reject) => {
     promiseUpdateModel.createSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IPromiseUpdate) => {
         if (e) {
           return reject(e);
         }
