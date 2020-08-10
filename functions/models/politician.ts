@@ -27,7 +27,7 @@ async function add(data: IPolitician): Promise<ModelError | AddReturn> {
   const con = await contributor.get(data.contributor_id, db);
 
   if (_.isEmpty(con)) {
-    return { status: 404, message: 'Invalid Contributor' };
+    throw Error('Invalid Contributor');
   }
 
   const ref = await collection.add(data);
@@ -77,7 +77,7 @@ async function update(id: string, updateData: object) {
   const politician = await get(id);
 
   if (_.isEmpty(politician)) {
-    return { status: 404, message: 'Invalid Politicain' };
+    throw Error('Invalid Politician');
   }
 
   return collection.doc(id).update(updateData);

@@ -27,7 +27,7 @@ async function add(data: IPromiseUpdate): Promise<AddReturn | ModelError> {
     const pro = await PromiseModel.get(data.promise_id);
 
     if (_.isEmpty(pro)) {
-      return { status: 404, message: 'Invalid Promise' };
+      throw Error('Invalid Promise');
     }
 
     const ref = await collection.add(data);
@@ -71,7 +71,7 @@ async function update(id: string, data: DocumentData): Promise<DocumentData> {
   const promiseUpdate = await get(id);
 
   if (_.isEmpty(promiseUpdate)) {
-    return { status: 404, message: 'Invalid Promise Update' };
+    throw Error('Invalid Promise Update');
   }
 
   const [updatedPromise] = await Promise.all([
