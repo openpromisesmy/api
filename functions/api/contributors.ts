@@ -106,9 +106,7 @@ async function updateContributor(req: express.Request, res: express.Response) {
       admin.firestore()
     );
 
-    return contributor && contributor.status
-      ? res.status(contributor.status).json(contributor)
-      : res.status(204).end();
+    return contributor && res.status(204).end();
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -130,7 +128,7 @@ async function deleteContributor(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncContributorValidateCreate(dataToValidate: object) {
+function _asyncContributorValidateCreate(dataToValidate: IContributor) {
   return new Promise<IContributor>((resolve, reject) => {
     contributorModel.createSchema.validate(
       dataToValidate,
@@ -145,7 +143,7 @@ function _asyncContributorValidateCreate(dataToValidate: object) {
   });
 }
 
-function _asyncContributorValidateUpdate(dataToValidate: object) {
+function _asyncContributorValidateUpdate(dataToValidate: IContributor) {
   return new Promise<IContributor>((resolve, reject) => {
     contributorModel.updateSchema.validate(
       dataToValidate,

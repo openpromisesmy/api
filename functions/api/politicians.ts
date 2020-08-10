@@ -44,9 +44,7 @@ async function createPolitician(req: express.Request, res: express.Response) {
 
     const politician = await politicianModel.add(validatedPolitician);
 
-    return politician.status
-      ? res.status(politician.status).json(politician)
-      : res.json(politician);
+    return politician;
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -64,9 +62,7 @@ async function listPoliticians(req: express.Request, res: express.Response) {
       ...req.query
     });
 
-    return politicians.status
-      ? res.status(politicians.status).json(politicians)
-      : res.json(politicians);
+    return politicians;
   } catch (e) {
     console.log(e);
     return res.status(500).end();
@@ -106,9 +102,7 @@ async function updatePolitician(req: express.Request, res: express.Response) {
       validatedPolitician
     );
 
-    return politician && politician.status
-      ? res.status(politician.status).json(politician)
-      : res.status(204).end();
+    return politician && politician.status && res.status(204).end();
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);

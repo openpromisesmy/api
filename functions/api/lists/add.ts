@@ -1,6 +1,7 @@
 import express from 'express';
 import ListModel from '../../models/list';
 import { IList, create as createSchema } from '../../schemas/list';
+import { ValidationError } from 'joi';
 
 async function createList(req: express.Request, res: express.Response) {
   try {
@@ -19,7 +20,7 @@ async function createList(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncListValidateCreate(dataToValidate: object) {
+function _asyncListValidateCreate(dataToValidate: IList) {
   return new Promise<IList>((resolve, reject) => {
     createSchema.validate(
       dataToValidate,
