@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import _ from 'lodash';
 import util from '../etc/utils';
+import { snapshotToArray } from '../etc/utils';
 import {
   create as createSchema,
   IContributor,
@@ -71,7 +72,7 @@ async function list(query: object, db: admin.firestore.Firestore) {
 
   const snapshot = await ref.get();
 
-  return util.snapshotToArray(snapshot);
+  return snapshotToArray(snapshot);
 }
 
 async function update(
