@@ -67,9 +67,7 @@ async function listPromises(req: express.Request, res: express.Response) {
   try {
     const promises = await PromiseModel.list({ live: true, ...req.query });
 
-    return promises.status
-      ? res.status(promises.status).json(promises)
-      : res.json(promises);
+    return promises && res.json(promises);
   } catch (e) {
     console.log(e);
     return res.status(500).end();
