@@ -25,7 +25,7 @@ function _asyncValidateContributor(dataToValidate: object) {
   });
 }
 
-export = {
+export default {
   firebaseAuth,
   logger,
   routePermissions
