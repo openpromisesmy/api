@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { firebaseAuth } from '../etc/middlewares';
 import PoliticianModel from '../models/politician';
 
-import { ValidationError } from 'joi';
+import { ValidationError, IpOptions } from 'joi';
+import { IPolitician } from '../schemas/politician';
 
 // politicians.get('/')
 // politicians.post('/').json({contributor_id: '123', profile_image: '123', name: 'Umar', primary_position: 'OpenPromises', brief: 'Umar bla bla', description: 'bla bla', status: 'verified', live: true})
@@ -122,11 +123,13 @@ async function deletePolitician(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncPoliticianValidateCreate(dataToValidate: object) {
+function _asyncPoliticianValidateCreate(
+  dataToValidate: IPolitician
+): Promise<IPolitician> {
   return new Promise((resolve, reject) => {
     politicianModel.createSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IPolitician) => {
         if (e) {
           return reject(e);
         }
