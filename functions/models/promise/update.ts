@@ -15,7 +15,7 @@ const update = (db: admin.firestore.Firestore) => async (
 ) => {
   const promise = await promiseModel.get(id);
   if (_.isEmpty(promise)) {
-    return { status: 404, message: 'Invalid Promise' };
+    throw Error('Invalid Promise');
   }
   // the lines below are so convoluted, we need to simplify them
   const previouslyNone = !promise.list_ids || promise.list_ids.length < 1;

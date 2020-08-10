@@ -70,7 +70,7 @@ async function update(
   const contributor: IContributor | {} = await get(id, db);
 
   if (_.isEmpty(contributor)) {
-    return { status: 404, message: 'Invalid Contributor' };
+    throw Error('Invalid Contributor');
   }
 
   return db

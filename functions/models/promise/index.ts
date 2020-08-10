@@ -84,7 +84,7 @@ export async function ensurePoliticianExistsById(politicianId: string) {
     if (thisPolitician.exists) {
       return;
     }
-    throw { status: 404, message: 'Invalid Politician' };
+    throw Error('Invalid Politician');
   });
 }
 
@@ -95,7 +95,7 @@ export async function ensureContributorExistsById(contributorId: string) {
     if (thisContributor.exists) {
       return;
     }
-    throw { status: 404, message: 'Invalid Contributor' };
+    throw Error('Invalid Contributor');
   });
 }
 
@@ -106,10 +106,7 @@ export async function ensureAllListsExistById(listIds: string[]) {
     const [invalidId] = thisListIds.filter(id => id !== undefined);
 
     if (invalidId) {
-      throw {
-        message: `Invalid List with id "${invalidId}"`,
-        status: 404
-      };
+      throw Error('Invalid List ID');
     }
   });
 }
