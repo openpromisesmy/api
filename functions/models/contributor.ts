@@ -36,17 +36,23 @@ async function get(id: string, db: admin.firestore.Firestore) {
     .get();
 
   const data = doc.data();
-  const contributor = _.isEmpty(data) ? {} : util.toObject(id, data);
-
-  return contributor;
+  if (_.isEmpty(data) || data == undefined) {
+    return {};
+  } else {
+    return util.toObject(id, data);
+  }
 }
 
-async function find(match: any, db: admin.firestore.Firestore) {
+interface MatchObject {
+  [key: string]: any;
+}
+
+async function find(match: MatchObject, db: admin.firestore.Firestore) {
   const snapshot = await admin
     .database()
     .ref('/contributors')
     .orderByChild(Object.keys(match)[0])
-    .equalTo(Object.keys(match).map(key => match[key][0]))
+    .equalTo(Object.keys(match).map(key => match[key][0])) // TODO: check whether this even works
     .once('value');
 
   const data = snapshot.val();
