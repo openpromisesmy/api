@@ -52,7 +52,7 @@ async function get(id: string) {
 }
 
 interface Query {
-  [key: string]: string;
+  [key: string]: any;
 }
 
 async function list(query: Query) {
