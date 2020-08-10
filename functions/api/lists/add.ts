@@ -19,7 +19,7 @@ async function createList(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncListValidateCreate(dataToValidate: object) {
+function _asyncListValidateCreate(dataToValidate: IList) {
   return new Promise<IList>((resolve, reject) => {
     createSchema.validate(
       dataToValidate,
