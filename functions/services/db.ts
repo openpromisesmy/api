@@ -1,13 +1,11 @@
 import admin from 'firebase-admin';
-import serviceAccount from '../secrets/google-key.json';
-// import * as functions from 'firebase-functions';
+const credentialPath = require('../secrets/google-key.json');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) {
-  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+  admin.initializeApp({ credential: admin.credential.cert(credentialPath) });
 } else {
-  // admin.initializeApp(functions.config().firebase);
   admin.initializeApp();
 }
 

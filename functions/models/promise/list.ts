@@ -6,30 +6,33 @@ interface IQuery {
   reverse?: boolean;
 }
 
+type RefHead = admin.firestore.CollectionReference | admin.firestore.Query;
+
 const list = (db: admin.firestore.Firestore) => async (query: IQuery) => {
   let ref = db.collection('promises');
+  let head: RefHead = ref;
   if (!_.isEmpty(query)) {
     _.forIn(query, (value: any, key: string) => {
       switch (key) {
         case 'pageSize':
-          ref = ref.limit(Number(value));
+          head = head.limit(Number(value));
           break;
         case 'startAfter':
-          ref = ref.startAfter(value);
+          head = head.startAfter(value);
           break;
         case 'orderBy':
-          ref = ref.orderBy(value, query.reverse ? 'desc' : 'asc');
+          head = head.orderBy(value, query.reverse ? 'desc' : 'asc');
           break;
         case 'reverse':
           break;
         default:
-          ref = ref.where(key, '==', value);
+          head = head.where(key, '==', value);
           break;
       }
     });
   }
 
-  const snapshot = await ref.get();
+  const snapshot = await head.get();
   return utils.snapshotToArray(snapshot);
 };
 
