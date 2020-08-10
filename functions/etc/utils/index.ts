@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const compose = (...fns: Array<((d: any) => any)>) => (x: ((d: any) => any)) =>
   fns.reduceRight((acc, fn) => fn(acc), x);
-const now = () => new Date().toISOString();
+export const now = () => new Date().toISOString();
 const toArray = (fireObj: DocumentData) =>
   Object.keys(fireObj).reduce(
     (acc, key) => acc.concat({ ...fireObj[key], id: key }),
