@@ -4,6 +4,7 @@ import utils from '../../etc/utils';
 import { RefHead } from '../types';
 
 interface IQuery {
+  live?: boolean;
   reverse?: boolean;
 }
 
