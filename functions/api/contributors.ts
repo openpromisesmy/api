@@ -128,7 +128,7 @@ async function deleteContributor(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncContributorValidateCreate(dataToValidate: object) {
+function _asyncContributorValidateCreate(dataToValidate: IContributor) {
   return new Promise<IContributor>((resolve, reject) => {
     contributorModel.createSchema.validate(
       dataToValidate,
