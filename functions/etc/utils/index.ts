@@ -15,7 +15,7 @@ const toObject = (id: string, fireObj: DocumentData): DocumentData => ({
 });
 const getKey = (obj: any) => Object.keys(obj)[0];
 const getValue = (obj: any) => obj[getKey(obj)];
-const snapshotToArray = (snapshot: QuerySnapshot) => {
+export const snapshotToArray = (snapshot: QuerySnapshot) => {
   const array: object[] = [];
   snapshot.forEach((doc: DocumentData) => {
     array.push(toObject(doc.id, doc.data()));
