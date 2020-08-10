@@ -44,7 +44,7 @@ async function createPolitician(req: express.Request, res: express.Response) {
 
     const politician = await politicianModel.add(validatedPolitician);
 
-    return politician;
+    return res.json(politician);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -62,7 +62,7 @@ async function listPoliticians(req: express.Request, res: express.Response) {
       ...req.query
     });
 
-    return politicians;
+    return res.json(politicians);
   } catch (e) {
     console.log(e);
     return res.status(500).end();
