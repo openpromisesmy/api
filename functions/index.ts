@@ -1,9 +1,4 @@
-import admin from 'firebase-admin';
-
-import * as functions from 'firebase-functions';
-
-admin.initializeApp(functions.config().firebase);
-
+// import * as functions from 'firebase-functions';
 import contributors from './api/contributors';
 import lists from './api/lists';
 import politicians from './api/politicians';

@@ -28,16 +28,16 @@ const shared = {
   administration_name: joi.string().valid('Muhyiddin cabinet'),
   brief: joi.string(),
   constituency: joi.string(),
-  party: joi.string(),
-  term_end: joi.string(),
-  term_start: joi.string(),
   contact_details: joi.object().keys({
     email: joi.string().email(),
     facebook_url: joi.string().uri(),
     phone_number: joi.string(),
     profile_image: joi.string().uri(),
     twitter_url: joi.string().uri()
-  })
+  }),
+  party: joi.string(),
+  term_end: joi.string(),
+  term_start: joi.string()
 };
 
 export const create = joi.object().keys({

@@ -8,7 +8,7 @@
     "lint": "tslint -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
     "lint:fix":
       "tslint --fix -c ./tslint.json './*/*.ts' './*.ts' -e './node_modules'",
-    "serve": "(tsc || true) && firebase serve",
+    "serve": "(tsc || true) && NODE_ENV=development firebase serve",
     "start": "(tsc || true) && npm run shell",
     "deploy": "(tsc || true) && firebase deploy --only functions",
     "logs": "(tsc || true) && firebase functions:log",

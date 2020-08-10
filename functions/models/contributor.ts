@@ -7,8 +7,6 @@ import {
   update as updateSchema
 } from '../schemas/contributor';
 
-// db.settings({ timestampsInSnapshots: true });
-
 export = () => ({
   add,
   createSchema,

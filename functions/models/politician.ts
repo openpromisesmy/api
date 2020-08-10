@@ -1,4 +1,3 @@
-import admin from 'firebase-admin';
 import _ from 'lodash';
 import util from '../etc/utils';
 import {
@@ -6,10 +5,9 @@ import {
   IPolitician,
   update as updateSchema
 } from '../schemas/politician';
+import db from '../services/db';
 import contributorModel from './contributor';
 
-const db = admin.firestore();
-// db.settings({ timestampsInSnapshots: true });
 const contributor = contributorModel();
 const collection = db.collection('politicians');
 
@@ -25,7 +23,7 @@ export = () => ({
 });
 
 async function add(data: IPolitician) {
-  const con = await contributor.get(data.contributor_id, admin.firestore());
+  const con = await contributor.get(data.contributor_id, db);
 
   if (_.isEmpty(con)) {
     return { status: 404, message: 'Invalid Contributor' };
