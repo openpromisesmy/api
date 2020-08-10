@@ -7,7 +7,7 @@ import {
 } from '../schemas/politician';
 import db from '../services/db';
 import contributorModel from './contributor';
-import { RefHead } from './types';
+import { AddReturn, ModelError, RefHead } from './types';
 
 const contributor = contributorModel();
 const collection = db.collection('politicians');
@@ -23,7 +23,7 @@ export = () => ({
   updateSchema
 });
 
-async function add(data: IPolitician) {
+async function add(data: IPolitician): Promise<ModelError | AddReturn> {
   const con = await contributor.get(data.contributor_id, db);
 
   if (_.isEmpty(con)) {
@@ -39,7 +39,7 @@ async function add(data: IPolitician) {
   return { id: ref.id };
 }
 
-async function get(id: string) {
+async function get(id: string): Promise<IPolitician | {}> {
   const doc = await collection.doc(id).get();
 
   const politician = doc.data();

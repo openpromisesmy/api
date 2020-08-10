@@ -8,7 +8,8 @@ import _ from 'lodash';
 import { firebaseAuth } from '../etc/middlewares';
 import PoliticianModel from '../models/politician';
 
-import { ValidationError } from 'joi';
+import { ValidationError, IpOptions } from 'joi';
+import { IPolitician } from '../schemas/politician';
 
 // politicians.get('/')
 // politicians.post('/').json({contributor_id: '123', profile_image: '123', name: 'Umar', primary_position: 'OpenPromises', brief: 'Umar bla bla', description: 'bla bla', status: 'verified', live: true})
@@ -44,7 +45,7 @@ async function createPolitician(req: express.Request, res: express.Response) {
 
     const politician = await politicianModel.add(validatedPolitician);
 
-    return politician;
+    return res.json(politician);
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -62,7 +63,7 @@ async function listPoliticians(req: express.Request, res: express.Response) {
       ...req.query
     });
 
-    return politicians;
+    return res.json(politicians);
   } catch (e) {
     console.log(e);
     return res.status(500).end();
@@ -73,9 +74,7 @@ async function listAllPoliticians(req: express.Request, res: express.Response) {
   try {
     const politicians = await politicianModel.list(req.query);
 
-    return politicians.status
-      ? res.status(politicians.status).json(politicians)
-      : res.json(politicians);
+    return politicians && res.json(politicians);
   } catch (e) {
     console.log(e);
     return res.status(500).end();
@@ -102,7 +101,7 @@ async function updatePolitician(req: express.Request, res: express.Response) {
       validatedPolitician
     );
 
-    return politician && politician.status && res.status(204).end();
+    return politician && res.status(204).end();
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
@@ -124,11 +123,13 @@ async function deletePolitician(req: express.Request, res: express.Response) {
   }
 }
 
-function _asyncPoliticianValidateCreate(dataToValidate: object) {
+function _asyncPoliticianValidateCreate(
+  dataToValidate: IPolitician
+): Promise<IPolitician> {
   return new Promise((resolve, reject) => {
     politicianModel.createSchema.validate(
       dataToValidate,
-      (e: ValidationError, validatedData: object) => {
+      (e: ValidationError, validatedData: IPolitician) => {
         if (e) {
           return reject(e);
         }
