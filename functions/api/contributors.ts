@@ -106,7 +106,7 @@ async function updateContributor(req: express.Request, res: express.Response) {
       admin.firestore()
     );
 
-    return contributor && contributor.status && res.status(204).end();
+    return contributor && res.status(204).end();
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
