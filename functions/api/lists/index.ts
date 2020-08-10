@@ -2,12 +2,12 @@ import cors from 'cors';
 import express from 'express';
 import * as functions from 'firebase-functions';
 
-import middlewares from '../etc/middlewares';
+import middlewares from '../../etc/middlewares';
 
-import addList from './lists/add';
-import getList from './lists/get';
-import listAllLists from './lists/listAll';
-import listLiveLists from './lists/listLive';
+import addList from './add';
+import getList from './get';
+import listAllLists from './listAll';
+import listLiveLists from './listLive';
 
 const { firebaseAuth, routePermissions } = middlewares;
 
