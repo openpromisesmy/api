@@ -42,9 +42,13 @@ async function add(data: IPolitician) {
 async function get(id: string) {
   const doc = await collection.doc(id).get();
 
-  const coll = doc.data();
+  const politician = doc.data();
 
-  return _.isEmpty(coll) ? {} : util.toObject(id, coll);
+  if (_.isEmpty(politician) || politician == undefined) {
+    return {};
+  } else {
+    return util.toObject(id, politician);
+  }
 }
 
 interface Query {
