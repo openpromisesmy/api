@@ -81,9 +81,7 @@ async function listPromiseUpdates(req: express.Request, res: express.Response) {
       ...req.query
     });
 
-    return promiseUpdates.status
-      ? res.status(promiseUpdates.status).json(promiseUpdates)
-      : res.json(promiseUpdates);
+    return promiseUpdates;
   } catch (e) {
     console.log(e);
 
