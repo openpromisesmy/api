@@ -30,7 +30,10 @@ async function add(data: IContributor, db: admin.firestore.Firestore) {
   return { id: ref.id };
 }
 
-async function get(id: string, db: admin.firestore.Firestore) {
+async function get(
+  id: string,
+  db: admin.firestore.Firestore
+): Promise<IContributor | {}> {
   const doc = await db
     .collection('contributors')
     .doc(id)
@@ -80,7 +83,7 @@ async function update(
   updateData: IContributor,
   db: admin.firestore.Firestore
 ) {
-  const contributor: IContributor = await get(id, db);
+  const contributor: IContributor | {} = await get(id, db);
 
   if (_.isEmpty(contributor)) {
     return { status: 404, message: 'Invalid Contributor' };
