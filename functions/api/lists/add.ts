@@ -1,6 +1,7 @@
 import express from 'express';
 import ListModel from '../../models/list';
 import { IList, create as createSchema } from '../../schemas/list';
+import { ValidationError } from 'joi';
 
 async function createList(req: express.Request, res: express.Response) {
   try {
