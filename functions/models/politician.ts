@@ -46,7 +46,11 @@ async function get(id: string) {
   return _.isEmpty(coll) ? {} : util.toObject(id, coll);
 }
 
-async function list(query: object) {
+interface Query {
+  [key: string]: string;
+}
+
+async function list(query: Query) {
   let ref = collection;
   if (!_.isEmpty(query)) {
     for (const x in query) {
