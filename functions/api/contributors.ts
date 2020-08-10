@@ -143,7 +143,7 @@ function _asyncContributorValidateCreate(dataToValidate: IContributor) {
   });
 }
 
-function _asyncContributorValidateUpdate(dataToValidate: object) {
+function _asyncContributorValidateUpdate(dataToValidate: IContributor) {
   return new Promise<IContributor>((resolve, reject) => {
     contributorModel.updateSchema.validate(
       dataToValidate,
