@@ -102,7 +102,7 @@ async function updatePolitician(req: express.Request, res: express.Response) {
       validatedPolitician
     );
 
-    return politician && politician.status && res.status(204).end();
+    return politician && res.status(204).end();
   } catch (e) {
     if (e.name === 'ValidationError') {
       return res.status(400).send(e.message);
