@@ -31,7 +31,7 @@ export = {
   routePermissions
 };
 
-async function firebaseAuth(
+export async function firebaseAuth(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
