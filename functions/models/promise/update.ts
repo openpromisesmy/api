@@ -32,7 +32,7 @@ const update = (db: admin.firestore.Firestore) => async (
   } else {
     return db
       .runTransaction(async (transaction: any) => {
-        if (updateHas) {
+        if (updateHas && data.list_ids != undefined) {
           await ensureAllListsExistById(data.list_ids);
         }
 
