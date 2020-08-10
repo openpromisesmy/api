@@ -62,9 +62,7 @@ async function listPoliticians(req: express.Request, res: express.Response) {
       ...req.query
     });
 
-    return politicians.status
-      ? res.status(politicians.status).json(politicians)
-      : res.json(politicians);
+    return politicians;
   } catch (e) {
     console.log(e);
     return res.status(500).end();
