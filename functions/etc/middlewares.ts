@@ -55,6 +55,10 @@ export async function firebaseAuth(
     return res.status(400).send('You need to be authorized to do this.');
   }
 
+  if (typeof sentToken !== 'string') {
+    return res.status(400).send('x-firebase-token has to be a string');
+  }
+
   try {
     const decodedToken = await admin.auth().verifyIdToken(sentToken);
     const contributors = await contributorModel.list(
