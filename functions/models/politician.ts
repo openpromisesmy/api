@@ -39,7 +39,7 @@ async function add(data: IPolitician) {
   return { id: ref.id };
 }
 
-async function get(id: string) {
+async function get(id: string): Promise<IPolitician | {}> {
   const doc = await collection.doc(id).get();
 
   const politician = doc.data();
