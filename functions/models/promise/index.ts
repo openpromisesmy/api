@@ -116,7 +116,7 @@ export async function ensureAllListsExistById(listIds: string[]) {
 
 interface IUpdatePromiseIdInListsParam {
   previousListIds: string[];
-  updatedListIds: string[];
+  updatedListIds: string[] | undefined;
   promiseId: string;
   transaction: any;
 }
