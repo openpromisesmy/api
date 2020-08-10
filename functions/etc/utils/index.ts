@@ -24,16 +24,17 @@ const snapshotToArray = (snapshot: QuerySnapshot) => {
 };
 
 export const detectArrayChanges = require('./detectArrayChanges');
+const parseQueryForRef = require('./parseQueryForRef');
+const promisify = require('./promisify');
 
-export = {
+export default {
   compose,
   getKey,
   getValue,
   now,
-  parseQueryForRef: require('./parseQueryForRef'),
-  promisify: require('./promisify'),
+  parseQueryForRef,
+  promisify,
   snapshotToArray,
   toArray,
-  toObject,
-  detectArrayChanges
+  toObject
 };
