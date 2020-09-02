@@ -39,14 +39,14 @@ async function get(
     .get();
 
   const data = doc.data();
-  if (_.isEmpty(data) || data == undefined) {
+  if (_.isEmpty(data) || data === undefined) {
     return {};
   } else {
     return util.toObject(id, data);
   }
 }
 
-interface MatchObject {
+interface IMatchObject {
   [key: string]: any;
 }
 

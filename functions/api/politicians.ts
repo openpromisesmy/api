@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { firebaseAuth } from '../etc/middlewares';
 import PoliticianModel from '../models/politician';
 
-import { ValidationError, IpOptions } from 'joi';
+import { IpOptions, ValidationError } from 'joi';
 import { IPolitician } from '../schemas/politician';
 
 // politicians.get('/')

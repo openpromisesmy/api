@@ -10,7 +10,7 @@ import * as functions from 'firebase-functions';
 import middlewares from '../etc/middlewares';
 import PromiseModel from '../models/promise';
 
-import { ValidationError, IPOptions } from 'joi';
+import { IPOptions, ValidationError } from 'joi';
 import { IPromise } from '../schemas/promise';
 
 const { firebaseAuth, routePermissions } = middlewares;
