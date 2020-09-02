@@ -4,6 +4,11 @@ export type RefHead =
   | admin.firestore.CollectionReference
   | admin.firestore.Query;
 
-export type AddReturn = { id: string };
+export interface IAddReturn {
+  id: string;
+}
 
-export type ModelError = { status: number; message: string };
+export interface IModelError {
+  status: number;
+  message: string;
+}

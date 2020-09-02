@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+/* tslint:disable-next-line */
 const credentialPath = require('../secrets/google-key.json');
 
 const isDev = process.env.NODE_ENV === 'development';

@@ -8,7 +8,7 @@ import {
 } from '../schemas/promiseUpdate';
 import db from '../services/db';
 import PromiseModel from './promise';
-import { AddReturn, ModelError } from './types';
+import { IAddReturn, IModelError } from './types';
 
 const collection = db.collection('promiseUpdates');
 
@@ -22,7 +22,7 @@ export = () => ({
   updateSchema
 });
 
-async function add(data: IPromiseUpdate): Promise<AddReturn | ModelError> {
+async function add(data: IPromiseUpdate): Promise<IAddReturn | IModelError> {
   try {
     const pro = await PromiseModel.get(data.promise_id);
 

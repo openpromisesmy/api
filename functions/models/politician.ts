@@ -7,7 +7,7 @@ import {
 } from '../schemas/politician';
 import db from '../services/db';
 import contributorModel from './contributor';
-import { AddReturn, ModelError, RefHead } from './types';
+import { IAddReturn, IModelError, RefHead } from './types';
 
 const contributor = contributorModel();
 const collection = db.collection('politicians');
@@ -23,7 +23,7 @@ export = () => ({
   updateSchema
 });
 
-async function add(data: IPolitician): Promise<ModelError | AddReturn> {
+async function add(data: IPolitician): Promise<IModelError | IAddReturn> {
   const con = await contributor.get(data.contributor_id, db);
 
   if (_.isEmpty(con)) {
@@ -44,19 +44,19 @@ async function get(id: string): Promise<IPolitician | {}> {
 
   const politician = doc.data();
 
-  if (_.isEmpty(politician) || politician == undefined) {
+  if (_.isEmpty(politician) || politician === undefined) {
     return {};
   } else {
     return util.toObject(id, politician);
   }
 }
 
-interface Query {
+interface IQuery {
   [key: string]: any;
 }
 
-async function list(query: Query) {
-  let ref = collection;
+async function list(query: IQuery) {
+  const ref = collection;
   let head: RefHead = ref;
   if (!_.isEmpty(query)) {
     for (const x in query) {
