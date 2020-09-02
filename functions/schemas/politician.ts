@@ -32,10 +32,10 @@ const shared = {
     email: joi.string().email(),
     facebook_url: joi.string().uri(),
     phone_number: joi.string(),
-    profile_image: joi.string().uri(),
     twitter_url: joi.string().uri()
   }),
   party: joi.string(),
+  profile_image: joi.string().uri(),
   term_end: joi.string(),
   term_start: joi.string()
 };
