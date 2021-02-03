@@ -40,7 +40,7 @@ API calls require a token and email in the header
 * Run `cd functions/`
 * Run `npm i`
 * Run `npm run tsc:watch` and leave the terminal open
-* In a new terminal, run `npm run serve-h`
+* In a new terminal (also in `/functions`), run `npm run serve-h`
 * When the `npm run serve-h` command is done, it will output the list of the OpenPromises API's endpoints.
 
 ### 3. DONE!
