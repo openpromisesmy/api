@@ -3,7 +3,7 @@
 ### Firebase
 
 1.  Install the Firebase CLI tool:
-    `npm i -g firebase-tools`
+    `npm i -g firebase-tools` [firebase cli doc](https://firebase.google.com/docs/cli) (you might need to sudo)
 2.  Log in via the Firebase CLI tool:
     `firebase login`. You will be brought to your browser. Log in using the Google account which has been given access to the project.
 
