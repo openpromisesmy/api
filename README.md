@@ -1,7 +1,7 @@
 ## Prerequisites
 
 ### Firebase
-
+0. Create project on Firebase - [reference](https://docs.kii.com/en/samples/push-notifications/push-notifications-android-fcm/create-project/)
 1.  Install the Firebase CLI tool:
     `npm i -g firebase-tools` [firebase cli doc](https://firebase.google.com/docs/cli) (you might need to sudo)
 2.  Log in via the Firebase CLI tool:
