@@ -1,10 +1,11 @@
 ## Prerequisites
 
 ### Firebase
-0. Create project on Firebase - [reference](https://docs.kii.com/en/samples/push-notifications/push-notifications-android-fcm/create-project/)
+
+0.  Create project on Firebase - [reference](https://docs.kii.com/en/samples/push-notifications/push-notifications-android-fcm/create-project/)
 1.  Install the Firebase CLI tool:
     `npm i -g firebase-tools` [firebase cli doc](https://firebase.google.com/docs/cli) (you might need to sudo)
-2.  Log in via the Firebase CLI tool:
+1.  Log in via the Firebase CLI tool:
     `firebase login`. You will be brought to your browser. Log in using the Google account which has been given access to the project.
 
 #### OBTAIN THE SERVICE ACCOUNT KEY
@@ -38,10 +39,11 @@ API calls require a token and email in the header
 ### 2. RUN THE API SERVER
 
 * Run `cd functions/`
-* Run `npm i`
+* Run `npm ci` (do `ci` over `i` whenever possible to not modify the lockfile unintentionally)
 * Run `npm run tsc:watch` and leave the terminal open
-* In a new terminal (also in `/functions`), run `npm run serve-h`
-* When the `npm run serve-h` command is done, it will output the list of the OpenPromises API's endpoints.
+* In a new terminal (also in `/functions`), run `npm run serve`
+  (if you run into `Error: Port 5000 is not open on localhost, could not start functions emulator.`, find out what is already running on port 5000 and kill it) (on unix systems, run `lsof -t -i tcp:5000` to see what is running on port 5000) (in MacOS Monterrey, port 5000 might be used by AirPlay receiver, switch it off [reference image](https://i.stack.imgur.com/jlt4g.png) )
+* When the `npm run serve` command is done, it will output the list of the OpenPromises API's endpoints.
 
 ### 3. DONE!
 
