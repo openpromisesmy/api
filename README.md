@@ -9,8 +9,8 @@
 
 #### OBTAIN THE SERVICE ACCOUNT KEY
 
-* Request a senior Open Promises member to generate a service account key for you
-* Place the key under `${OP_API_PROJECT_ROOT}/functions/secrets/google-key.json`, where `OP_API_PROJECT_ROOT` is your local path to the OP API repo.
+* On Firebase, generate a service account if it has not been created.
+* Place the key under `${PROJECT_ROOT}/functions/secrets/google-key.json`, where `PROJECT_ROOT` is your local path to the OpenPromises API repo.
 
 #### INSTALL THE GOOGLE CLOUD SDK
 
