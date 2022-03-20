@@ -15,8 +15,8 @@
 #### INSTALL THE GOOGLE CLOUD SDK
 
 * Go to https://cloud.google.com/sdk/install
-* Follow the instructions to install the Google Cloud SDK (install it in your home directory and remember to run the gcloud init command)
-* Run the following command in your terminal: `$ gcloud auth application-default login`
+* Follow the instructions to install the Google Cloud SDK (install it in your home directory)
+* Run the init command as mentioned in the install instructions: `./google-cloud-sdk/bin/gcloud init` (it should have asked you to login and select the project)
 
 If you ignore this step, the OP API will throw an error: `Error: Could not load the default credentials.` whenever you send a request to it.
 
