@@ -7,7 +7,9 @@ const isDev = process.env.NODE_ENV === 'development';
 if (isDev) {
   admin.initializeApp({ credential: admin.credential.cert(credentialPath) });
 } else {
-  admin.initializeApp();
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+  });
 }
 
 const db = admin.firestore();
