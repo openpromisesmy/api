@@ -11,11 +11,19 @@ import { ValidationError } from 'joi';
 import middlewares from '../etc/middlewares';
 import { IPromiseUpdate } from '../schemas/promiseUpdate';
 
+import rateLimit from 'express-rate-limit';
+
 const { firebaseAuth } = middlewares;
 
 const promiseUpdateModel = PromiseUpdateModel();
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 1
+});
+app.use(limiter);
 
 app.use(cors({ origin: true }));
 

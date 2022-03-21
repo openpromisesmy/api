@@ -11,15 +11,17 @@ import PoliticianModel from '../models/politician';
 import { IpOptions, ValidationError } from 'joi';
 import { IPolitician } from '../schemas/politician';
 
-// politicians.get('/')
-// politicians.post('/').json({contributor_id: '123', profile_image: '123', name: 'Umar', primary_position: 'OpenPromises', brief: 'Umar bla bla', description: 'bla bla', status: 'verified', live: true})
-// politicians.post('/-L6gfTkNClzZy7w9t_9e').json({contributor_id:'321'})
-// politicians.get('/-L6grrLSYEBLbHIxpeGy')
-// politicians.delete('/-L6gfTkNClzZy7w9t_9e')
+import rateLimit from 'express-rate-limit';
 
 const politicianModel = PoliticianModel();
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 1
+});
+app.use(limiter);
 
 app.use(cors({ origin: true }));
 
