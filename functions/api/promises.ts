@@ -12,17 +12,12 @@ import PromiseModel from '../models/promise';
 
 import { IPOptions, ValidationError } from 'joi';
 import { IPromise } from '../schemas/promise';
+import { limiter } from './ common';
 
 const { firebaseAuth, routePermissions } = middlewares;
 
-import rateLimit from 'express-rate-limit';
-
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1
-});
 app.use(limiter);
 
 app.use(cors({ origin: true }));

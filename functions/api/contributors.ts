@@ -13,24 +13,14 @@ import { ValidationError } from 'joi';
 
 import middlewares from '../etc/middlewares';
 
-import rateLimit from 'express-rate-limit';
+import { limiter } from './ common';
 
 const { firebaseAuth } = middlewares;
-
-// contributors.get('/')
-// contributors.post('/').json({ profile_image: 'https://assets.openpromises.com/DSCF8873.jpg', name: 'Umar Rasydan', email: 'umarrasydan@gmail.com', contact: '+60172562786', status: 'Admin', live: true })
-// contributors.post('/-L6kq7u9sLz9fI2GuQ-h').json({name:'Umar Rasydan Romli'})
-// contributors.get('/-L6kq7u9sLz9fI2GuQ-h')
-// contributors.delete('/-L6gfTkNClzZy7w9t_9e')
 
 const contributorModel = ContributorModel();
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1
-});
 app.use(limiter);
 
 app.use(cors({ origin: true }));

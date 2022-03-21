@@ -11,16 +11,12 @@ import PoliticianModel from '../models/politician';
 import { IpOptions, ValidationError } from 'joi';
 import { IPolitician } from '../schemas/politician';
 
-import rateLimit from 'express-rate-limit';
+import { limiter } from './ common';
 
 const politicianModel = PoliticianModel();
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1
-});
 app.use(limiter);
 
 app.use(cors({ origin: true }));

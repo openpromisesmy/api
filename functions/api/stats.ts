@@ -9,7 +9,7 @@ import contributorModel from '../models/contributor';
 import politicianModel from '../models/politician';
 import PromiseModel from '../models/promise';
 
-import rateLimit from 'express-rate-limit';
+import { limiter } from './ common';
 
 const contributors = contributorModel();
 const politicians = politicianModel();
@@ -19,10 +19,6 @@ const politicians = politicianModel();
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 1
-});
 app.use(limiter);
 
 app.use(cors({ origin: true }));
