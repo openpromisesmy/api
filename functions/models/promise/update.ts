@@ -5,15 +5,15 @@ import admin from 'firebase-admin';
 import {
   ensureAllListsExistById,
   updatePromiseIdInLists,
-  collection
+  collection,
+  get
 } from './index';
-import promiseModel from './index';
 
 const update = (db: admin.firestore.Firestore) => async (
   id: string,
   data: IUpdatePromise
 ) => {
-  const promise = await promiseModel.get(id);
+  const promise = await get(id);
   if (_.isEmpty(promise)) {
     throw Error('Invalid Promise');
   }
