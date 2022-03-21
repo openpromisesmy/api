@@ -165,7 +165,7 @@ async function stats() {
     promises,
     politicians
   );
-
+  // @ts-ignore
   const statsByStatus = _aggregateByStatus(livePromisesByLivePoliticians);
 
   return {

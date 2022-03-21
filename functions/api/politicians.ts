@@ -96,6 +96,7 @@ async function updatePolitician(req: express.Request, res: express.Response) {
     // TODO: we need to handle when politician is updated from live to not live, all their promises needs to be made not live too
     const politician = await politicianModel.update(
       req.params.id,
+      // @ts-ignore
       validatedPolitician
     );
 

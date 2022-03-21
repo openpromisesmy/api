@@ -21,6 +21,7 @@ const app = express();
 app.use(limiter);
 
 app.use(cors({ origin: true }));
+// @ts-ignore
 app.use(bodyParser.json());
 app.use(boolParser());
 

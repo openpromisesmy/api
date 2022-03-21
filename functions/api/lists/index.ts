@@ -15,6 +15,7 @@ const { firebaseAuth, routePermissions } = middlewares;
 const app = express();
 app.use(limiter);
 app.use(cors({ origin: true }));
+// @ts-ignore
 app.use(express.json());
 
 app.post('/', firebaseAuth, addList);
