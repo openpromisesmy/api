@@ -8,11 +8,12 @@ import addList from './add';
 import getList from './get';
 import listAllLists from './listAll';
 import listLiveLists from './listLive';
+import { limiter } from '../ common';
 
 const { firebaseAuth, routePermissions } = middlewares;
 
 const app = express();
-
+app.use(limiter);
 app.use(cors({ origin: true }));
 app.use(express.json());
 
