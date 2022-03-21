@@ -14,6 +14,8 @@ import { IPOptions, ValidationError } from 'joi';
 import { IPromise } from '../schemas/promise';
 
 const { firebaseAuth, routePermissions } = middlewares;
+
+import RateLimit from 'express-rate-limit';
 // promises.get('/')
 // promises.post('/').json({ contributor_id: '123', politician_id: '-L5o5YwQa-jgdt_4sPqe', source_date: '2018-03-03T16:20:01.072Z', source_name: 'Bernama', source_url: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', cover_image: 'https://github.com/hapijs/joi/blob/v13.1.2/API.md', category: 'potato', title: 'Promising promises', quote: '"...potato said potata"', status: 'In review' })
 // promises.post('/-L6kQKs6_GqlUfualdcA').json({contributor_id:'321'})
@@ -21,6 +23,13 @@ const { firebaseAuth, routePermissions } = middlewares;
 // promises.delete('/-L6gfTkNClzZy7w9t_9e')
 
 const app = express();
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5
+});
+
+console.log(limiter);
 
 app.use(cors({ origin: true }));
 app.use(bodyParser.json());
