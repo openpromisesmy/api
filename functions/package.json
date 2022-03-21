@@ -23,7 +23,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "express-query-boolean": "^2.0.0",
-    "firebase-admin": "^8.8.0",
+    "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.3.0",
     "joi": "^13.6.0",
     "joi-phone-number": "^2.0.11",
