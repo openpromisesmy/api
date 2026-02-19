@@ -10,6 +10,7 @@ yarn-error.log*
 *.js.map
 scripts/dist
 scripts/data
+scripts/secret.json
 functions/scripts/secret.json
 
 # Runtime data
